@@ -19,8 +19,12 @@
 
 @layer utilities {
 
-  /*TODO Primary */
+  /* Primary */
   .text-primary {
+    color: var(--color-primary);
+  }
+
+  .hover\:text-primary:hover {
     color: var(--color-primary);
   }
 
@@ -28,12 +32,24 @@
     background-color: var(--color-primary);
   }
 
+  .hover\:bg-primary:hover {
+    background-color: var(--color-primary);
+  }
+
   .border-primary {
     border-color: var(--color-primary);
   }
 
-  /*TODO Secondary */
+  .hover\:border-primary:hover {
+    border-color: var(--color-primary);
+  }
+
+  /* Secondary */
   .text-secondary {
+    color: var(--color-secondary);
+  }
+
+  .hover\:text-secondary:hover {
     color: var(--color-secondary);
   }
 
@@ -41,12 +57,24 @@
     background-color: var(--color-secondary);
   }
 
+  .hover\:bg-secondary:hover {
+    background-color: var(--color-secondary);
+  }
+
   .border-secondary {
     border-color: var(--color-secondary);
   }
 
-  /*TODO Tertiary */
+  .hover\:border-secondary:hover {
+    border-color: var(--color-secondary);
+  }
+
+  /* Tertiary */
   .text-tertiary {
+    color: var(--color-tertiary);
+  }
+
+  .hover\:text-tertiary:hover {
     color: var(--color-tertiary);
   }
 
@@ -54,12 +82,24 @@
     background-color: var(--color-tertiary);
   }
 
+  .hover\:bg-tertiary:hover {
+    background-color: var(--color-tertiary);
+  }
+
   .border-tertiary {
     border-color: var(--color-tertiary);
   }
 
-  /*TODO Maroon */
+  .hover\:border-tertiary:hover {
+    border-color: var(--color-tertiary);
+  }
+
+  /* Maroon */
   .text-maroon {
+    color: var(--color-maroon);
+  }
+
+  .hover\:text-maroon:hover {
     color: var(--color-maroon);
   }
 
@@ -67,12 +107,24 @@
     background-color: var(--color-maroon);
   }
 
+  .hover\:bg-maroon:hover {
+    background-color: var(--color-maroon);
+  }
+
   .border-maroon {
     border-color: var(--color-maroon);
   }
 
-  /*TODO Background */
+  .hover\:border-maroon:hover {
+    border-color: var(--color-maroon);
+  }
+
+  /* Background */
   .bg-app {
+    background-color: var(--color-background);
+  }
+
+  .hover\:bg-app:hover {
     background-color: var(--color-background);
   }
 
@@ -80,7 +132,15 @@
     color: var(--color-background);
   }
 
+  .hover\:text-app:hover {
+    color: var(--color-background);
+  }
+
   .border-app {
+    border-color: var(--color-background);
+  }
+
+  .hover\:border-app:hover {
     border-color: var(--color-background);
   }
 }
