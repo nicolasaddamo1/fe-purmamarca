@@ -1,7 +1,7 @@
 import React from "react";
 
 const Hiro = () => {
-  return <div>Hiro</div>;
+  return <div className="text-primary">Hiro</div>;
 };
 
 export default Hiro;
