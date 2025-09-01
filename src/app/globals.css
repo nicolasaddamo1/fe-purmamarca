@@ -7,13 +7,80 @@
     --color-secondary: #9f9587;
     --color-tertiary: #6a994e;
     --color-maroon: #76644c;
+  }
 
+  body {
+    font-family: var(--font-abeezee), sans-serif;
+    background-color: var(--color-background);
+    margin: 0;
+    padding: 0;
   }
 }
 
-body {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  background-color: var(--color-background);
-  margin: 0;
-  padding: 0;
+@layer utilities {
+
+  /*TODO Primary */
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .border-primary {
+    border-color: var(--color-primary);
+  }
+
+  /*TODO Secondary */
+  .text-secondary {
+    color: var(--color-secondary);
+  }
+
+  .bg-secondary {
+    background-color: var(--color-secondary);
+  }
+
+  .border-secondary {
+    border-color: var(--color-secondary);
+  }
+
+  /*TODO Tertiary */
+  .text-tertiary {
+    color: var(--color-tertiary);
+  }
+
+  .bg-tertiary {
+    background-color: var(--color-tertiary);
+  }
+
+  .border-tertiary {
+    border-color: var(--color-tertiary);
+  }
+
+  /*TODO Maroon */
+  .text-maroon {
+    color: var(--color-maroon);
+  }
+
+  .bg-maroon {
+    background-color: var(--color-maroon);
+  }
+
+  .border-maroon {
+    border-color: var(--color-maroon);
+  }
+
+  /*TODO Background */
+  .bg-app {
+    background-color: var(--color-background);
+  }
+
+  .text-app {
+    color: var(--color-background);
+  }
+
+  .border-app {
+    border-color: var(--color-background);
+  }
 }
