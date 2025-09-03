@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../../.flowbite-react/class-list.json";
+@import "flowbite";
 
 @layer base {
   :root {
@@ -16,6 +19,22 @@
     padding: 0;
   }
 }
+ @layer utilities {
+      /* Chrome, Safari, and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* IE and Edge */
+      .no-scrollbar {
+        -ms-overflow-style: none;
+      }
+
+      /* Firefox */
+      .no-scrollbar {
+        scrollbar-width: none;
+      }
+    }
 
 @layer utilities {
 
