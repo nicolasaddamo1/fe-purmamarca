@@ -1,63 +1,57 @@
+"use client";
 import Image from "next/image";
+import { motion } from "framer-motion";
+
+const images = [
+  "/pur1.jpg",
+  "/pur2.jpg",
+  "/pur3.jpg",
+  "/pur4.jpg",
+  "/pur5.jpg",
+  "/pur6.jpg",
+  "/pur7.jpg",
+  "/pur8.jpg",
+  "/pur9.jpg",
+  "/pur10.jpg",
+];
+
 const Hero = () => {
   return (
-    <div className="relative w-full">
-      {/* Imagen de fondo */}
-      <Image
-        src="/cerro.png"
-        alt="purmamarca"
-        className="w-full h-64 md:h-[580px] object-cover"
-        width={1920}
-        height={1080}
-      />
-
-      {/* Overlay con vidrio y máscara */}
-      <div className="absolute inset-0 flex justify-center items-center">
-        <svg className="w-full h-full">
-          <defs>
-            <mask id="text-mask" x="0" y="0" width="100%" height="100%">
-              {/* Fondo negro = tapado, letras blancas = agujeros */}
-              <rect x="0" y="0" width="100%" height="100%" fill="white" />
-              <text
-                x="50%"
-                y="35%"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="60"
-                fontFamily="ABeeZee"
-                fontWeight="bold"
-                fill="black"
-              >
-                Distribuidora
-              </text>
-              <text
-                x="50%"
-                y="50%"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="130"
-                fontFamily="ABeeZee"
-                fontWeight="bold"
-                fill="black"
-              >
-                Purmamarca
-              </text>
-            </mask>
-          </defs>
-
-          {/* Rectángulo con blur y máscara */}
-          <rect
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill="rgba(0, 0, 0, 0.623)"
-            style={{ backdropFilter: "blur(10px)" }}
-            mask="url(#text-mask)"
-          />
-        </svg>
+    <section className="md:flex w-full h-[480px] overflow-hidden">
+      <div className="flex justify-center items-center bg-secondary w-full md:w-1/2 h-[300px] md:h-full">
+        <Image
+          src="/logpur.png"
+          alt="Imagen fija"
+          width={300}
+          height={300}
+          className="object-contain"
+          priority
+        />
       </div>
-    </div>
+
+      <div className="relative w-full md:w-1/2 h-[200px] md:h-full overflow-hidden">
+        <motion.div
+          className="flex h-full"
+          animate={{ x: ["0%", "-100%"] }}
+          transition={{
+            repeat: Infinity,
+            ease: "linear",
+            duration: 60,
+          }}
+        >
+          {[...images, ...images].map((img, i) => (
+            <div key={i} className="relative flex-shrink-0 w-[50vw] h-full">
+              <Image
+                src={img}
+                alt={`Slide ${i + 1}`}
+                fill
+                className="object-cover"
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
   );
 };
 
