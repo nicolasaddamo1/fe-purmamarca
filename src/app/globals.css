@@ -3,188 +3,37 @@
 @source "../../.flowbite-react/class-list.json";
 @import "flowbite";
 
-@layer base {
-  :root {
-    --color-background: #f8e8d5;
-    --color-primary: #213721;
-    --color-secondary: #9f9587;
-    --color-tertiary: #6a994e;
-    --color-maroon: #76644c;
-    --color-chocolate: #612608;
-  }
+/* 🎨 Tema con variables */
+@theme inline {
+  --color-background: #f8e8d5;
+  --color-suave: #fbd6a2;
+  --color-subtitle: #91491a;
+  --color-primary: #213721;
+  --color-secondary: #9f9587;
+  --color-tertiary: #6a994e;
+  --color-maroon: #76644c;
+  --color-chocolate: #612608;
 
+  --font-body: var(--font-abeezee), sans-serif;
+}
+
+@layer base {
   body {
-    font-family: var(--font-abeezee), sans-serif;
+    font-family: var(--font-body);
     background-color: var(--color-background);
     margin: 0;
     padding: 0;
   }
 }
+
 @layer utilities {
-  /* Chrome, Safari, and Opera */
+  /* Quitar scrollbar */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
-  /* IE and Edge */
   .no-scrollbar {
-    -ms-overflow-style: none;
-  }
-
-  /* Firefox */
-  .no-scrollbar {
-    scrollbar-width: none;
-  }
-}
-
-@layer utilities {
-  /* Primary */
-  .text-primary {
-    color: var(--color-primary);
-  }
-
-  .hover\:text-primary:hover {
-    color: var(--color-primary);
-  }
-
-  .bg-primary {
-    background-color: var(--color-primary);
-  }
-
-  .hover\:bg-primary:hover {
-    background-color: var(--color-primary);
-  }
-
-  .border-primary {
-    border-color: var(--color-primary);
-  }
-
-  .hover\:border-primary:hover {
-    border-color: var(--color-primary);
-  }
-
-  /* Secondary */
-  .text-secondary {
-    color: var(--color-secondary);
-  }
-
-  .hover\:text-secondary:hover {
-    color: var(--color-secondary);
-  }
-
-  .bg-secondary {
-    background-color: var(--color-secondary);
-  }
-
-  .hover\:bg-secondary:hover {
-    background-color: var(--color-secondary);
-  }
-
-  .border-secondary {
-    border-color: var(--color-secondary);
-  }
-
-  .hover\:border-secondary:hover {
-    border-color: var(--color-secondary);
-  }
-
-  /* Tertiary */
-  .text-tertiary {
-    color: var(--color-tertiary);
-  }
-
-  .hover\:text-tertiary:hover {
-    color: var(--color-tertiary);
-  }
-
-  .bg-tertiary {
-    background-color: var(--color-tertiary);
-  }
-
-  .hover\:bg-tertiary:hover {
-    background-color: var(--color-tertiary);
-  }
-
-  .border-tertiary {
-    border-color: var(--color-tertiary);
-  }
-
-  .hover\:border-tertiary:hover {
-    border-color: var(--color-tertiary);
-  }
-
-  /* Maroon */
-  .text-maroon {
-    color: var(--color-maroon);
-  }
-
-  .hover\:text-maroon:hover {
-    color: var(--color-maroon);
-  }
-
-  .bg-maroon {
-    background-color: var(--color-maroon);
-  }
-
-  .hover\:bg-maroon:hover {
-    background-color: var(--color-maroon);
-  }
-
-  .border-maroon {
-    border-color: var(--color-maroon);
-  }
-
-  .hover\:border-maroon:hover {
-    border-color: var(--color-maroon);
-  }
-
-  /* Background */
-  .bg-app {
-    background-color: var(--color-background);
-  }
-
-  .hover\:bg-app:hover {
-    background-color: var(--color-background);
-  }
-
-  .text-app {
-    color: var(--color-background);
-  }
-
-  .hover\:text-app:hover {
-    color: var(--color-background);
-  }
-
-  .border-app {
-    border-color: var(--color-background);
-  }
-
-  .hover\:border-app:hover {
-    border-color: var(--color-background);
-  }
-
-  /* Chocolate amber */
-  .text-chocolate {
-    color: var(--color-chocolate);
-  }
-
-  .hover\:text-chocolate:hover {
-    color: var(--color-chocolate);
-  }
-
-  .bg-chocolate {
-    background-color: var(--color-chocolate);
-  }
-
-  .hover\:bg-chocolate:hover {
-    background-color: var(--color-chocolate);
-  }
-
-  .border-chocolate {
-    border-color: var(--color-chocolate);
-  }
-
-  .hover\:border-chocolate:hover {
-    border-color: var(--color-chocolate);
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

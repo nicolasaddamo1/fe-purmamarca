@@ -18,15 +18,16 @@ const images = [
 const Hero = () => {
   return (
     <section className="md:flex w-full h-[480px] overflow-hidden">
-      <div className="flex justify-center items-center bg-secondary w-full md:w-1/2 h-[300px] md:h-full">
-        <Image
-          src="/logpur.png"
-          alt="Imagen fija"
-          width={300}
-          height={300}
-          className="object-contain"
-          priority
-        />
+      <div className="flex justify-center items-center bg-chocolate w-full md:w-1/2 h-[200px] md:h-full">
+        <div className="top-6 relative w-[200px] md:w-[400px] h-[200px] md:h-[400px]">
+          <Image
+            src="/purlogo.png"
+            alt="Imagen fija"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
       </div>
 
       <div className="relative w-full md:w-1/2 h-[200px] md:h-full overflow-hidden">
