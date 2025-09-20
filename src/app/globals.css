@@ -36,4 +36,10 @@
     -ms-overflow-style: none; /* IE/Edge */
     scrollbar-width: none; /* Firefox */
   }
+  .text-stroke {
+    -webkit-text-stroke: 0.3px #612608;
+  }
+  .text-stroke-2 {
+    -webkit-text-stroke: 1px #612608;
+  }
 }
