@@ -10,6 +10,7 @@
     --color-secondary: #9f9587;
     --color-tertiary: #6a994e;
     --color-maroon: #76644c;
+    --color-chocolate: #612608;
   }
 
   body {
@@ -19,25 +20,24 @@
     padding: 0;
   }
 }
- @layer utilities {
-      /* Chrome, Safari, and Opera */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
+@layer utilities {
+  /* Chrome, Safari, and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-      /* IE and Edge */
-      .no-scrollbar {
-        -ms-overflow-style: none;
-      }
+  /* IE and Edge */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+  }
 
-      /* Firefox */
-      .no-scrollbar {
-        scrollbar-width: none;
-      }
-    }
+  /* Firefox */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
 
 @layer utilities {
-
   /* Primary */
   .text-primary {
     color: var(--color-primary);
@@ -161,5 +161,30 @@
 
   .hover\:border-app:hover {
     border-color: var(--color-background);
+  }
+
+  /* Chocolate amber */
+  .text-chocolate {
+    color: var(--color-chocolate);
+  }
+
+  .hover\:text-chocolate:hover {
+    color: var(--color-chocolate);
+  }
+
+  .bg-chocolate {
+    background-color: var(--color-chocolate);
+  }
+
+  .hover\:bg-chocolate:hover {
+    background-color: var(--color-chocolate);
+  }
+
+  .border-chocolate {
+    border-color: var(--color-chocolate);
+  }
+
+  .hover\:border-chocolate:hover {
+    border-color: var(--color-chocolate);
   }
 }
