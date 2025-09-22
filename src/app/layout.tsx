@@ -13,6 +13,9 @@ const abeezee = ABeeZee({
 export const metadata: Metadata = {
   title: "Purmamarca",
   description: "E-commerce de productos de artesanía",
+  icons: {
+    icon: "/purm.ico",
+  },
 };
 
 export default function RootLayout({
