@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ABeeZee } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar/NavBar";
+import Footer from "@/components/Footer/Footer";
 
 const abeezee = ABeeZee({
   weight: ["400"],
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body className={`${abeezee.variable} antialiased`}>
         <NavBar />
         {children}
+        <Footer />
       </body>
     </html>
   );
