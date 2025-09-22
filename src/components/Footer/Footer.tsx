@@ -1,4 +1,3 @@
-// components/Footer.tsx
 import Image from "next/image";
 
 export default function Footer() {
@@ -6,7 +5,7 @@ export default function Footer() {
     <footer className="bg-app border-t border-secondary text-maroon">
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
         
-        {/* Columna 1 - Logo y horarios */}
+        {/* Columna 1  */}
         <div className="flex items-start gap-4 md:col-span-1">
           <Image
             src="/logopurma.png"
@@ -25,7 +24,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Columna 2 - Productos */}
+        {/* Columna 2  */}
         <div className="self-center text-center md:text-left">
           <h2 className="text-lg font-semibold text-secondary">Productos</h2>
           <ul className="mt-2 space-y-1">
@@ -36,7 +35,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Columna 3 - Ayuda */}
+        {/* Columna 3  */}
         <div className="self-center text-center md:text-left">
           <h2 className="text-lg font-semibold text-secondary">Ayuda</h2>
           <ul className="mt-2 space-y-1">
@@ -47,7 +46,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Columna 4 - Llegamos A */}
+        {/* Columna 4  */}
         <div className="self-center text-center md:text-left">
           <h2 className="text-lg font-semibold text-secondary">Llegamos a</h2>
           <ul className="mt-2 space-y-1">
