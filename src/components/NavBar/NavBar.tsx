@@ -7,6 +7,8 @@ import MobileMenu from "./MobileMenu";
 import { LiaSearchSolid } from "react-icons/lia";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { usePathname } from "next/navigation";
+import { Popover } from "antd";
+import { CgShoppingCart } from "react-icons/cg";
 
 const NavBar = () => {
   const path = usePathname()
@@ -68,17 +70,28 @@ const NavBar = () => {
       {path.includes("productos") &&
         <nav className="w-full">
           <div className="flex justify-between items-center mx-auto px-6 py-4 max-w-7xl">
+            <div
+              className="group relative font-medium text-white/70 hover:text-primary text-sm transition-colors"
+            >
+              <Popover placement="bottom" mouseLeaveDelay={0.3} styles={{ body: { padding: 0, borderRadius: 0 } }} content={
+                <ul className="m-0 py-2 w-40">
+                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 1</li>
+                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 2</li>
+                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 3</li>
+                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 4</li>
+
+                </ul>
+              }>
+                <span className='flex flex-row items-center gap-2'>CATEGORIAS <IoMdArrowDropdown size={20} /> </span>
+              </Popover>
+            </div>
             <label htmlFor="searchBar" className='flex flex-row items-center bg-white m-auto px-2 rounded-md w-96 h-8 text-secondary text-center'>
               <LiaSearchSolid size={20} className='font-semibold' />
               <input type="text" id='searchBar' className='px-2 border-0 outline-0 w-full h-full' placeholder='Algun producto de busqueda' />
             </label>
-            <div
-              className="group relative font-medium text-white/70 hover:text-primary text-sm transition-colors"
-            >
-              <span className='flex flex-row items-center gap-2'>CATEGORIAS <IoMdArrowDropdown size={20} /> </span>
-              <span className="-bottom-1 left-0 absolute bg-primary w-0 group-hover:w-full h-[2px] transition-all duration-300 ease-out" />
+            <div className="text-white/70 hover:text-primary duration-300">
+              <CgShoppingCart size={20} />
             </div>
-
           </div>
         </nav>}
     </div>
