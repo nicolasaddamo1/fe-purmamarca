@@ -31,21 +31,7 @@ function page(): React.ReactElement {
 
     return (
         <div>
-            <nav className="top-15 left-0 z-50 fixed bg-white/20 backdrop-blur-md border-white/20 border-b w-full">
-                <div className="flex justify-between items-center mx-auto px-6 py-4 max-w-7xl">
-                    <label htmlFor="searchBar" className='flex flex-row items-center bg-white m-auto px-2 rounded-md w-96 h-8 text-secondary text-center'>
-                        <LiaSearchSolid size={20} className='font-semibold' />
-                        <input type="text" id='searchBar' className='px-2 border-0 outline-0 w-full h-full' placeholder='Algun producto de busqueda' />
-                    </label>
-                    <div
-                        className="group relative text-secondary hover:text-primary text-sm transition-colors"
-                    >
-                        <span className='flex flex-row items-center gap-2'>CATEGORIAS <IoMdArrowDropdown size={20} /> </span>
-                        <span className="-bottom-1 left-0 absolute bg-primary w-0 group-hover:w-full h-[2px] transition-all duration-300 ease-out" />
-                    </div>
 
-                </div>
-            </nav>
             <PromoCarousel />
             <section className='flex flex-col gap-6 px-4 py-10 pt-32'>
                 <HeadSection verMas={false} link='/home' name='Observa nuestras' highlight='Categorias' />
