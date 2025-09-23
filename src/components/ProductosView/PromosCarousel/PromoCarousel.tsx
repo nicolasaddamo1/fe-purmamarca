@@ -1,28 +1,37 @@
-import React from 'react'
-import { Carousel } from "flowbite-react";
+"use client"
+import React from 'react';
+import { Carousel } from 'antd';
 
-function PromoCarousel() {
+const contentStyle: React.CSSProperties = {
+    margin: 0,
+    height: '400px',
+    color: '#fff',
+    lineHeight: '160px',
+    textAlign: 'center',
+    background: '#364d79',
+    borderBottomLeftRadius: "20px",
+    borderBottomRightRadius: "20px",
+};
+
+const PromoCarousel: React.FC = () => {
+
+
     return (
-        <div className="h-96 overflow-hidden">
-            <Carousel leftControl={null} rightControl={null} slideInterval={3000}>
-                <img
-                    className="w-full object-cover"
-                    src=""
-                    alt="..."
-                />
-                <img
-                    className="w-full object-cover"
-                    src=""
-                    alt="..."
-                />
-                <img
-                    className="w-full object-cover"
-                    src=""
-                    alt="..."
-                />
-            </Carousel>
-        </div>
-    )
-}
+        <Carousel >
+            <div>
+                <h3 style={contentStyle}>1</h3>
+            </div>
+            <div>
+                <h3 style={contentStyle}>2</h3>
+            </div>
+            <div>
+                <h3 style={contentStyle}>3</h3>
+            </div>
+            <div>
+                <h3 style={contentStyle}>4</h3>
+            </div>
+        </Carousel>
+    );
+};
 
-export default PromoCarousel
+export default PromoCarousel;
