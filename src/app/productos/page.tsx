@@ -5,10 +5,54 @@ import Novedades from '@/components/ProductosView/Novedades/Novedades'
 import Product from '@/components/ProductosView/Product/Product'
 import PromoCarousel from '@/components/ProductosView/PromosCarousel/PromoCarousel'
 import React from 'react'
-import { IoMdArrowDropdown } from 'react-icons/io'
-import { LiaSearchSolid } from 'react-icons/lia'
 
-const productList = [
+
+export const productList = [
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
+    {
+        name: "Catarata de humo",
+        price: "250.000",
+        imageUrl: "https://pbs.twimg.com/media/G1faberXUAAHuad?format=jpg&name=large"
+    },
     {
         name: "Catarata de humo",
         price: "250.000",
@@ -30,7 +74,7 @@ const productList = [
 function page(): React.ReactElement {
 
     return (
-        <div>
+        <div className='pt-32'>
 
             <PromoCarousel />
             <section className='flex flex-col gap-6 px-4 py-10 pt-32'>
