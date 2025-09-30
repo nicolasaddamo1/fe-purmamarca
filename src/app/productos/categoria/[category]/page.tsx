@@ -1,18 +1,30 @@
+"use client"
 import Category from '@/components/ProductosView/Category/Category'
 import HeadSection from '@/components/ProductosView/HeadOfSection/HeadSection'
-import React from 'react'
-import { productList } from '../../page'
+import React, { useEffect, useState } from 'react'
+import { useProductStore } from '@/store/productsStore'
+import { IProduct } from '@/interfaces/productInterface'
+import { useCategoryStore } from '@/store/categoryStore'
 import Product from '@/components/ProductosView/Product/Product'
 
-function page() {
+function page({ params }: { params: Promise<{ category: string }> }) {
+    const { category } = React.use(params)
+    const { categories } = useCategoryStore()
+    const { products } = useProductStore()
+    const [data, setData] = useState<IProduct[]>()
+
+    useEffect(() => {
+        const filter: IProduct[] = products.filter((prod: IProduct) => prod.categoryId == category)
+        setData(filter)
+    }, [products])
     return (
         <div className='pt-36'>
             <HeadSection verMas={false} link='/home' name='Ve Otras' highlight='Categorias' />
             <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
                 {
-                    productList.map((prod, i) =>
+                    categories.map((prod, i) =>
                         <div key={i}>
-                            <Category name={prod.name} imageUrl={prod.imageUrl} />
+                            <Category id={prod.id} name={prod.name} imageUrl={prod.categoryImage} />
                         </div>
                     )
                 }
@@ -20,26 +32,13 @@ function page() {
             <HeadSection verMas={false} link='/home' name='Nuestros mejores' highlight={"param"} />
             <div className='flex flex-row flex-wrap justify-left items-center gap-6 m-auto p-4 max-w-[1200px] h-full'>
                 {
-                    productList.map((prod, i) =>
+                    data?.map((prod, i) =>
                         <div key={i}>
-                            <Product name={prod.name} price={prod.price} imageUrl={prod.imageUrl} />
+                            <Product id={prod.id} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
                         </div>
                     )
                 }
-                {
-                    productList.map((prod, i) =>
-                        <div key={i}>
-                            <Product name={prod.name} price={prod.price} imageUrl={prod.imageUrl} />
-                        </div>
-                    )
-                }
-                {
-                    productList.map((prod, i) =>
-                        <div key={i}>
-                            <Product name={prod.name} price={prod.price} imageUrl={prod.imageUrl} />
-                        </div>
-                    )
-                }
+
             </div>
         </div>
     )

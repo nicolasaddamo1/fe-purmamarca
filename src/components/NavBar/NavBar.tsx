@@ -9,9 +9,13 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { Popover } from "antd";
 import { CgShoppingCart } from "react-icons/cg";
+import { useCategoryStore } from "@/store/categoryStore";
+import SidebarExample from "../cart/sideVar";
 
 const NavBar = () => {
   const path = usePathname()
+  const { categories } = useCategoryStore()
+
   return (
     <div className="top-0 left-0 z-[999] fixed bg-chocolate md:bg-primary/20 md:backdrop-blur-md w-full">
       <nav className="w-full h-[100px] md:h-[70px]">
@@ -75,10 +79,15 @@ const NavBar = () => {
             >
               <Popover placement="bottom" mouseLeaveDelay={0.3} styles={{ body: { padding: 0, borderRadius: 0 } }} content={
                 <ul className="m-0 py-2 w-40">
-                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 1</li>
-                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 2</li>
-                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 3</li>
-                  <li className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">cat 4</li>
+                  {categories?.map((obj, i) => {
+                    return (
+                      <li key={i} className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">
+                        <Link className="!text-black decoration-0" href={`/productos/categoria/${obj.id}`}  >{obj.name}</Link>
+                      </li>
+
+                    )
+                  })}
+
 
                 </ul>
               }>
@@ -89,9 +98,7 @@ const NavBar = () => {
               <LiaSearchSolid size={20} className='font-semibold' />
               <input type="text" id='searchBar' className='px-2 border-0 outline-0 w-full h-full' placeholder='Algun producto de busqueda' />
             </label>
-            <div className="text-white/70 hover:text-primary duration-300">
-              <CgShoppingCart size={20} />
-            </div>
+            <SidebarExample />
           </div>
         </nav>}
     </div>

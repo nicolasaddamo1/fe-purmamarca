@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
 
-function Product({ name, price, imageUrl }: { name: string, price: string, imageUrl: string }): React.ReactElement {
+function Product({ id, name, price, imageUrl }: { id: string, name: string, price: number, imageUrl: string }): React.ReactElement {
     return (
-        <Link href={"/productos/detalle"} className='group flex flex-col hover:shadow-2xl rounded-xs outline-[#76644c67] outline-2 hover:outline-[#76644c] w-36 hover:scale-105 duration-200'>
+        <Link href={`/productos/detalle/${id}`} className='group flex flex-col hover:shadow-2xl rounded-xs outline-[#76644c67] outline-2 hover:outline-[#76644c] w-36 hover:scale-105 duration-200'>
             <div className='bg-[#dbc7ab]'>
                 <img className='m-auto w-32 h-36' src={`${imageUrl}`} alt={name} />
             </div>
