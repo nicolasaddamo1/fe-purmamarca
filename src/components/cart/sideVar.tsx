@@ -8,13 +8,15 @@ import { IProdCart, useCartStore } from "@/store/cartStore";
 import { div } from "framer-motion/client";
 import Image from "next/image";
 import { FaRegTrashAlt } from "react-icons/fa";
+import PedidoFormModal from "../modal/FormInfo";
+import Link from "next/link";
 
 
 
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { order, clearProd } = useCartStore()
+  const { prods, clearProd } = useCartStore()
 
   function deleteProd(prod: IProdCart) {
     clearProd(prod)
@@ -31,7 +33,7 @@ export default function Sidebar() {
     {createPortal((
       <AnimatePresence >
         {isOpen && (
-          <div className="z-[9999] fixed inset-0">
+          <div className="z-[999] fixed inset-0">
             {/* Overlay */}
             <motion.div
               className="absolute inset-0 bg-black/20"
@@ -43,14 +45,14 @@ export default function Sidebar() {
 
             {/* Sidebar */}
             <motion.aside
-              className="top-0 right-0 z-50 fixed flex flex-col bg-white shadow-xl w-80 h-full"
+              className="top-0 right-0 z-50 fixed flex flex-col bg-background shadow-xl w-80 h-full"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
             >
               <header className="flex justify-between items-center p-4 border-b">
-                <h2 className="font-semibold text-lg">Carrito</h2>
+                <h2 className="font-semibold text-chocolate text-xl tracking-wide">Carrito</h2>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="text-gray-600 hover:text-black"
@@ -61,17 +63,17 @@ export default function Sidebar() {
 
               <div className="flex-1 p-4 overflow-y-auto">
                 {
-                  order.prods.length >= 1 ?
-                    order.prods.map((prod, i) =>
-                      <div key={i} className="flex flex-row gap-2 hover:bg-gray-300 p-2 duration-200">
-                        <Image height={80} width={80} alt={prod.name} src={"https://pbs.twimg.com/media/G17wqbcXUAApROI?format=jpg&name=small"} />
+                  prods.length >= 1 ?
+                    prods.map((prod, i) =>
+                      <Link href={`/productos/detalle/${prod.id}`} key={i} className="flex flex-row gap-2 hover:bg-white/40 p-2 duration-200 cursor-default">
+                        <Image height={80} width={80} alt={prod.name} src={prod.imgs[0]} />
                         <section className="w-full">
                           <h6 className="font-medium text-subtitle">{prod.name}</h6>
                           <p>Cant: <span>  {prod.stock_order} </span></p>
                         </section>
                         <FaRegTrashAlt onClick={() => deleteProd(prod)} className="self-start text-red-500 hover:text-red-700 duration-200" size={20} />
 
-                      </div>
+                      </Link>
                     )
                     :
                     <p className="text-gray-500">Tu carrito está vacío.</p>
@@ -79,9 +81,7 @@ export default function Sidebar() {
               </div>
 
               <footer className="p-4 border-t">
-                <button className="bg-primary hover:bg-primary/90 py-2 rounded-md w-full text-white duration-200">
-                  Finalizar compra
-                </button>
+                <PedidoFormModal />
               </footer>
             </motion.aside>
           </div>

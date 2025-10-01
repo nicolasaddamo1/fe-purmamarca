@@ -48,12 +48,12 @@ function page(): React.ReactElement {
                         )
                     }
                 </div>
-                <HeadSection verMas link='/home' name='Obten los mejores productos al' highlight='mejor precio' />
+                <HeadSection verMas link='/productos/categoria/any' name='Obten los mejores productos al' highlight='mejor precio' />
                 <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
                     {
                         products?.map((prod, i) =>
                             <div key={i}>
-                                <Product id={prod.id} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
+                                <Product id={prod.id} available={prod.available} priceOnSale={prod.priceOnSale} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
                             </div>
                         )
                     }

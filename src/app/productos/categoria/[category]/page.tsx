@@ -14,9 +14,13 @@ function page({ params }: { params: Promise<{ category: string }> }) {
     const [data, setData] = useState<IProduct[]>()
 
     useEffect(() => {
-        const filter: IProduct[] = products.filter((prod: IProduct) => prod.categoryId == category)
-        setData(filter)
+        if (category === "any") { setData(products) }
+        else {
+            const filter: IProduct[] = products.filter((prod: IProduct) => prod.categoryId == category)
+            setData(filter)
+        }
     }, [products])
+
     return (
         <div className='pt-36'>
             <HeadSection verMas={false} link='/home' name='Ve Otras' highlight='Categorias' />
@@ -29,7 +33,7 @@ function page({ params }: { params: Promise<{ category: string }> }) {
                     )
                 }
             </div>
-            <HeadSection verMas={false} link='/home' name='Nuestros mejores' highlight={"param"} />
+            <HeadSection verMas={false} link='/home' name='Nuestros mejores' highlight={""} />
             <div className='flex flex-row flex-wrap justify-left items-center gap-6 m-auto p-4 max-w-[1200px] h-full'>
                 {
                     data?.map((prod, i) =>
