@@ -18,8 +18,8 @@ const images = [
 const Hero = () => {
   return (
     <section className="md:flex w-full h-[480px] overflow-hidden">
-      <div className="hidden md:flex justify-center items-center bg-chocolate w-full md:w-1/2 h-[200px] md:h-full">
-        <div className="top-10 md:top-6 relative w-[200px] md:w-[400px] h-[200px] md:h-[400px]">
+      <div className="hidden md:flex justify-center items-center bg-primary w-full md:w-1/2 h-[200px] md:h-full">
+        <div className="top-10 md:top-6 relative w-[200px] md:w-[500px] h-[200px] md:h-[500px]">
           <Image
             src="/purlogo.png"
             alt="Imagen fija"
