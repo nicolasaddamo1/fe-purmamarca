@@ -6,8 +6,8 @@ const AboutUs = () => {
       <section className="relative md:px-30 py-20">
         <div className="flex md:flex-row flex-col items-start gap-10 md:gap-50 mx-auto px-4 container">
           <div className="text-left">
-            <h4 className="mb-2 text-secondary text-xl">Sobre nosotros</h4>
-            <h1 className="font-bold text-maroon text-3xl md:text-4xl leading-tight">
+            <h4 className="mb-2 text-secondary text-2xl">Sobre nosotros</h4>
+            <h1 className="font-bold text-maroon text-3xl md:text-5xl leading-tight">
               Distribuidora
             </h1>
             <h1 className="font-bold text-maroon text-4xl md:text-5xl leading-tight">
