@@ -7,12 +7,7 @@ export interface IProdCart extends IProduct{
   stock_order:number
 }
 interface CartStore {
-  order: {
-    name:string,
-    direccion:string,
-    prods:IProdCart[]
-  }
-  ;
+  prods:IProdCart[];
   addProd: (p: IProdCart) => void;
   clearCart: () => void;
   clearProd:(p:IProdCart)=>void
@@ -21,13 +16,22 @@ interface CartStore {
 export const useCartStore = create<CartStore>()(
   persist(
     (set) => ({
-      order: {name:"",direccion:"",prods:[]},
-      addProd: (p) => set((prev)=>{return{order:{...prev.order,prods:[...prev.order.prods,p]}}}),
-      clearCart:()=> set({order:{name:"",direccion:"",prods:[]}}),
+      prods:[],
+      addProd: (p) =>
+        set((prev) => {
+          const exists = prev.prods.some((prod) => prod.id === p.id);
+
+          const updatedProds = exists
+            ? prev.prods.map((prod) => (prod.id === p.id ? p : prod)) 
+            : [...prev.prods, p];
+
+          return {prods: updatedProds}        
+        }),
+      clearCart:()=> set({prods:[]}),
      clearProd:(p)=> set((prev)=>
         {
-            const filteredData= prev.order.prods.filter((prod:IProdCart)=> prod.id !=p.id)
-            return{order:{...prev.order,prods:filteredData}}
+            const filteredData= prev.prods.filter((prod:IProdCart)=> prod.id !=p.id)
+            return{prods:filteredData}
 
         })
     }),
