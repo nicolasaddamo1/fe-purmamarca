@@ -41,10 +41,10 @@ const StarProduct = () => {
   return (
     <section className="py-16">
       <div className="mx-auto px-4 text-center container">
-        <h3 className="mb-4 font-semibold text-secondary text-2xl">
+        <h3 className="mb-4 font-semibold text-secondary text-3xl">
           Nuestros productos Estrellas
         </h3>
-        <p className="mx-auto mb-8 max-w-xl text-maroon text-2xl md:text-3xl">
+        <p className="mx-auto mb-8 max-w-xl text-maroon text-2xl md:text-2xl">
           Productos seleccionados con la mejor calidad y cercanía para vos.
         </p>
 
