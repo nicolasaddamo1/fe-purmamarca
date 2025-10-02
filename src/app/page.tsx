@@ -12,8 +12,8 @@ export default function Home() {
       <StarProduct />
       <AboutUs />
       <ProductsSection />
-      <TestimonialsSection/>
-      <QualitiesSection/> 
+      <TestimonialsSection />
+      <QualitiesSection />
     </div>
   );
 }
