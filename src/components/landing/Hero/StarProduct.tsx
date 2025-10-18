@@ -55,13 +55,16 @@ const StarProduct = () => {
                 <ProductCard
                   key={product.id}
                   id={parseInt(product.id)}
-                  title={product.name}
+                  name={product.name}
                   price={
                     product.onSale && product.priceOnSale
                       ? product.priceOnSale
                       : product.price
                   }
-                  rate={0} // TODO: valor por defecto
+                  stock={product.stock}
+                  size={product.size || ""}
+                  description={product.description || ""}
+                  available={product.available}
                   image={product.imgs[0] || "/placeholder.jpg"}
                 />
               ))}

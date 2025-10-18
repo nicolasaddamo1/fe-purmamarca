@@ -42,3 +42,23 @@
     -webkit-text-stroke: 1px #612608;
   }
 }
+
+/* Scroll personalizado tipo admin elegante */
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(97, 38, 8, 0.4);
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(97, 38, 8, 0.7);
+}
