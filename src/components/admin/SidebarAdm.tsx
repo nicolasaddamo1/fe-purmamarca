@@ -19,7 +19,7 @@ export default function SidebarAdm({ open }: Props) {
         open ? "w-60" : "w-20"
       } h-screen overflow-hidden`}
     >
-      <div className="flex flex-col gap-4 p-4 py-20">
+      <div className="flex flex-col gap-4 p-4 py-10">
         <button
           onClick={() => setSidebarView("newProduct")}
           className="flex items-center gap-2 bg-chocolate/90 hover:bg-chocolate/80 px-3 py-2 rounded-md text-white transition cursor-pointer"
