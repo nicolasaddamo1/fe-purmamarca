@@ -2,14 +2,13 @@
 import AdBanner from '@/components/ProductosView/AdBanner/AdBanner'
 import Category from '@/components/ProductosView/Category/Category'
 import HeadSection from '@/components/ProductosView/HeadOfSection/HeadSection'
-import Novedades from '@/components/ProductosView/Novedades/Novedades'
 import Product from '@/components/ProductosView/Product/Product'
 import PromoCarousel from '@/components/ProductosView/PromosCarousel/PromoCarousel'
 import React, { useEffect } from 'react'
-import { getAllCategories } from '../axios/categoriasApi'
-import { getAllProducts } from '../axios/ProductosApi'
 import { useProductStore } from '@/store/productsStore'
 import { useCategoryStore } from '@/store/categoryStore'
+import { getAllCategories } from '@/app/axios/categoriasApi'
+import { getAllProducts } from '@/app/axios/ProductosApi'
 
 
 function page(): React.ReactElement {
@@ -55,7 +54,7 @@ function page(): React.ReactElement {
                     {
                         products?.map((prod, i) => {
                             return (<div className='m-auto' key={i}>
-                                <Product id={prod.id} available={prod.available} priceOnSale={prod.priceOnSale} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
+                                <Product id={prod.id} available={prod.available} priceOnSale={prod.priceOnSale} name={prod.name} price={prod.price} imageUrl={"https://pbs.twimg.com/media/G209xrkXsAESuN9?format=jpg&name=small"} />
                             </div>)
                         }
                         )
