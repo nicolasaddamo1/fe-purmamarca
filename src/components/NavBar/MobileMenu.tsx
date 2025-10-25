@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const path = usePathname()
+  const defineHeight = path.includes("productos") ? -50 : -95
   return (
     <div className="md:hidden relative">
       {/* Botón hamburguesa */}
@@ -34,8 +36,8 @@ const MobileMenu = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -50, x: -60 }}
-            animate={{ opacity: 1, x: -25 }}
+            initial={{ opacity: 0, y: defineHeight, x: -60 }}
+            animate={{ opacity: 1, y: defineHeight, x: -25 }}
             exit={{ opacity: 0, x: -60 }}
             transition={{ duration: 0.3 }}
             className="top-[10rem] left-0 -z-20 absolute flex flex-col justify-center items-left space-y-4 bg-chocolate shadow-md p-10 rounded-br-[5rem] w-max h-max text-white text-lg"
@@ -64,7 +66,7 @@ const MobileMenu = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </div >
   );
 };
 
