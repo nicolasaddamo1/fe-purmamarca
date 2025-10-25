@@ -34,11 +34,11 @@ function page({ params }: { params: Promise<{ category: string }> }) {
                 }
             </div>
             <HeadSection verMas={false} link='/home' name='Nuestros mejores' highlight={""} />
-            <div className='flex flex-row flex-wrap justify-left items-center gap-6 m-auto p-4 max-w-[1200px] h-full'>
+            <div className='gap-6 grid grid-cols-1 md:grid-cols-5 md:p-4 w-full'>
                 {
                     data?.map((prod, i) =>
                         <div key={i}>
-                            <Product id={prod.id} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
+                            <Product available id={prod.id} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
                         </div>
                     )
                 }

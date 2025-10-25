@@ -25,7 +25,7 @@ const AboutUs = () => {
               elaborados de forma responsable y sostenible.
             </p>
 
-            <p>
+            <p className="hidden md:inline">
               Creemos en el poder de lo natural para mejorar la vida de las
               personas, por eso seleccionamos cuidadosamente cada ingrediente y
               fomentamos prácticas que respeten el medio ambiente. Nuestro

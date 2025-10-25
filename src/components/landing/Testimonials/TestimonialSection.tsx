@@ -39,6 +39,39 @@ const testimonials: Testimonial[] = [
     rating: 4,
   },
 ];
+//TODO fix import types
+function ArrowsChange({ prev, next, setCurrent, current }): React.ReactElement {
+  return <div className="flex flex-row md:flex-col justify-center items-center gap-4">
+    <button
+      onClick={prev}
+      aria-label="Anterior testimonio"
+      className="hover:bg-[#e0d0c0] p-2 rounded transition"
+    >
+      <IoIosArrowBack size={26} className="text-[#4A3F2C]" />
+    </button>
+
+    <div className="flex flex-row md:flex-col items-center gap-2">
+      {testimonials.map((_, i) => (
+        <button
+          key={i}
+          onClick={() => setCurrent(i)}
+          aria-label={`Ir al testimonio ${i + 1}`}
+          className={`w-2.5 h-2.5 rounded-full transition ${i === current ? "bg-[#4A3F2C]" : "bg-gray-400/50"
+            }`}
+        />
+      ))}
+    </div>
+
+    <button
+      onClick={next}
+      aria-label="Siguiente testimonio"
+      className="hover:bg-[#e0d0c0] p-2 rounded transition"
+    >
+      <IoIosArrowForward size={26} className="text-[#4A3F2C]" />
+    </button>
+  </div>
+}
+
 
 export default function TestimonialsSection() {
   const [current, setCurrent] = useState(0);
@@ -50,15 +83,11 @@ export default function TestimonialsSection() {
   const t = testimonials[current];
 
   return (
-    <section className="py-12 bg-[#f6e4d4]">
-      <div className="max-w-6xl mt-28 mb-28 mx-auto px-6 flex flex-col md:flex-row items-center md:items-start gap-12">
-        {/* IMAGEN */}
+    <section className="bg-[#f6e4d4] py-12">
+      <div className="flex md:flex-row flex-col items-center gap-12 mx-auto mt-28 mb-28 px-6 max-w-6xl">
         <div
-          className="overflow-hidden flex-shrink-0 shadow-lg"
+          className="flex-shrink-0 shadow-lg rounded-4xl md:rounded-[32rem] md:w-80 h-64 md:h-[32rem] overflow-hidden"
           style={{
-            width: 280,
-            height: 400,
-            borderRadius: "50%/30%",
           }}
         >
           <Image
@@ -66,66 +95,37 @@ export default function TestimonialsSection() {
             alt={t.author}
             width={560}
             height={800}
-            className="object-cover w-full h-full"
+            className="w-full h-full object-cover"
             priority
           />
         </div>
 
-        {/* BLOQUE DE TEXTO + NAVEGACIÓN */}
-        <div className="flex-1 flex flex-row items-stretch gap-6">
-          {/* TEXTO */}
-          <div className="flex-1 flex flex-col justify-center">
-            <h4 className="text-secondary uppercase text-sm tracking-wider mb-2 text-left">
+        <div className="flex flex-row flex-1 items-stretch gap-1 md:gap-6">
+          <div className="flex flex-col flex-1 justify-center">
+            <h4 className="mb-2 text-secondary text-sm text-left uppercase tracking-wider">
               Testimonios de nuestros clientes
             </h4>
 
             <div className="flex items-center mb-4 text-left">
               {Array.from({ length: t.rating }).map((_, i) => (
-                <FaStar key={i} className="text-[#4A3F2C] text-lg mr-1" />
+                <FaStar key={i} className="mr-1 text-[#4A3F2C] text-lg" />
               ))}
             </div>
 
-            <blockquote className="text-[#4A3F2C] italic text-lg md:text-xl leading-relaxed mb-4 text-left">
+            <blockquote className="mb-4 text-[#4A3F2C] text-lg md:text-xl text-left italic leading-relaxed">
               "{t.text}"
             </blockquote>
 
-            <p className="text-gray-600 text-sm mb-4 text-left">-- {t.author}</p>
+            <p className="mb-4 text-gray-600 text-sm text-left">-- {t.author}</p>
           </div>
+          <div className="hidden md:flex">
 
-          {/* NAVEGACIÓN VERTICAL */}
-          <div className="flex flex-col items-center justify-center gap-4">
-            {/* Flecha izquierda */}
-            <button
-              onClick={prev}
-              aria-label="Anterior testimonio"
-              className="p-2 hover:bg-[#e0d0c0] rounded transition"
-            >
-              <IoIosArrowBack size={26} className="text-[#4A3F2C]" />
-            </button>
-
-            {/* Dots */}
-            <div className="flex flex-col items-center gap-2">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  aria-label={`Ir al testimonio ${i + 1}`}
-                  className={`w-2.5 h-2.5 rounded-full transition ${
-                    i === current ? "bg-[#4A3F2C]" : "bg-gray-400/50"
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* Flecha derecha */}
-            <button
-              onClick={next}
-              aria-label="Siguiente testimonio"
-              className="p-2 hover:bg-[#e0d0c0] rounded transition"
-            >
-              <IoIosArrowForward size={26} className="text-[#4A3F2C]" />
-            </button>
+            <ArrowsChange next={next} prev={prev} setCurrent={setCurrent} current={current} />
           </div>
+        </div>
+        <div className="md:hidden flex">
+          <ArrowsChange next={next} prev={prev} setCurrent={setCurrent} current={current} />
+
         </div>
       </div>
     </section>
