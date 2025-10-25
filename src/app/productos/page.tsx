@@ -34,44 +34,37 @@ function page(): React.ReactElement {
         getAllCat()
     }, [])
     return (
-        <div className='pt-32'>
+        <div className='md:pt-32'>
 
             <PromoCarousel />
-            <section className='flex flex-col gap-6 px-4 py-10 pt-32'>
-                <HeadSection verMas={false} link='/home' name='Observa nuestras' highlight='Categorias' />
-                <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
-                    {
-                        categories?.map((prod, i) =>
-                            <div key={i}>
-                                <Category id={prod.id} name={prod.name} imageUrl={prod.categoryImage} />
-                            </div>
-                        )
-                    }
+            <section className='flex flex-col gap-6 md:px-4 py-10'>
+                <div className='hidden md:block'>
+                    <HeadSection verMas={false} link='/home' name='Observa nuestras' highlight='Categorias' />
+                    <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
+                        {
+                            categories?.map((prod, i) =>
+                                <div key={i}>
+                                    <Category id={prod.id} name={prod.name} imageUrl={prod.categoryImage} />
+                                </div>
+                            )
+                        }
+                    </div>
                 </div>
-                <HeadSection verMas link='/productos/categoria/any' name='Obten los mejores productos al' highlight='mejor precio' />
-                <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
+                <HeadSection verMas={false} link='/productos/categoria/any' name='Obten los mejores productos al' highlight='mejor precio' />
+                <div className='gap-6 grid grid-cols-1 md:grid-cols-5 md:p-4 w-full'>
                     {
-                        products?.map((prod, i) =>
-                            <div key={i}>
+                        products?.map((prod, i) => {
+                            return (<div className='m-auto' key={i}>
                                 <Product id={prod.id} available={prod.available} priceOnSale={prod.priceOnSale} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
-                            </div>
+                            </div>)
+                        }
                         )
                     }
                 </div>
-                <HeadSection verMas link='/home' name='Novedades' highlight={null} />
-                <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
-                    //TODO obtener endpoint de novedades
-                    {/* {
-                        productList.map((prod, i) =>
-                            <div key={i}>
-                                <Novedades name={prod.name} price={prod.price} imageUrl={prod.imageUrl} />
-                            </div>
-                        )
-                    } */}
-                </div>
+
                 <div className='flex flex-row justify-between items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
-                    <AdBanner imageURL='https://pbs.twimg.com/media/Gzw7xZwWIAAvpaT?format=png&name=small' />
-                    <AdBanner imageURL='https://pbs.twimg.com/media/Gzw7xZwWIAAvpaT?format=png&name=small' />
+                    <AdBanner imageURL='https://pbs.twimg.com/media/G209xrkXsAESuN9?format=jpg&name=small' />
+                    <AdBanner imageURL='https://pbs.twimg.com/media/G209xrkXsAESuN9?format=jpg&name=small' />
                 </div>
             </section>
             <section></section>

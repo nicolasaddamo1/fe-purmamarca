@@ -8,7 +8,6 @@ import { LiaSearchSolid } from "react-icons/lia";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { Popover } from "antd";
-import { CgShoppingCart } from "react-icons/cg";
 import { useCategoryStore } from "@/store/categoryStore";
 import SidebarExample from "../cart/sideVar";
 
@@ -16,10 +15,13 @@ const NavBar = () => {
   const path = usePathname()
   const { categories } = useCategoryStore()
 
+  //TODO hide navbar on scroll on mobile
   return (
-    <div className="top-0 left-0 z-[999] fixed bg-chocolate md:bg-primary/20 md:backdrop-blur-md w-full">
+    <div className="top-0 left-0 z-[999] md:fixed sticky bg-chocolate md:bg-primary/20 md:backdrop-blur-md w-full">
       <nav className="w-full h-[100px] md:h-[70px]">
         <div className="flex justify-between items-center mx-auto px-6 max-w-7xl h-full">
+          <MobileMenu />
+
           <div className="flex items-center space-x-3">
             <Image
               src="/colla.png"
@@ -68,7 +70,6 @@ const NavBar = () => {
             </Link>
           </div>
 
-          <MobileMenu />
         </div>
       </nav>
       {path.includes("productos") &&
@@ -94,7 +95,7 @@ const NavBar = () => {
                 <span className='flex flex-row items-center gap-2'>CATEGORIAS <IoMdArrowDropdown size={20} /> </span>
               </Popover>
             </div>
-            <label htmlFor="searchBar" className='flex flex-row items-center bg-white m-auto px-2 rounded-md w-96 h-8 text-secondary text-center'>
+            <label htmlFor="searchBar" className='hidden md:flex flex-row items-center bg-white m-auto px-2 rounded-md w-96 h-8 text-secondary text-center'>
               <LiaSearchSolid size={20} className='font-semibold' />
               <input type="text" id='searchBar' className='px-2 border-0 outline-0 w-full h-full' placeholder='Algun producto de busqueda' />
             </label>
