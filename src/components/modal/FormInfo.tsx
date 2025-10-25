@@ -33,8 +33,7 @@ Estos son los productos:
         }
         )}
 `;
-
-        const url = `https://wa.me/phoneNumber?text=${encodeURIComponent(mensaje)}`;
+        const url = `https://wa.me/541141923867?text=${encodeURIComponent(mensaje)}`;
         window.open(url, "_blank");
         setIsModalOpen(false);
         form.resetFields();
