@@ -1,5 +1,4 @@
-import type { NextConfig } from "next";
-import withFlowbiteReact from "flowbite-react/plugin/nextjs";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
@@ -40,9 +39,22 @@ const nextConfig: NextConfig = {
                 port: '',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'picsum.photos',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'acdn-us.mitiendanube.com',
+                port: '',
+                pathname: '/**',
+            },
+            
            
         ],
     },
 };
 
-export default withFlowbiteReact(nextConfig);
+export default nextConfig;
