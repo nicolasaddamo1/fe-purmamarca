@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ABeeZee } from "next/font/google";
+import AntdProvider from "./antdProvider";
 import "./globals.css";
 
 const abeezee = ABeeZee({
@@ -23,7 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${abeezee.variable} antialiased`}>{children}</body>
+      <body className={`${abeezee.variable} antialiased`}>
+        <AntdProvider>{children}</AntdProvider>
+      </body>
     </html>
   );
 }

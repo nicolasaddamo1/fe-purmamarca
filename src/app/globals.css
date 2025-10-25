@@ -62,3 +62,16 @@
 *::-webkit-scrollbar-thumb:hover {
   background-color: rgba(97, 38, 8, 0.7);
 }
+
+/* Centrar horizontal y vertical los iconos de Card actions */
+.ant-card-actions {
+  display: flex !important;
+  justify-content: center !important; /* horizontal */
+  align-items: center !important; /* vertical */
+}
+
+.ant-card-actions li {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}

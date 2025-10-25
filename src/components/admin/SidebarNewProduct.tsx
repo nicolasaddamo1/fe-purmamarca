@@ -6,6 +6,7 @@ import { HiCamera } from "react-icons/hi";
 import { useProductCreationStore } from "@/store/useProductCreationStore";
 import { useCategoryStore } from "@/store/categoryStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
+import CategoryDropdown from "./CategoryDropdown";
 
 const SidebarNewProduct: React.FC = () => {
   const { categories } = useCategoryStore();
@@ -88,19 +89,7 @@ const SidebarNewProduct: React.FC = () => {
           onChange={(e) => setField("price", Number(e.target.value))}
           className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
         />
-        {/* TODO: tener encuenta como vamos a manejar las categorias y cuales son o cuantas hay */}
-        <select
-          value={product.categoryId}
-          onChange={(e) => setField("categoryId", e.target.value)}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
-        >
-          <option value="">Seleccionar categoría</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <CategoryDropdown />
 
         <input
           type="number"
