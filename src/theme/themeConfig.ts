@@ -2,7 +2,7 @@ import type { ThemeConfig } from "antd";
 
 export const themeConfig: ThemeConfig = {
   token: {
-    borderRadius: 16,
+    borderRadius: 8,
     colorPrimary: "#213721",
     fontFamily: "var(--font-abeezee), sans-serif",
   },
@@ -18,6 +18,19 @@ export const themeConfig: ThemeConfig = {
       extraColor: "rgba(0,0,0,0.65)",
       actionsBg: "#ffffff",
       actionsLiMargin: "12px",
+    },
+    Button: {
+      borderRadius: 6,
+      colorPrimary: "#612608d9",
+      colorPrimaryHover: "#612608d3",
+      colorPrimaryActive: "#162816",
+      colorTextLightSolid: "#ffffff",
+      controlHeight: 40,
+      fontWeight: 200,
+      boxShadow: "none",
+      controlOutline: "none",
+
+      paddingInline: 40,
     },
   },
 };

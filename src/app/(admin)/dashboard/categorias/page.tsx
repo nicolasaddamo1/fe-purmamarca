@@ -15,6 +15,8 @@ import {
   updateCategory,
   ICategory,
 } from "@/app/axios/categoriasApi";
+import { toast } from "react-toastify";
+
 import { useCategoryStore } from "@/store/categoryStore";
 
 const CategoryPage: React.FC = () => {
@@ -36,7 +38,7 @@ const CategoryPage: React.FC = () => {
         const data = await getAllCategories();
         setCategories(data);
       } catch {
-        message.error("Error al cargar las categorías");
+        toast.error("Error al cargar las categorías");
       }
     };
     fetchCategories();
@@ -58,7 +60,7 @@ const CategoryPage: React.FC = () => {
           finalCategory = { ...finalCategory, categoryImage: imageUrl };
         }
         updateCategoryInStore(finalCategory);
-        message.success("Categoría actualizada 😎");
+        toast.success("Categoría actualizada 😎");
       } else {
         // Crear nueva categoría
         finalCategory = await createCategory(name);
@@ -67,11 +69,11 @@ const CategoryPage: React.FC = () => {
           finalCategory = { ...finalCategory, categoryImage: imageUrl };
         }
         addCategory(finalCategory);
-        message.success("Categoría creada 😎");
+        toast.success("Categoría creada 😎");
       }
     } catch (error) {
       console.error(error);
-      message.error("Error al guardar la categoría.");
+      toast.error("Error al guardar la categoría.");
     } finally {
       setLoading(false);
       setIsModalOpen(false);
@@ -92,9 +94,9 @@ const CategoryPage: React.FC = () => {
         try {
           await deleteCategory(category.id);
           removeCategory(category.id);
-          message.success("Categoría eliminada 😎");
+          toast.success("Categoría eliminada 😎");
         } catch {
-          message.error("Error al eliminar la categoría");
+          toast.error("Error al eliminar la categoría");
         } finally {
           setLoading(false);
         }
