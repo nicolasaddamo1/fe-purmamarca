@@ -38,9 +38,12 @@ const CategoryPage: React.FC = () => {
   const handleCreateCategory = async (name: string, file: File | null) => {
     try {
       setLoading(true);
+
+      // Crear la categoría
       const category = await createCategory(name);
       let finalCategory = category;
 
+      // Subir imagen solo si hay archivo
       if (file) {
         const imageUrl = await uploadCategoryImage(category.id, file);
         finalCategory = { ...category, categoryImage: imageUrl };
@@ -48,7 +51,8 @@ const CategoryPage: React.FC = () => {
 
       addCategory(finalCategory);
       message.success("Categoría creada con éxito 😎");
-    } catch {
+    } catch (error) {
+      console.error(error);
       message.error("Error al crear la categoría.");
     } finally {
       setLoading(false);
@@ -57,7 +61,6 @@ const CategoryPage: React.FC = () => {
 
   // Eliminar categoría
   const handleDelete = async (category: ICategory) => {
-    console.log("🗑️ Click en eliminar:", category); // <-- agregá esto
     Modal.confirm({
       title: "Borrar categoría",
       icon: <ExclamationCircleOutlined />,

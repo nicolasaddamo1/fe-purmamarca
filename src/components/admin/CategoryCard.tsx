@@ -21,7 +21,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   const imageSrc =
     categoryImage && categoryImage.startsWith("http")
       ? categoryImage
-      : "No hay imagen disponible";
+      : "/placeholder.png"; // placeholder válido en public/
 
   return (
     <Card

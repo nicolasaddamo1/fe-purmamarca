@@ -25,7 +25,12 @@ export async function uploadCategoryImage(
 
   const { data } = await api.post<{ message: string; imageUrl: string }>(
     `/categories/${categoryId}/upload-image`,
-    formData
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
 
   return data.imageUrl;
