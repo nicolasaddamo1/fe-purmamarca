@@ -27,7 +27,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
     categoryToEdit?.categoryImage || null
   );
 
-  // Actualizar estado al abrir modal o cambiar categoryToEdit
   useEffect(() => {
     if (categoryToEdit) {
       setName(categoryToEdit.name);
@@ -35,17 +34,14 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
       setFile(null);
     } else {
       setName("");
-      setFile(null);
       setPreview(null);
+      setFile(null);
     }
   }, [categoryToEdit, open]);
 
-  // Liberar object URL previo si cambia la imagen
   useEffect(() => {
     return () => {
-      if (preview && file) {
-        URL.revokeObjectURL(preview);
-      }
+      if (preview && file) URL.revokeObjectURL(preview);
     };
   }, [preview, file]);
 
@@ -77,7 +73,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
       className="rounded-xl"
     >
       <div className="flex flex-col gap-4">
-        {/* Dropzone */}
         <div
           {...getRootProps()}
           className="relative flex flex-col justify-center items-center p-6 border-2 border-primary/70 hover:border-chocolate border-dashed rounded-lg transition cursor-pointer"
@@ -99,7 +94,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           )}
         </div>
 
-        {/* Nombre */}
         <input
           type="text"
           placeholder="Nombre de la categoría"
@@ -108,7 +102,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           onChange={(e) => setName(e.target.value)}
         />
 
-        {/* Botones */}
         <div className="flex justify-center gap-6 mt-2">
           <Button onClick={onClose} disabled={loading}>
             Cancelar
