@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-import { Modal, Button, message } from "antd";
+import { Modal, Button } from "antd";
 
 import CategoryList from "@/components/admin/CategoryList";
 import CategoryModal from "@/components/admin/CategoryModal";
