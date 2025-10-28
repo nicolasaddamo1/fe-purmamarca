@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input, Button, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import type { RcFile } from "antd/es/upload";
+import { Input, Button, message } from "antd";
 
 interface CategoryFormProps {
   onSubmit: (name: string, file: File | null) => Promise<void>;
@@ -39,17 +37,11 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         onChange={(e) => setName(e.target.value)}
       />
 
-      <Upload
-        beforeUpload={(file: RcFile) => {
-          const actualFile =
-            (file as RcFile & { originFileObj?: File }).originFileObj ?? file;
-          setFile(actualFile);
-          return false; // Evita que Upload haga la carga automática
-        }}
-        maxCount={1}
-      >
-        <Button icon={<UploadOutlined />}>Seleccionar imagen</Button>
-      </Upload>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+      />
 
       <div className="flex justify-end gap-2">
         <Button onClick={onClose}>Cancelar</Button>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ABeeZee } from "next/font/google";
 import AntdProvider from "./antdProvider";
 import "./globals.css";
+import ToastProvider from "@/components/Toast/ToastProvider";
 
 const abeezee = ABeeZee({
   weight: ["400"],
@@ -25,7 +26,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${abeezee.variable} antialiased`}>
-        <AntdProvider>{children}</AntdProvider>
+        <AntdProvider>
+          <ToastProvider />
+          {children}
+        </AntdProvider>
       </body>
     </html>
   );

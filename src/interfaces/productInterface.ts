@@ -1,14 +1,14 @@
 export interface IProduct {
   id: string;
   name: string;
-  description: string;
-  color: string;
+  description?: string; // 👈 opcional
+  color?: string; // 👈 opcional también
   categoryId: string;
-  category: TCategory;
+  category?: TCategory; // 👈 opcional
   price: number;
   stock: number;
-  imgs: string[];
-  onSale: boolean;
+  imgs?: string[];
+  onSale?: boolean;
   priceOnSale?: number;
   size?: string;
   available?: boolean;

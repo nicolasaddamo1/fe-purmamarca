@@ -1,63 +1,87 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Modal, message } from "antd";
-import { ExclamationCircleOutlined, PlusOutlined } from "@ant-design/icons";
+
+import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { Modal, Button } from "antd";
+
 import CategoryList from "@/components/admin/CategoryList";
-import CategoryForm from "@/components/admin/CategoryForm";
+import CategoryModal from "@/components/admin/CategoryModal";
 import {
   getAllCategories,
   createCategory,
   uploadCategoryImage,
   deleteCategory,
+  updateCategory,
   ICategory,
 } from "@/app/axios/categoriasApi";
+import { toast } from "react-toastify";
+
 import { useCategoryStore } from "@/store/categoryStore";
 
 const CategoryPage: React.FC = () => {
-  const { categories, setCategories, addCategory, removeCategory } =
-    useCategoryStore();
+  const {
+    categories,
+    setCategories,
+    addCategory,
+    removeCategory,
+    updateCategoryInStore,
+  } = useCategoryStore();
 
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
 
-  // Traer categorías al montar
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const data = await getAllCategories();
         setCategories(data);
       } catch {
-        message.error("Error al cargar las categorías");
+        toast.error("Error al cargar las categorías");
       }
     };
     fetchCategories();
   }, [setCategories]);
 
-  // Crear categoría
-  const handleCreateCategory = async (name: string, file: File | null) => {
+  const handleCreateOrEditCategory = async (
+    name: string,
+    file: File | null
+  ) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const category = await createCategory(name);
-      let finalCategory = category;
-
-      if (file) {
-        const imageUrl = await uploadCategoryImage(category.id, file);
-        finalCategory = { ...category, categoryImage: imageUrl };
+      let finalCategory: ICategory;
+      if (categoryToEdit) {
+        // PATCH solo nombre
+        finalCategory = await updateCategory(categoryToEdit.id, { name });
+        // Subir imagen si hay
+        if (file) {
+          const imageUrl = await uploadCategoryImage(categoryToEdit.id, file);
+          finalCategory = { ...finalCategory, categoryImage: imageUrl };
+        }
+        updateCategoryInStore(finalCategory);
+        toast.success("Categoría actualizada 😎");
+      } else {
+        // Crear nueva categoría
+        finalCategory = await createCategory(name);
+        if (file) {
+          const imageUrl = await uploadCategoryImage(finalCategory.id, file);
+          finalCategory = { ...finalCategory, categoryImage: imageUrl };
+        }
+        addCategory(finalCategory);
+        toast.success("Categoría creada 😎");
       }
-
-      addCategory(finalCategory);
-      message.success("Categoría creada con éxito 😎");
-    } catch {
-      message.error("Error al crear la categoría.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al guardar la categoría.");
     } finally {
       setLoading(false);
+      setIsModalOpen(false);
+      setCategoryToEdit(null);
     }
   };
 
-  // Eliminar categoría
   const handleDelete = async (category: ICategory) => {
-    console.log("🗑️ Click en eliminar:", category); // <-- agregá esto
     Modal.confirm({
       title: "Borrar categoría",
       icon: <ExclamationCircleOutlined />,
@@ -70,9 +94,9 @@ const CategoryPage: React.FC = () => {
         try {
           await deleteCategory(category.id);
           removeCategory(category.id);
-          message.success("Categoría eliminada 😎");
+          toast.success("Categoría eliminada 😎");
         } catch {
-          message.error("Error al eliminar la categoría");
+          toast.error("Error al eliminar la categoría");
         } finally {
           setLoading(false);
         }
@@ -81,7 +105,8 @@ const CategoryPage: React.FC = () => {
   };
 
   const handleEdit = (category: ICategory) => {
-    message.info(`Editar categoría: ${category.name}`);
+    setCategoryToEdit(category);
+    setIsModalOpen(true);
   };
 
   return (
@@ -101,19 +126,16 @@ const CategoryPage: React.FC = () => {
         onDelete={handleDelete}
       />
 
-      <Modal
-        title="Crear nueva categoría"
+      <CategoryModal
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-        destroyOnHidden
-      >
-        <CategoryForm
-          onSubmit={handleCreateCategory}
-          onClose={() => setIsModalOpen(false)}
-          loading={loading}
-        />
-      </Modal>
+        onClose={() => {
+          setIsModalOpen(false);
+          setCategoryToEdit(null);
+        }}
+        onSubmit={handleCreateOrEditCategory}
+        loading={loading}
+        categoryToEdit={categoryToEdit}
+      />
     </div>
   );
 };
