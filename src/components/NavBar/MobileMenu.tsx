@@ -35,12 +35,13 @@ const MobileMenu = () => {
 
       <AnimatePresence>
         {isOpen && (
+
           <motion.div
             initial={{ opacity: 0, y: defineHeight, x: -60 }}
             animate={{ opacity: 1, y: defineHeight, x: -25 }}
             exit={{ opacity: 0, x: -60 }}
             transition={{ duration: 0.3 }}
-            className="top-[10rem] left-0 -z-20 absolute flex flex-col justify-center items-left space-y-4 bg-chocolate shadow-md p-10 rounded-br-[5rem] w-max h-max text-white text-lg"
+            className={` ${path.includes("/aboutUs") ? "top-[8rem]" : "top-[12rem]"} left-0 -z-20 absolute flex flex-col justify-center items-left space-y-4 bg-chocolate shadow-md p-10 rounded-br-[5rem] w-max h-max text-white text-lg`}
           >
             <Link
               href="/productos"
@@ -56,14 +57,9 @@ const MobileMenu = () => {
             >
               • ABOUT
             </Link>
-            <Link
-              href="/testimonios"
-              onClick={() => setIsOpen(false)}
-              className="text-white/90 hover:text-primary transition-colors"
-            >
-              • TESTIMONIOS
-            </Link>
+
           </motion.div>
+
         )}
       </AnimatePresence>
     </div >

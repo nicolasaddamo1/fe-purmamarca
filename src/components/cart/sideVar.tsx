@@ -38,7 +38,7 @@ export default function Sidebar() {
 
           {/* Sidebar */}
           <motion.aside
-            className="top-0 right-0 z-50 fixed flex flex-col bg-background shadow-xl w-80 h-full"
+            className="top-0 right-0 z-50 fixed flex flex-col bg-background shadow-xl w-[80%] md:w-80 h-full"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -54,15 +54,15 @@ export default function Sidebar() {
               </button>
             </header>
 
-            <div className="flex-1 p-4 overflow-y-auto">
+            <div className="flex flex-col flex-1 md:p-4 overflow-y-auto">
               {prods.length >= 1 ? (
                 prods.map((prod, i) => (
                   <Link
                     href={`/productos/detalle/${prod.id}`}
                     key={i}
-                    className="flex flex-row gap-2 hover:bg-white/40 p-2 duration-200 cursor-default"
+                    className="flex flex-row items-center gap-2 hover:bg-white/40 p-2 duration-200 cursor-default"
                   >
-                    <Image height={80} width={80} alt={prod.name} src={prod.imgs[0]} />
+                    <Image height={80} width={80} className="w-14 md:w-20 h-14 md:h-20" alt={prod.name} src={prod.imgs[0]} />
                     <section className="w-full">
                       <h6 className="font-medium text-subtitle">{prod.name}</h6>
                       <p>
@@ -71,7 +71,7 @@ export default function Sidebar() {
                     </section>
                     <FaRegTrashAlt
                       onClick={() => deleteProd(prod)}
-                      className="self-start text-red-500 hover:text-red-700 duration-200"
+                      className="self-start size-10 md:size-7 text-red-500 hover:text-red-700 duration-200"
                       size={20}
                     />
                   </Link>
