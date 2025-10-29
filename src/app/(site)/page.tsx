@@ -54,7 +54,7 @@ function page(): React.ReactElement {
                     {
                         products?.map((prod, i) => {
                             return (<div className='m-auto' key={i}>
-                                <Product id={prod.id} available={prod.available} priceOnSale={prod.priceOnSale} name={prod.name} price={prod.price} imageUrl={"https://pbs.twimg.com/media/G209xrkXsAESuN9?format=jpg&name=small"} categoryName={prod.category.name} />
+                                <Product id={prod.id} available={prod.available} priceOnSale={prod.priceOnSale} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} categoryName={prod.category.name} />
                             </div>)
                         }
                         )
