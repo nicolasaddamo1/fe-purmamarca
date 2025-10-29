@@ -14,7 +14,6 @@ function page({ params }: { params: Promise<{ category: string }> }) {
   const { categories, setCategories } = useCategoryStore();
   const { products, setProducts } = useProductStore();
   const [data, setData] = useState<IProduct[]>();
-
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -40,25 +39,28 @@ function page({ params }: { params: Promise<{ category: string }> }) {
       setData(filter);
     }
   }, [products]);
-
+  const catData = categories.filter((cat) => cat.id == category)
   return (
-    <div className='pt-36'>
-      <HeadSection verMas={false} link='/home' name='Ve Otras' highlight='Categorias' />
-      <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
-        {
-          categories.map((prod, i) =>
-            <div key={i}>
-              <Category id={prod.id} name={prod.name} imageUrl={prod.categoryImage} />
-            </div>
-          )
-        }
-      </div>
-      <HeadSection verMas={false} link='/home' name='Nuestros mejores' highlight={""} />
-      <div className='gap-6 grid grid-cols-1 md:grid-cols-5 md:p-4 w-full'>
+    <div className='py-10 md:pt-36'>
+      <section className="hidden md:inline">
+
+        <HeadSection verMas={false} link='/home' name='Ve Otras' highlight='Categorias' />
+        <div className='flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar'>
+          {
+            categories.map((prod, i) =>
+              <div key={i}>
+                <Category id={prod.id} name={prod.name} imageUrl={prod.categoryImage} />
+              </div>
+            )
+          }
+        </div>
+      </section>
+      <HeadSection verMas={false} link='/home' name='Nuestros mejores productos en' highlight={catData[0].name} />
+      <div className='gap-6 grid grid-cols-1 md:grid-cols-5 p-2 md:p-4 w-full'>
         {
           data?.map((prod, i) =>
-            <div key={i}>
-              <Product available id={prod.id} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} />
+            <div className='m-auto' key={i}>
+              <Product available id={prod.id} name={prod.name} price={prod.price} imageUrl={prod.imgs[0]} categoryName={prod.category.name} />
             </div>
           )
         }

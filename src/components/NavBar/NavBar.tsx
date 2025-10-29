@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { Popover } from "antd";
 import { useCategoryStore } from "@/store/categoryStore";
 import SidebarExample from "../cart/sideVar";
+import CategorySidevar from "../categorySideVar/CategorySidevar";
 
 const NavBar = () => {
   const path = usePathname()
@@ -34,7 +35,7 @@ const NavBar = () => {
             <div>
               <Link
                 href="/"
-                className="right-6 relative text-stroke-2 font-semibold text-white md:text-xl text-2xl"
+                className="right-6 relative font-semibold text-chocolate md:text-xl text-2xl"
               >
                 Purmamarca
               </Link>
@@ -46,7 +47,7 @@ const NavBar = () => {
 
           <div className="hidden relative md:flex space-x-8 font-medium text-sm">
             <Link
-              href="/productos"
+              href="/"
               className="group relative text-white/70 hover:text-primary transition-colors"
             >
               <span>PRODUCTOS</span>
@@ -54,46 +55,24 @@ const NavBar = () => {
             </Link>
 
             <Link
-              href="/about"
+              href="/aboutUs"
               className="group relative text-white/70 hover:text-primary transition-colors"
             >
-              <span>ABOUT</span>
+              <span>SOBRE NOSOTROS</span>
               <span className="-bottom-1 left-0 absolute bg-primary w-0 group-hover:w-full h-[2px] transition-all duration-300 ease-out" />
             </Link>
 
-            <Link
-              href="/testimonios"
-              className="group relative text-white/70 hover:text-primary transition-colors"
-            >
-              <span>TESTIMONIOS</span>
-              <span className="-bottom-1 left-0 absolute bg-primary w-0 group-hover:w-full h-[2px] transition-all duration-300 ease-out" />
-            </Link>
           </div>
 
         </div>
       </nav>
-      {path.includes("productos") &&
+      {path.includes("aboutUs") ? "" :
         <nav className="w-full">
           <div className="flex justify-between items-center mx-auto px-6 py-4 max-w-7xl">
             <div
               className="group relative font-medium text-white/70 hover:text-primary text-sm transition-colors"
             >
-              <Popover placement="bottom" mouseLeaveDelay={0.3} styles={{ body: { padding: 0, borderRadius: 0 } }} content={
-                <ul className="m-0 py-2 w-40">
-                  {categories?.map((obj, i) => {
-                    return (
-                      <li key={i} className="hover:bg-gray-300 px-2 py-1 font-semibold text-sm duration-200">
-                        <Link className="!text-black decoration-0" href={`/productos/categoria/${obj.id}`}  >{obj.name}</Link>
-                      </li>
-
-                    )
-                  })}
-
-
-                </ul>
-              }>
-                <span className='flex flex-row items-center gap-2'>CATEGORIAS <IoMdArrowDropdown size={20} /> </span>
-              </Popover>
+              <CategorySidevar />
             </div>
             <label htmlFor="searchBar" className='hidden md:flex flex-row items-center bg-white m-auto px-2 rounded-md w-96 h-8 text-secondary text-center'>
               <LiaSearchSolid size={20} className='font-semibold' />
