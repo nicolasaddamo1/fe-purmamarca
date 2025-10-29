@@ -3,19 +3,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "@/app/axios/categoriasApi";
 import { getAllProducts } from "@/app/axios/ProductosApi";
+import type { IProduct } from "@/interfaces/productInterface";
 
 /* Types */
 type Category = { id: string; name: string; categoryImage?: string };
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  imgs: string[];
-  rating?: number;
-  // backend puede devolver categoryId o un objeto category {id,name}
-  categoryId?: string;
-  category?: { id?: string; name?: string } | string;
-};
 
 /* Skeletons */
 function CategoryPillSkeleton() {
@@ -23,6 +14,7 @@ function CategoryPillSkeleton() {
     <div className="bg-gray-200 px-8 py-2 rounded-full w-28 h-8 animate-pulse" />
   );
 }
+
 function ProductCardSkeleton() {
   return (
     <div className="border border-secondary/40 rounded-md overflow-hidden">
@@ -36,7 +28,7 @@ function ProductCardSkeleton() {
   );
 }
 
-/* UI subcomponents (respetando estilos que tenías) */
+/* UI subcomponents */
 function CategoryPill({
   label,
   active,
@@ -62,32 +54,19 @@ function CategoryPill({
   );
 }
 
-function Rating({ value, textColor }: { value: number; textColor: string }) {
-  const full = Math.floor(value);
-  const hasHalf = value - full >= 0.5;
-  return (
-    <div className="flex items-center gap-2">
-      <div className="flex">
-        {Array.from({ length: full }).map((_, i) => (
-          <span key={i} className={`text-lg leading-none ${textColor}`}>
-            ★
-          </span>
-        ))}
-        {hasHalf && (
-          <span className={`text-lg leading-none ${textColor}`}>☆</span>
-        )}
-      </div>
-      <span className={`text-sm ${textColor}`}>{value.toFixed(1)}</span>
-    </div>
-  );
-}
-
-function ProductCard({ p, index }: { p: Product; index: number }) {
+/* 🎯 NUEVA versión del ProductCard */
+function ProductCard({ p, index }: { p: IProduct; index: number }) {
   const isSecondRow = index >= 3;
   const textColor = isSecondRow ? "text-primary" : "text-secondary";
+  const isAvailable = p.available ?? false;
+  const hasStock = p.stock > 0;
 
   return (
-    <div className="border border-secondary/40 rounded-md overflow-hidden">
+    <div
+      className={`border border-secondary/40 rounded-md overflow-hidden transition-all duration-200 ${
+        !isAvailable ? "opacity-50 grayscale" : ""
+      }`}
+    >
       <div className="relative w-full aspect-[4/3]">
         <Image
           src={p.imgs?.[0] || "/placeholder.jpg"}
@@ -96,12 +75,22 @@ function ProductCard({ p, index }: { p: Product; index: number }) {
           className="object-cover"
         />
       </div>
+
       <div className="p-4 border-secondary/30 border-t">
         <p className={`text-xs uppercase tracking-widest mb-1 ${textColor}`}>
           {p.name}
         </p>
-        <p className={`text-sm mb-2 ${textColor}`}>${p.price}</p>
-        <Rating value={p.rating || 0} textColor={textColor} />
+        <p className={`text-sm mb-1 ${textColor}`}>${p.price}</p>
+        <p className={`text-sm ${textColor}`}>
+          Stock:{" "}
+          {!isAvailable ? (
+            <span className="text-red-500">No disponible</span>
+          ) : hasStock ? (
+            p.stock
+          ) : (
+            <span className="text-red-500">No disponible</span>
+          )}
+        </p>
       </div>
     </div>
   );
@@ -111,7 +100,7 @@ function ProductCard({ p, index }: { p: Product; index: number }) {
 export default function ProductsSection() {
   const [cats, setCats] = useState<Category[]>([]);
   const [activeCategoryId, setActiveCategoryId] = useState<string>("all");
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]); // ✅ ahora usa IProduct
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -121,9 +110,8 @@ export default function ProductsSection() {
           getAllCategories(),
           getAllProducts(),
         ]);
-        // catsFromApi assumed: [{id,name,...}, ...]
         setCats(catsFromApi);
-        setProducts(prodsFromApi);
+        setProducts(prodsFromApi); // ✅ compatible con IProduct[]
       } catch (err) {
         console.error("Error cargando datos:", err);
       } finally {
@@ -133,29 +121,23 @@ export default function ProductsSection() {
     load();
   }, []);
 
-  // Para mostrar "Todos" + las categorías reales
   const categoriesForUI = [{ id: "all", name: "Todos" }, ...cats];
 
-  // Filtrado robusto: compara categoryId, category.id o category.name
+  // 🧠 Filtrado por categoría (mantiene productos disponibles y no disponibles)
   const filteredProducts = products
     .filter((p) => {
       if (activeCategoryId === "all") return true;
-      // product may have categoryId field:
-      if ((p as any).categoryId && (p as any).categoryId === activeCategoryId)
-        return true;
-      // product may have category object or string
+      if (p.categoryId && p.categoryId === activeCategoryId) return true;
       const catObj = p.category;
       if (typeof catObj === "string") {
-        // compare by name
-        const catName = catObj;
         const activeName = categoriesForUI.find(
           (c) => c.id === activeCategoryId
         )?.name;
-        return activeName ? catName === activeName : false;
+        return catObj === activeName;
       } else if (catObj && typeof catObj === "object") {
         return (
-          (catObj as any).id === activeCategoryId ||
-          (catObj as any).name ===
+          catObj.id === activeCategoryId ||
+          catObj.name ===
             categoriesForUI.find((c) => c.id === activeCategoryId)?.name
         );
       }
