@@ -11,7 +11,7 @@ export interface IProduct {
   size?: string;
   onSale?: boolean;
   available?: boolean;
-  imgs?: string[]; // 👈 Cambiado: coincide con el backend
+  imgs?: string[];
 }
 
 // Obtener todos los productos
@@ -28,29 +28,37 @@ export async function createProduct(
   return data;
 }
 
-// Subir imágenes (usa el endpoint correcto y campo "imgs")
+// Subir imágenes
 export async function uploadProductImages(
   productId: string,
   files: File[]
 ): Promise<string[]> {
   const formData = new FormData();
-  files.forEach((file) => formData.append("files", file)); // 👈 El campo debe ser 'files' (según tu endpoint)
+  files.forEach((file) => formData.append("files", file));
 
   const { data } = await api.post<{ urls: string[] }>(
     `/files/uploadimages/${productId}`,
-
     formData,
     {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      headers: { "Content-Type": "multipart/form-data" },
     }
   );
 
-  return data.urls; // 👈 el backend devuelve "urls", no "imageUrls"
+  return data.urls;
 }
 
 // Eliminar producto
 export async function deleteProduct(productId: string): Promise<void> {
   await api.delete(`/products/${productId}`);
+}
+
+// ✅ Actualizar disponibilidad (PATCH parcial)
+export async function updateProductAvailability(
+  productId: string,
+  available: boolean
+): Promise<IProduct> {
+  const { data } = await api.patch<IProduct>(`/products/${productId}`, {
+    available,
+  });
+  return data;
 }

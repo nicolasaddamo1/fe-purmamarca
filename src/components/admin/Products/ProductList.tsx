@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ProductCard from "./ProductCard";
+import ProductCardAdm from "./ProductCardAdm";
 import { IProduct } from "@/interfaces/productInterface";
 
 interface ProductListProps {
@@ -26,7 +26,7 @@ const ProductList: React.FC<ProductListProps> = ({
   return (
     <div className="gap-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
       {products.map((product) => (
-        <ProductCard
+        <ProductCardAdm
           key={product.id}
           product={product}
           onEdit={onEdit}
