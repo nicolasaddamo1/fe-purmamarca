@@ -3,6 +3,7 @@
 import { HiPlus, HiHome, HiCube, HiCollection } from "react-icons/hi";
 import SidebarNewProduct from "./SidebarNewProduct";
 import { useSidebarStore } from "@/store/useSidebarStore";
+import { useRouter } from "next/navigation";
 
 interface Props {
   open: boolean;
@@ -10,16 +11,17 @@ interface Props {
 
 export default function SidebarAdm({ open }: Props) {
   const { sidebarView, setSidebarView } = useSidebarStore();
+  const router = useRouter();
 
   if (sidebarView === "newProduct") return <SidebarNewProduct />;
 
   return (
     <aside
-      className={`bg-chocolate/10 border-r border-chocolate/30  transition-all duration-300 ${
+      className={`bg-chocolate/10 border-r border-chocolate/30 transition-all duration-300 ${
         open ? "w-60" : "w-20"
       } h-screen overflow-hidden`}
     >
-      <div className="flex flex-col gap-4 p-4 py-20">
+      <div className="flex flex-col gap-4 p-4 py-10">
         <button
           onClick={() => setSidebarView("newProduct")}
           className="flex items-center gap-2 bg-chocolate/90 hover:bg-chocolate/80 px-3 py-2 rounded-md text-white transition cursor-pointer"
@@ -28,13 +30,22 @@ export default function SidebarAdm({ open }: Props) {
         </button>
 
         <nav className="flex flex-col gap-2 mt-6">
-          <button className="flex items-center gap-3 hover:bg-chocolate/10 px-3 py-2 rounded-md transition cursor-pointer">
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="flex items-center gap-3 hover:bg-chocolate/10 px-3 py-2 rounded-md transition cursor-pointer"
+          >
             <HiHome className="w-5 h-5 text-primary/90" /> {open && "Dashboard"}
           </button>
-          <button className="flex items-center gap-3 hover:bg-chocolate/10 px-3 py-2 rounded-md transition cursor-pointer">
+          <button
+            onClick={() => router.push("/dashboard/productos")} // futuro endpoint
+            className="flex items-center gap-3 hover:bg-chocolate/10 px-3 py-2 rounded-md transition cursor-pointer"
+          >
             <HiCube className="w-5 h-5 text-primary/90" /> {open && "Productos"}
           </button>
-          <button className="flex items-center gap-3 hover:bg-chocolate/10 px-3 py-2 rounded-md transition cursor-pointer">
+          <button
+            onClick={() => router.push("/dashboard/categorias")}
+            className="flex items-center gap-3 hover:bg-chocolate/10 px-3 py-2 rounded-md transition cursor-pointer"
+          >
             <HiCollection className="w-5 h-5 text-primary/90" />{" "}
             {open && "Categorías"}
           </button>

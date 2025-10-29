@@ -3,16 +3,18 @@
 import React, { useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { HiCamera } from "react-icons/hi";
+import { toast } from "react-toastify";
 import { useProductCreationStore } from "@/store/useProductCreationStore";
 import { useCategoryStore } from "@/store/categoryStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
+import { createProduct, uploadProductImages } from "@/app/axios/ProductosApi";
+import CategoryDropdown from "./CategoryDropdown";
 
 const SidebarNewProduct: React.FC = () => {
   const { categories } = useCategoryStore();
   const { setSidebarView } = useSidebarStore();
   const product = useProductCreationStore();
-  const setField = product.setField;
-  const resetForm = product.resetForm;
+  const { setField, resetForm } = product;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -36,6 +38,45 @@ const SidebarNewProduct: React.FC = () => {
     onDrop,
   });
 
+  const handleCreateProduct = async () => {
+    if (
+      !product.name ||
+      !product.color ||
+      !product.price ||
+      !product.categoryId
+    ) {
+      toast.error("Completa los campos requeridos antes de continuar");
+      return;
+    }
+
+    try {
+      // 1️⃣ Crear producto
+      const newProduct = await createProduct({
+        name: product.name,
+        description: product.description,
+        color: product.color,
+        categoryId: product.categoryId,
+        price: product.price,
+        stock: product.stock,
+        size: product.size,
+        onSale: product.onSale,
+        available: product.available,
+      });
+
+      // 2️⃣ Subir imágenes (si hay)
+      if (product.imgs.length > 0) {
+        await uploadProductImages(newProduct.id, product.imgs);
+      }
+
+      toast.success("Producto creado correctamente 🎉");
+      resetForm();
+      setSidebarView("menu");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al crear el producto 😞");
+    }
+  };
+
   return (
     <aside className="flex flex-col items-center bg-chocolate/10 p-4 pt-4 pb-26 border-chocolate/30 border-r w-60 h-screen overflow-y-auto transition-all duration-300">
       <button
@@ -58,8 +99,6 @@ const SidebarNewProduct: React.FC = () => {
             <p className="text-chocolate/70 text-xs">o soltá tu imagen acá</p>
           </>
         )}
-
-        {/* Imagen principal */}
         {product.imgPreviews[0] && (
           <div className="mb-2">
             <img
@@ -88,19 +127,8 @@ const SidebarNewProduct: React.FC = () => {
           onChange={(e) => setField("price", Number(e.target.value))}
           className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
         />
-        {/* TODO: tener encuenta como vamos a manejar las categorias y cuales son o cuantas hay */}
-        <select
-          value={product.categoryId}
-          onChange={(e) => setField("categoryId", e.target.value)}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
-        >
-          <option value="">Seleccionar categoría</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+
+        <CategoryDropdown />
 
         <input
           type="number"
@@ -118,6 +146,14 @@ const SidebarNewProduct: React.FC = () => {
           className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
         />
 
+        <input
+          type="text"
+          placeholder="Color"
+          value={product.color}
+          onChange={(e) => setField("color", e.target.value)}
+          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
+        />
+
         <textarea
           ref={textareaRef}
           placeholder="Descripción"
@@ -128,16 +164,16 @@ const SidebarNewProduct: React.FC = () => {
         />
       </div>
 
-      {/* Botones Cancelar / Crear */}
+      {/* Botones */}
       <div className="flex gap-2 mt-6 w-full">
         <button
           onClick={() => resetForm()}
-          className="flex-1 bg-white hover:bg-chocolate/10 py-2 border-1 border-chocolate rounded-md text-chocolate transition cursor-pointer"
+          className="flex-1 bg-white hover:bg-chocolate/10 py-2 border border-chocolate rounded-md text-chocolate transition cursor-pointer"
         >
           Cancelar
         </button>
         <button
-          onClick={() => console.log("Crear producto")}
+          onClick={handleCreateProduct}
           className="flex-1 bg-chocolate/90 hover:bg-chocolate/80 py-2 rounded-md text-white transition cursor-pointer"
         >
           Crear

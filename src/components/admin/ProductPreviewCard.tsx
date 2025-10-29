@@ -8,7 +8,7 @@ const ProductPreviewCard: React.FC = () => {
   const product = useProductCreationStore();
 
   return (
-    <div className="bg-white shadow-md hover:shadow-xl border border-chocolate/30 rounded-lg w-64 h-80 overflow-hidden transition-shadow duration-300 cursor-pointer">
+    <div className="bg-white shadow-md hover:shadow-xl border border-chocolate/30 rounded-lg w-64 h-auto overflow-hidden transition-shadow duration-300 cursor-pointer">
       {product.imgPreviews.length > 0 ? (
         <img
           src={product.imgPreviews[0]}
