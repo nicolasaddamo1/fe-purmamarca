@@ -7,7 +7,6 @@ import { IProduct } from "@/interfaces/productInterface";
 import { toast } from "react-toastify";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
-import { div } from "framer-motion/client";
 
 export default function ProductsPage() {
   const { products, setProducts } = useProductStore();

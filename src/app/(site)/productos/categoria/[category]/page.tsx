@@ -106,12 +106,16 @@ const Page: React.FC = () => {
                   className="m-auto"
                 >
                   <Product
-                    available={prod.available}
+                    key={prod.id}
                     id={prod.id}
+                    available={prod.available}
+                    priceOnSale={prod.priceOnSale}
                     name={prod.name}
                     price={prod.price}
                     imageUrl={prod.imgs?.[0] ?? ""}
                     categoryName={prod.category?.name ?? ""}
+                    stock={prod.stock}
+                    description={prod.description}
                   />
                 </motion.div>
               ))}
