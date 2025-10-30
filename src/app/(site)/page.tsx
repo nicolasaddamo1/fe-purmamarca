@@ -109,12 +109,6 @@ const Page: React.FC = () => {
             />
           ))}
         </div>
-
-        {/* Publicidades */}
-        <div className="flex flex-row justify-between items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar">
-          <AdBanner imageURL="https://pbs.twimg.com/media/G209xrkXsAESuN9?format=jpg&name=small" />
-          <AdBanner imageURL="https://pbs.twimg.com/media/G209xrkXsAESuN9?format=jpg&name=small" />
-        </div>
       </section>
     </div>
   );
