@@ -1,10 +1,10 @@
 export interface IProduct {
   id: string;
   name: string;
-  description?: string; // 👈 opcional
-  color?: string; // 👈 opcional también
+  description?: string;
+  color?: string;
   categoryId: string;
-  category?: TCategory; // 👈 opcional
+  category?: TCategory;
   price: number;
   stock: number;
   imgs?: string[];

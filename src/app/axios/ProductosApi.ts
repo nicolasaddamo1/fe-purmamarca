@@ -20,6 +20,11 @@ export async function getAllProducts(): Promise<IProduct[]> {
   return data;
 }
 
+export async function getProductById(id: string | number) {
+  const res = await api.get(`/products/${id}`);
+  return res.data;
+}
+
 // Crear producto
 export async function createProduct(
   productData: Omit<IProduct, "id" | "imgs">
