@@ -18,7 +18,7 @@ const images = [
 const Hero = () => {
   return (
     <section className="md:flex w-full h-[480px] overflow-hidden">
-      <div className="flex justify-center items-center bg-chocolate w-full md:w-1/2 h-full">
+      <div className="hidden justify-center items-center bg-primary/80 w-full md:w-1/2 h-400px">
         <div className="top-10 md:top-6 relative w-[400px] h-[400px]">
           <Image
             src="/purlogo.png"
@@ -30,7 +30,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="hidden md:inline relative w-full md:w-1/2 h-[400px] md:h-full overflow-hidden">
+      <div className="md:inline relative w-full md:w-1/2 h-[400px] md:h-full overflow-hidden">
         <motion.div
           className="flex h-full"
           animate={{ x: ["0%", "-100%"] }}
