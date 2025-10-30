@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AdBanner from "@/components/ProductosView/AdBanner/AdBanner";
 import Category from "@/components/ProductosView/Category/Category";
 import HeadSection from "@/components/ProductosView/HeadOfSection/HeadSection";
@@ -14,6 +14,7 @@ import { getAllProducts } from "@/app/axios/ProductosApi";
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
   const { products, setProducts } = useProductStore();
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,8 +35,30 @@ const Page: React.FC = () => {
     fetchData();
   }, [categories.length, products.length, setCategories, setProducts]);
 
-  // ✅ dejamos que el backend controle "available"
-  const displayProducts = products;
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { query, pathname } = (
+        e as CustomEvent<{ query: string; pathname: string }>
+      ).detail;
+
+      if (pathname === "/") {
+        setSearchQuery(query.toLowerCase());
+      }
+    };
+    window.addEventListener("nav:search", handler as EventListener);
+    return () =>
+      window.removeEventListener("nav:search", handler as EventListener);
+  }, []);
+
+  const displayProducts = products.filter((prod) => {
+    if (!searchQuery.trim()) return true;
+    const text = searchQuery.trim().toLowerCase();
+    return (
+      prod.name.toLowerCase().includes(text) ||
+      (prod.description ?? "").toLowerCase().includes(text) ||
+      prod.category?.name.toLowerCase().includes(text)
+    );
+  });
 
   return (
     <div className="md:pt-32">

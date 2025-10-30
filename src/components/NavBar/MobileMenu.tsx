@@ -4,11 +4,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import CategorySidevar from "../categorySideVar/CategorySidevar";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const path = usePathname()
-  const defineHeight = path.includes("productos") ? -50 : -95
+  const path = usePathname();
+  const defineHeight = path.includes("productos") ? -50 : -95;
+
   return (
     <div className="md:hidden relative">
       {/* Botón hamburguesa */}
@@ -35,34 +37,42 @@ const MobileMenu = () => {
 
       <AnimatePresence>
         {isOpen && (
-
           <motion.div
             initial={{ opacity: 0, y: defineHeight, x: -60 }}
             animate={{ opacity: 1, y: defineHeight, x: -25 }}
             exit={{ opacity: 0, x: -60 }}
             transition={{ duration: 0.3 }}
-            className={` ${path.includes("/aboutUs") ? "top-[8rem]" : "top-[12rem]"} left-0 -z-20 absolute flex flex-col justify-center items-left space-y-4 bg-chocolate shadow-md p-10 rounded-br-[5rem] w-max h-max text-white text-lg`}
+            className={`${
+              path.includes("/aboutUs") ? "top-[9.3rem]" : "top-[9.3rem]"
+            } absolute flex flex-col justify-start items-start space-y-4 bg-primary shadow-md p-16 rounded-br-[9rem] w-max h-max text-white text-lg`}
           >
+            {/* Categorías */}
+            <CategorySidevar />
+
+            {/* Links */}
             <Link
-              href="/productos"
+              href="/"
               onClick={() => setIsOpen(false)}
-              className="text-white/90 hover:text-primary transition-colors"
+              className="group relative"
             >
-              • PRODUCTOS
-            </Link>
-            <Link
-              href="/about"
-              onClick={() => setIsOpen(false)}
-              className="text-white/90 hover:text-primary transition-colors"
-            >
-              • ABOUT
+              <span className="text-white/90 hover:text-gray-400 transition-colors">
+                PRODUCTOS
+              </span>
             </Link>
 
+            <Link
+              href="/aboutUs"
+              onClick={() => setIsOpen(false)}
+              className="group relative"
+            >
+              <span className="text-white/90 hover:text-gray-400 transition-colors">
+                SOBRE NOSOTROS
+              </span>
+            </Link>
           </motion.div>
-
         )}
       </AnimatePresence>
-    </div >
+    </div>
   );
 };
 
