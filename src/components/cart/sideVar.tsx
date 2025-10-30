@@ -45,7 +45,9 @@ export default function Sidebar() {
             transition={{ type: "tween", duration: 0.3 }}
           >
             <header className="flex justify-between items-center p-4 border-b">
-              <h2 className="font-semibold text-chocolate text-xl tracking-wide">Carrito</h2>
+              <h2 className="font-semibold text-chocolate text-xl tracking-wide">
+                Carrito
+              </h2>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-gray-600 hover:text-black"
@@ -62,7 +64,13 @@ export default function Sidebar() {
                     key={i}
                     className="flex flex-row items-center gap-2 hover:bg-white/40 p-2 duration-200 cursor-default"
                   >
-                    <Image height={80} width={80} className="w-14 md:w-20 h-14 md:h-20" alt={prod.name} src={prod.imgs[0]} />
+                    <Image
+                      height={80}
+                      width={80}
+                      className="w-14 md:w-20 h-14 md:h-20"
+                      alt={prod.name}
+                      src={prod.imgs[0]}
+                    />
                     <section className="w-full">
                       <h6 className="font-medium text-subtitle">{prod.name}</h6>
                       <p>
@@ -92,14 +100,12 @@ export default function Sidebar() {
 
   return (
     <>
-
       <div
         onClick={() => setIsOpen(true)}
         className="text-white/70 hover:text-primary duration-300 cursor-pointer"
       >
         <CgShoppingCart size={20} />
       </div>
-
 
       {mounted && createPortal(sidebarContent, document.body)}
     </>
