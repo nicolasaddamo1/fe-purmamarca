@@ -1,23 +1,24 @@
+// src/components/admin/SidebarNewProduct.tsx
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { HiCamera } from "react-icons/hi";
 import { toast } from "react-toastify";
 import { useProductCreationStore } from "@/store/useProductCreationStore";
-import { useCategoryStore } from "@/store/categoryStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import { createProduct, uploadProductImages } from "@/app/axios/ProductosApi";
 import CategoryDropdown from "./CategoryDropdown";
 
 const SidebarNewProduct: React.FC = () => {
-  const { categories } = useCategoryStore();
   const { setSidebarView } = useSidebarStore();
   const product = useProductCreationStore();
   const { setField, resetForm } = product;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [discountInput, setDiscountInput] = useState(0); // solo para UI
 
+  // 🔠 Ajuste dinámico de altura del textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -26,6 +27,7 @@ const SidebarNewProduct: React.FC = () => {
     }
   }, [product.description]);
 
+  // 🖼️ Manejo de imágenes
   const onDrop = (acceptedFiles: File[]) => {
     const previews = acceptedFiles.map((file) => URL.createObjectURL(file));
     setField("imgs", acceptedFiles);
@@ -37,6 +39,18 @@ const SidebarNewProduct: React.FC = () => {
     multiple: true,
     onDrop,
   });
+
+  // 💲 Cálculo de priceOnSale según input de descuento
+  useEffect(() => {
+    if (product.onSale && discountInput > 0) {
+      const newPriceOnSale = Math.round(
+        product.price * (1 - discountInput / 100)
+      );
+      setField("priceOnSale", newPriceOnSale);
+    } else {
+      setField("priceOnSale", 0);
+    }
+  }, [product.price, product.onSale, discountInput]);
 
   const handleCreateProduct = async () => {
     if (
@@ -50,26 +64,26 @@ const SidebarNewProduct: React.FC = () => {
     }
 
     try {
-      // 1️⃣ Crear producto
       const newProduct = await createProduct({
         name: product.name,
         description: product.description,
         color: product.color,
         categoryId: product.categoryId,
         price: product.price,
+        priceOnSale: product.priceOnSale, // enviamos solo priceOnSale
         stock: product.stock,
         size: product.size,
         onSale: product.onSale,
         available: product.available,
       });
 
-      // 2️⃣ Subir imágenes (si hay)
       if (product.imgs.length > 0) {
         await uploadProductImages(newProduct.id, product.imgs);
       }
 
       toast.success("Producto creado correctamente 🎉");
       resetForm();
+      setDiscountInput(0);
       setSidebarView("menu");
     } catch (error) {
       console.error(error);
@@ -92,20 +106,24 @@ const SidebarNewProduct: React.FC = () => {
         className="relative bg-white/70 shadow-sm p-4 border-2 border-chocolate/40 hover:border-chocolate/60 border-dashed rounded-xl w-full text-center transition cursor-pointer"
       >
         <input {...getInputProps()} />
-        {!product.imgPreviews.length && (
+        {!product.imgPreviews.length ? (
           <>
             <HiCamera className="mx-auto mb-2 w-10 h-10 text-primary/90" />
             <p className="font-semibold text-primary/90">Agregar imagen</p>
-            <p className="text-chocolate/70 text-xs">o soltá tu imagen acá</p>
+            <p className="text-chocolate/70 text-xs">
+              o soltá tus imágenes acá
+            </p>
           </>
-        )}
-        {product.imgPreviews[0] && (
-          <div className="mb-2">
-            <img
-              src={product.imgPreviews[0]}
-              alt="preview principal"
-              className="shadow-sm border border-chocolate/20 rounded-lg w-full h-32 object-cover"
-            />
+        ) : (
+          <div className="gap-2 grid grid-cols-2">
+            {product.imgPreviews.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt={`preview-${i}`}
+                className="shadow-sm border border-chocolate/20 rounded-lg w-full h-32 object-cover"
+              />
+            ))}
           </div>
         )}
       </div>
@@ -117,15 +135,15 @@ const SidebarNewProduct: React.FC = () => {
           placeholder="Nombre del producto"
           value={product.name}
           onChange={(e) => setField("name", e.target.value)}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
+          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
         />
 
         <input
           type="number"
-          placeholder="Precio"
+          placeholder="Precio base"
           value={product.price || ""}
           onChange={(e) => setField("price", Number(e.target.value))}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
+          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
         />
 
         <CategoryDropdown />
@@ -135,7 +153,7 @@ const SidebarNewProduct: React.FC = () => {
           placeholder="Stock disponible"
           value={product.stock || ""}
           onChange={(e) => setField("stock", Number(e.target.value))}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
+          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
         />
 
         <input
@@ -143,7 +161,7 @@ const SidebarNewProduct: React.FC = () => {
           placeholder="Tamaño"
           value={product.size}
           onChange={(e) => setField("size", e.target.value)}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
+          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
         />
 
         <input
@@ -151,7 +169,7 @@ const SidebarNewProduct: React.FC = () => {
           placeholder="Color"
           value={product.color}
           onChange={(e) => setField("color", e.target.value)}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50"
+          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
         />
 
         <textarea
@@ -159,15 +177,50 @@ const SidebarNewProduct: React.FC = () => {
           placeholder="Descripción"
           value={product.description}
           onChange={(e) => setField("description", e.target.value)}
-          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50 overflow-hidden resize-none"
+          className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50 overflow-hidden resize-none"
           rows={1}
         />
+
+        {/* Toggle En oferta */}
+        <label className="flex justify-between items-center bg-white shadow-sm p-2 border border-chocolate/20 rounded-md cursor-pointer">
+          <span className="font-medium text-primary">En oferta</span>
+          <input
+            type="checkbox"
+            checked={product.onSale}
+            onChange={(e) => setField("onSale", e.target.checked)}
+            className="w-5 h-5 accent-chocolate cursor-pointer"
+          />
+        </label>
+
+        {/* Descuento solo UI */}
+        {product.onSale && (
+          <>
+            <input
+              type="number"
+              placeholder="Descuento (%)"
+              value={discountInput}
+              onChange={(e) => setDiscountInput(Number(e.target.value))}
+              min={0}
+              max={100}
+              className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
+            />
+            <div className="font-semibold text-primary text-sm">
+              Precio final:{" "}
+              <span className="text-chocolate">
+                ${product.priceOnSale.toFixed(2)}
+              </span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Botones */}
       <div className="flex gap-2 mt-6 w-full">
         <button
-          onClick={() => resetForm()}
+          onClick={() => {
+            resetForm();
+            setDiscountInput(0);
+          }}
           className="flex-1 bg-white hover:bg-chocolate/10 py-2 border border-chocolate rounded-md text-chocolate transition cursor-pointer"
         >
           Cancelar
