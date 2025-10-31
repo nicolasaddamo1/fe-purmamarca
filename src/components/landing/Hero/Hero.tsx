@@ -18,7 +18,7 @@ const images = [
 const Hero = () => {
   return (
     <section className="flex md:flex-row flex-col w-full h-screen md:h-[480px] overflow-hidden">
-      {/* Imagen fija (solo en desktop) */}
+      
       <div className="hidden md:flex justify-center items-center bg-primary/80 w-full md:w-1/2 h-full">
         <div className="relative w-[400px] h-[400px]">
           <Image

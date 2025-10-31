@@ -1,18 +1,5 @@
 import api from "./axiosInstance";
-
-export interface IProduct {
-  id: string;
-  name: string;
-  description?: string;
-  color?: string;
-  categoryId: string;
-  price: number;
-  stock: number;
-  size?: string;
-  onSale?: boolean;
-  available?: boolean;
-  imgs?: string[];
-}
+import { IProduct } from "@/interfaces/productInterface";
 
 // Obtener todos los productos
 export async function getAllProducts(): Promise<IProduct[]> {

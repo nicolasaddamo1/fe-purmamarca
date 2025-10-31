@@ -4,14 +4,13 @@ export interface IProduct {
   description?: string;
   color?: string;
   categoryId: string;
-  category?: TCategory;
   price: number;
   stock: number;
-  imgs?: string[];
-  onSale?: boolean;
-  priceOnSale?: number;
   size?: string;
+  onSale?: boolean;
   available?: boolean;
+  imgs?: string[];
+  priceOnSale?: number; // 👈 reemplaza discount y finalPrice
 }
 
 export type TCategory = {
