@@ -1,6 +1,9 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { Carousel, Skeleton } from 'antd';
+import { useProductStore } from '@/store/productsStore';
+import { useRouter } from 'next/navigation';
+import { IPromotion } from '@/interfaces/promotionsInterface';
 
 const contentStyle: React.CSSProperties = {
     margin: 0,
@@ -13,29 +16,22 @@ const contentStyle: React.CSSProperties = {
     borderBottomLeftRadius: "20px",
     borderBottomRightRadius: "20px",
 };
-const images = ["https://img.freepik.com/vector-gratis/plantilla-banner-horizontal-rebajas-viernes-negro_23-2150867247.jpg?semt=ais_hybrid&w=740", "https://img.freepik.com/vetores-gratis/modelo-de-banner-de-venda-horizontal-plano-com-foto_23-2149000923.jpg",]
 
 const PromoCarousel: React.FC = () => {
 
     const [loaded, setLoaded] = useState(false);
-    const [imagesLoaded, setImagesLoaded] = useState(0);
+    const { promotions } = useProductStore();
+    // const router = useRouter()
 
     useEffect(() => {
-        images.forEach((src) => {
-            const img = new Image();
-            img.src = src;
-            img.onload = () => {
-                setImagesLoaded((prev) => prev + 1);
-            };
-        });
-    }, []);
-
-    useEffect(() => {
-        if (imagesLoaded === images.length) {
-            setLoaded(true);
+        if (promotions.length >= 1) {
+            setLoaded(true)
         }
-    }, [imagesLoaded]);
-
+    }, [])
+    //TODO HANDLE REDIRECT IF POSSIBLE create new page called promotion/[id] y get categories from there
+    // function handleRedirect(prom: IPromotion) {
+    //     if (prom.category_ids) { }
+    // }
     if (!loaded) {
         return (
             <div className="flex justify-around items-center w-full h-[250px]">
@@ -48,10 +44,10 @@ const PromoCarousel: React.FC = () => {
     }
     return (
         <Carousel autoplay autoplaySpeed={1500} >
-            {images.map((src, i) => (
-                <section key={i}>
+            {promotions.map((promo) => (
+                <section key={promo.name} title={promo.name}>
                     <div>
-                        <img src={src} style={contentStyle} alt={`promo-${i}`} />
+                        <img src={promo.image_url} style={contentStyle} alt={promo.name} title={promo.name} />
                     </div>
                 </section>
             ))}
