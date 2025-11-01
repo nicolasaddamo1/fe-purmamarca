@@ -10,10 +10,11 @@ import { useProductStore } from "@/store/productsStore";
 import { useCategoryStore } from "@/store/categoryStore";
 import { getAllCategories } from "@/app/axios/categoriasApi";
 import { getAllProducts } from "@/app/axios/ProductosApi";
+import { getAllPromotions } from "../axios/PromotionsApi";
 
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
-  const { products, setProducts } = useProductStore();
+  const { products, setProducts, promotions, setPromotions } = useProductStore();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
@@ -26,6 +27,10 @@ const Page: React.FC = () => {
         if (!products.length) {
           const fetchedProducts = await getAllProducts();
           setProducts(fetchedProducts);
+        }
+        if (!promotions.length) {
+          const fetchedPromotions = await getAllPromotions();
+          setPromotions(fetchedPromotions);
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);
@@ -61,7 +66,7 @@ const Page: React.FC = () => {
   });
 
   return (
-    <div className="md:pt-32">
+    <div className="md:pt-20">
       <PromoCarousel />
 
       <section className="flex flex-col gap-6 md:px-4 py-10">
