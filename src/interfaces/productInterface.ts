@@ -10,7 +10,7 @@ export interface IProduct {
   onSale?: boolean;
   available?: boolean;
   imgs?: string[];
-  priceOnSale?: number; // 👈 reemplaza discount y finalPrice
+  priceOnSale?: number;
 }
 
 export type TCategory = {

@@ -14,7 +14,8 @@ import { getAllPromotions } from "../axios/PromotionsApi";
 
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
-  const { products, setProducts, promotions, setPromotions } = useProductStore();
+  const { products, setProducts, promotions, setPromotions } =
+    useProductStore();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
@@ -104,6 +105,7 @@ const Page: React.FC = () => {
               key={prod.id}
               id={prod.id}
               available={prod.available}
+              onSale={prod.onSale} // 👈 Agregá esta línea
               priceOnSale={prod.priceOnSale}
               name={prod.name}
               price={prod.price}

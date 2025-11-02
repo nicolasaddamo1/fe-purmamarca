@@ -25,7 +25,8 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { name, imgs, price, stock, size, description } = product;
+  const { name, imgs, price, stock, size, description, onSale, priceOnSale } =
+    product;
   const { toggleAvailability } = useProductStore();
   const [isAvailable, setIsAvailable] = useState(product.available);
 
@@ -58,36 +59,32 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
       const updatedAvailable = !isAvailable;
       setIsAvailable(updatedAvailable);
 
-      // 🔥 Actualiza en el backend
       await updateProductAvailability(product.id, updatedAvailable);
 
-      // 🔄 Actualiza en el store global
       toggleAvailability(product.id, updatedAvailable);
 
       toast.success(
         `Producto ${updatedAvailable ? "habilitado" : "deshabilitado"}`
       );
     } catch {
-      setIsAvailable(isAvailable); // rollback visual
+      setIsAvailable(isAvailable);
       toast.error("Error al actualizar disponibilidad");
     }
   };
 
   const isProductActive = isAvailable && stock > 0;
 
+  const discountPercentage =
+    onSale && priceOnSale && price > 0
+      ? Math.round(((price - priceOnSale) / price) * 100)
+      : 0;
+
   return (
     <Card
       hoverable
-      className={`shadow-md hover:shadow-lg rounded-2xl transition-all ${
+      className={`shadow-md hover:shadow-lg rounded-2xl transition-all relative ${
         !isProductActive ? "opacity-60" : ""
       }`}
-      cover={
-        <img
-          alt={name}
-          src={imageSrc}
-          className="rounded-t-2xl w-full h-40 object-cover"
-        />
-      }
       actions={[
         <Tooltip title="Editar" key="edit">
           <EditOutlined
@@ -121,11 +118,35 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
         </Tooltip>,
       ]}
     >
+      <div className="relative -mx-6 -mt-6 mb-6 overflow-hidden">
+        {onSale && (
+          <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
+            🔥 OFERTA {discountPercentage > 0 && `-${discountPercentage}%`}
+          </div>
+        )}
+        <img
+          alt={name}
+          src={imageSrc}
+          className="rounded-t-2xl w-full h-48 object-cover"
+        />
+      </div>
+
       <Card.Meta
         title={name}
         description={
           <>
-            <p>${price}</p>
+            <div className="flex items-center gap-2 mb-2">
+              {onSale && priceOnSale ? (
+                <>
+                  <p className="text-gray-500 text-sm line-through">${price}</p>
+                  <p className="font-bold text-red-600 text-lg">
+                    ${priceOnSale}
+                  </p>
+                </>
+              ) : (
+                <p className="font-bold text-green-700 text-lg">${price}</p>
+              )}
+            </div>
             <p>
               Stock:{" "}
               {isProductActive ? (

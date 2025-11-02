@@ -10,7 +10,7 @@ interface ProductCreationStore {
   stock: number;
   size: string;
   onSale: boolean;
-  priceOnSale: number; // 👈 reemplaza discount + finalPrice
+  priceOnSale: number;
   available: boolean;
   imgs: File[];
   imgPreviews: string[];
@@ -30,7 +30,7 @@ export const useProductCreationStore = create<ProductCreationStore>((set) => ({
   stock: 0,
   size: "",
   onSale: false,
-  priceOnSale: 0, // 👈 inicializamos en 0
+  priceOnSale: 0,
   available: true,
   imgs: [],
   imgPreviews: [],

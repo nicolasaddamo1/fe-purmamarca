@@ -1,7 +1,7 @@
 // src/components/admin/SidebarNewProduct.tsx
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { HiCamera } from "react-icons/hi";
 import { toast } from "react-toastify";
@@ -16,9 +16,8 @@ const SidebarNewProduct: React.FC = () => {
   const { setField, resetForm } = product;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [discountInput, setDiscountInput] = useState(0); // solo para UI
 
-  // 🔠 Ajuste dinámico de altura del textarea
+  // Ajuste dinámico de altura del textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -27,7 +26,7 @@ const SidebarNewProduct: React.FC = () => {
     }
   }, [product.description]);
 
-  // 🖼️ Manejo de imágenes
+  // Manejo de imágenes
   const onDrop = (acceptedFiles: File[]) => {
     const previews = acceptedFiles.map((file) => URL.createObjectURL(file));
     setField("imgs", acceptedFiles);
@@ -39,18 +38,6 @@ const SidebarNewProduct: React.FC = () => {
     multiple: true,
     onDrop,
   });
-
-  // 💲 Cálculo de priceOnSale según input de descuento
-  useEffect(() => {
-    if (product.onSale && discountInput > 0) {
-      const newPriceOnSale = Math.round(
-        product.price * (1 - discountInput / 100)
-      );
-      setField("priceOnSale", newPriceOnSale);
-    } else {
-      setField("priceOnSale", 0);
-    }
-  }, [product.price, product.onSale, discountInput]);
 
   const handleCreateProduct = async () => {
     if (
@@ -64,18 +51,34 @@ const SidebarNewProduct: React.FC = () => {
     }
 
     try {
-      const newProduct = await createProduct({
+      const body: {
+        name: string;
+        description: string;
+        color: string;
+        categoryId: string;
+        price: number;
+        stock: number;
+        size: string;
+        onSale: boolean;
+        priceOnSale?: number;
+        available: boolean;
+      } = {
         name: product.name,
         description: product.description,
         color: product.color,
         categoryId: product.categoryId,
         price: product.price,
-        priceOnSale: product.priceOnSale, // enviamos solo priceOnSale
         stock: product.stock,
         size: product.size,
         onSale: product.onSale,
         available: product.available,
-      });
+      };
+
+      if (product.onSale && product.priceOnSale && product.priceOnSale > 0) {
+        body.priceOnSale = product.priceOnSale;
+      }
+
+      const newProduct = await createProduct(body);
 
       if (product.imgs.length > 0) {
         await uploadProductImages(newProduct.id, product.imgs);
@@ -83,9 +86,8 @@ const SidebarNewProduct: React.FC = () => {
 
       toast.success("Producto creado correctamente 🎉");
       resetForm();
-      setDiscountInput(0);
       setSidebarView("menu");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
       toast.error("Error al crear el producto 😞");
     }
@@ -115,15 +117,26 @@ const SidebarNewProduct: React.FC = () => {
             </p>
           </>
         ) : (
-          <div className="gap-2 grid grid-cols-2">
-            {product.imgPreviews.map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt={`preview-${i}`}
-                className="shadow-sm border border-chocolate/20 rounded-lg w-full h-32 object-cover"
-              />
-            ))}
+          <div className="flex flex-col items-center gap-2">
+            {/* Imagen principal */}
+            <img
+              src={product.imgPreviews[0]}
+              alt="Imagen principal"
+              className="shadow-md rounded-lg w-full h-56 object-cover"
+            />
+            {/* Miniaturas */}
+            {product.imgPreviews.length > 1 && (
+              <div className="flex gap-2 mt-2 w-full overflow-x-auto">
+                {product.imgPreviews.slice(1).map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`miniatura-${i}`}
+                    className="flex-shrink-0 shadow-sm border border-chocolate/20 rounded-md w-20 h-20 object-cover"
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -192,35 +205,23 @@ const SidebarNewProduct: React.FC = () => {
           />
         </label>
 
-        {/* Descuento solo UI */}
+        {/* Precio en oferta */}
         {product.onSale && (
-          <>
-            <input
-              type="number"
-              placeholder="Descuento (%)"
-              value={discountInput}
-              onChange={(e) => setDiscountInput(Number(e.target.value))}
-              min={0}
-              max={100}
-              className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
-            />
-            <div className="font-semibold text-primary text-sm">
-              Precio final:{" "}
-              <span className="text-chocolate">
-                ${product.priceOnSale.toFixed(2)}
-              </span>
-            </div>
-          </>
+          <input
+            type="number"
+            placeholder="Precio en oferta"
+            value={product.priceOnSale || ""}
+            onChange={(e) => setField("priceOnSale", Number(e.target.value))}
+            min={0}
+            className="bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:ring-1 focus:ring-chocolate/50"
+          />
         )}
       </div>
 
       {/* Botones */}
       <div className="flex gap-2 mt-6 w-full">
         <button
-          onClick={() => {
-            resetForm();
-            setDiscountInput(0);
-          }}
+          onClick={() => resetForm()}
           className="flex-1 bg-white hover:bg-chocolate/10 py-2 border border-chocolate rounded-md text-chocolate transition cursor-pointer"
         >
           Cancelar
