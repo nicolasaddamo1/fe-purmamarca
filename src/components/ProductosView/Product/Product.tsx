@@ -71,14 +71,14 @@ const Product: React.FC<ProductProps> = ({
 
         {/* Precio */}
         <div
-          className={`text-base md:text-2xl font-semibold ${
+          className={`text-3xl md:text-2xl font-semibold ${
             isAvailable ? "text-primary" : "text-gray-800"
           }`}
         >
           {priceOnSale ? (
             <div className="flex items-center gap-1">
               <span>${Number(priceOnSale).toLocaleString()}</span>
-              <del className="text-gray-500 md:text-xs text-sm">
+              <del className="text-gray-500 md:text-xs text-lg">
                 ${Number(price).toLocaleString()}
               </del>
             </div>
