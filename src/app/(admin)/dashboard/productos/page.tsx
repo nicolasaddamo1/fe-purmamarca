@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useProductStore } from "@/store/productsStore";
 import { getAllProducts, deleteProduct } from "@/app/axios/ProductosApi";
 import ProductList from "@/components/admin/Products/ProductList";
@@ -7,9 +7,12 @@ import { IProduct } from "@/interfaces/productInterface";
 import { toast } from "react-toastify";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
+import ProductEditModal from "@/components/admin/Products/ProductEditModal";
 
 export default function ProductsPage() {
   const { products, setProducts } = useProductStore();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<IProduct | null>(null);
 
   useEffect(() => {
     getAllProducts().then(setProducts);
@@ -23,7 +26,7 @@ export default function ProductsPage() {
       okText: "Eliminar",
       okButtonProps: { danger: true },
       cancelText: "Cancelar",
-      onOk: async () => {
+      async onOk() {
         try {
           await deleteProduct(product.id);
           setProducts(products.filter((p) => p.id !== product.id));
@@ -36,7 +39,8 @@ export default function ProductsPage() {
   };
 
   const handleEdit = (product: IProduct) => {
-    console.log("Editar producto:", product);
+    setProductToEdit(product);
+    setModalOpen(true);
   };
 
   return (
@@ -44,11 +48,23 @@ export default function ProductsPage() {
       <h1 className="mb-6 font-semibold text-primary text-4xl text-center">
         Productos
       </h1>
+
       <ProductList
         products={products}
         onDelete={handleDelete}
         onEdit={handleEdit}
       />
+
+      {productToEdit && (
+        <ProductEditModal
+          open={modalOpen}
+          onClose={() => {
+            setModalOpen(false);
+            setProductToEdit(null);
+          }}
+          productToEdit={productToEdit}
+        />
+      )}
     </div>
   );
 }

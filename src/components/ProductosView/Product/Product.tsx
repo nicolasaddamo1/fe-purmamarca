@@ -8,11 +8,11 @@ interface ProductProps {
   name: string;
   price: number;
   priceOnSale?: number;
+  onSale?: boolean;
   available?: boolean;
   imageUrl: string;
-  categoryName: string;
+
   stock?: number | string;
-  description?: string;
 }
 
 const Product: React.FC<ProductProps> = ({
@@ -20,13 +20,19 @@ const Product: React.FC<ProductProps> = ({
   name,
   price,
   priceOnSale,
+  onSale = false,
   available = true,
   imageUrl,
-  categoryName,
+
   stock,
-  description,
 }) => {
   const isAvailable = Boolean(available);
+
+  // 💡 Cálculo del porcentaje de descuento
+  const discountPercentage =
+    onSale && priceOnSale && price > priceOnSale && price > 0
+      ? Math.round(((price - priceOnSale) / price) * 100)
+      : 0;
 
   return (
     <div
@@ -38,8 +44,18 @@ const Product: React.FC<ProductProps> = ({
         }
         ${!isAvailable ? "opacity-60" : ""} bg-white`}
     >
-      {/* Imagen */}
-      <div className={`${isAvailable ? "bg-[#dbc7ab]" : "bg-gray-200"} w-full`}>
+      <div
+        className={`${
+          isAvailable ? "bg-[#dbc7ab]" : "bg-gray-200"
+        } w-full relative`}
+      >
+        {onSale && (
+          <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
+            🔥 OFERTA
+            {discountPercentage > 0 && ` -${discountPercentage}%`}
+          </div>
+        )}
+
         <img
           className="rounded-t-lg w-full h-48 object-cover"
           src={imageUrl}
@@ -48,23 +64,21 @@ const Product: React.FC<ProductProps> = ({
         />
       </div>
 
-      {/* Info */}
       <div className="flex flex-col items-start gap-1 px-3 py-2 w-full font-medium">
-        {/* Nombre */}
         <Link href={`/productos/detalle/${id}`} title={name} className="w-full">
           <h5 className="text-chocolate text-lg md:text-xl truncate">{name}</h5>
         </Link>
 
         {/* Precio */}
         <div
-          className={`text-base md:text-2xl font-semibold ${
+          className={`text-3xl md:text-2xl font-semibold ${
             isAvailable ? "text-primary" : "text-gray-800"
           }`}
         >
           {priceOnSale ? (
             <div className="flex items-center gap-1">
               <span>${Number(priceOnSale).toLocaleString()}</span>
-              <del className="text-gray-500 md:text-xs text-sm">
+              <del className="text-gray-500 md:text-xs text-lg">
                 ${Number(price).toLocaleString()}
               </del>
             </div>
@@ -79,13 +93,6 @@ const Product: React.FC<ProductProps> = ({
             ? `Stock: ${stock ?? "No especificado"}`
             : "Stock: Agotado"}
         </p>
-
-        {/* Descripción */}
-        {description && (
-          <p className="w-full overflow-hidden text-gray-600 text-xs md:text-xs text-ellipsis whitespace-nowrap">
-            {description}
-          </p>
-        )}
       </div>
 
       {/* Botón Ver Más */}
