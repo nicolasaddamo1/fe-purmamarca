@@ -11,7 +11,13 @@ interface ProductProps {
   onSale?: boolean;
   available?: boolean;
   imageUrl: string;
-
+  categoryName: string
+  promotion: {
+    name: string,
+    promo_percentage: number | null,
+    start_date: Date,
+    expiration_date: Date
+  } | null
   stock?: number | string;
 }
 
@@ -23,38 +29,36 @@ const Product: React.FC<ProductProps> = ({
   onSale = false,
   available = true,
   imageUrl,
-
+  categoryName,
+  promotion,
   stock,
 }) => {
   const isAvailable = Boolean(available);
 
-  // 💡 Cálculo del porcentaje de descuento
-  const discountPercentage =
-    onSale && priceOnSale && price > priceOnSale && price > 0
-      ? Math.round(((price - priceOnSale) / price) * 100)
-      : 0;
-
   return (
     <div
-      className={`group flex flex-col justify-between rounded-lg outline-1 w-64 md:w-56 h-auto hover:shadow-2xl duration-200
-        ${
-          isAvailable
-            ? "outline-[#76644c67] hover:outline-[#76644c]"
-            : "outline-neutral-400 hover:outline-neutral-700"
+      className={`group flex flex-col justify-between rounded-lg outline-1 w-64 md:w-56 h-auto m-auto hover:shadow-2xl duration-200
+        ${isAvailable
+          ? "outline-[#76644c67] hover:outline-[#76644c]"
+          : "outline-neutral-400 hover:outline-neutral-700"
         }
         ${!isAvailable ? "opacity-60" : ""} bg-white`}
     >
       <div
-        className={`${
-          isAvailable ? "bg-[#dbc7ab]" : "bg-gray-200"
-        } w-full relative`}
+        className={`${isAvailable ? "bg-[#dbc7ab]" : "bg-gray-200"
+          } w-full relative`}
       >
-        {onSale && (
+        {(onSale && isAvailable) ? (
           <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
             🔥 OFERTA
-            {discountPercentage > 0 && ` -${discountPercentage}%`}
-          </div>
-        )}
+          </div>)
+          :
+          (isAvailable && promotion?.name) &&
+          (
+            <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
+              🔥 OFERTA {promotion.name.toUpperCase()}
+            </div>
+          )}
 
         <img
           className="rounded-t-lg w-full h-48 object-cover"
@@ -69,11 +73,9 @@ const Product: React.FC<ProductProps> = ({
           <h5 className="text-chocolate text-lg md:text-xl truncate">{name}</h5>
         </Link>
 
-        {/* Precio */}
         <div
-          className={`text-3xl md:text-2xl font-semibold ${
-            isAvailable ? "text-primary" : "text-gray-800"
-          }`}
+          className={`text-3xl md:text-2xl font-semibold ${isAvailable ? "text-primary" : "text-gray-800"
+            }`}
         >
           {priceOnSale ? (
             <div className="flex items-center gap-1">

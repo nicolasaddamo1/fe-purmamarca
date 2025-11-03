@@ -12,7 +12,7 @@ import {
 import { IProduct } from "@/interfaces/productInterface";
 import { useProductStore } from "@/store/productsStore";
 import { toast } from "react-toastify";
-import { updateProductAvailability } from "@/app/axios/ProductosApi";
+import { updateProduct } from "@/app/axios/ProductosApi";
 
 interface ProductCardAdmProps {
   product: IProduct;
@@ -25,7 +25,7 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { name, imgs, price, stock, size, description, onSale, priceOnSale } =
+  const { name, imgs, price, stock, size, description, onSale, priceOnSale, promotion } =
     product;
   const { toggleAvailability } = useProductStore();
   const [isAvailable, setIsAvailable] = useState(product.available);
@@ -59,7 +59,7 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
       const updatedAvailable = !isAvailable;
       setIsAvailable(updatedAvailable);
 
-      await updateProductAvailability(product.id, updatedAvailable);
+      await updateProduct(product.id, { available: !product.available });
 
       toggleAvailability(product.id, updatedAvailable);
 
@@ -74,21 +74,15 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
 
   const isProductActive = isAvailable && stock > 0;
 
-  const discountPercentage =
-    onSale && priceOnSale && price > 0
-      ? Math.round(((price - priceOnSale) / price) * 100)
-      : 0;
-
   return (
     <Card
       hoverable
-      className={`shadow-md hover:shadow-lg rounded-2xl transition-all relative ${
-        !isProductActive ? "opacity-60" : ""
-      }`}
+      className={`shadow-md hover:shadow-lg rounded-2xl transition-all relative ${!isProductActive ? "opacity-60" : ""
+        }`}
       actions={[
         <Tooltip title="Editar" key="edit">
           <EditOutlined
-            onClick={() => onEdit?.(product)}
+            onClick={() => onEdit?.(product,)}
             className="text-blue-500 hover:text-blue-600"
           />
         </Tooltip>,
@@ -97,7 +91,7 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
           title={isAvailable ? "Deshabilitar producto" : "Habilitar producto"}
           key="available"
         >
-          {isAvailable ? (
+          {!isAvailable ? (
             <CheckCircleOutlined
               onClick={handleToggleAvailable}
               className="text-green-600 hover:text-green-700"
@@ -119,15 +113,21 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
       ]}
     >
       <div className="relative -mx-6 -mt-6 mb-6 overflow-hidden">
-        {onSale && (
+        {(onSale) ? (
           <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
-            🔥 OFERTA {discountPercentage > 0 && `-${discountPercentage}%`}
-          </div>
-        )}
+            🔥 OFERTA
+          </div>)
+          :
+          (isAvailable && promotion?.name) &&
+          (
+            <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
+              🔥 OFERTA {promotion.name.toUpperCase()}
+            </div>
+          )}
         <img
           alt={name}
           src={imageSrc}
-          className="rounded-t-2xl w-full h-48 object-cover"
+          className="z-0 p-2 rounded-t-2xl w-full h-48 object-cover"
         />
       </div>
 

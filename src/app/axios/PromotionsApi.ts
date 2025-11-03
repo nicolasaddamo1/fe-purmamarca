@@ -81,6 +81,9 @@ export async function patchPromotion(
           (payload as any)[key] = Number(value);
         } else if (key === "category_ids") {
           (payload as any)[key] = formData.getAll("category_ids");
+        }
+        else if (key === "file") {
+          continue
         } else {
           (payload as any)[key] = value;
         }

@@ -111,8 +111,8 @@ const Page: React.FC = () => {
               price={prod.price}
               imageUrl={prod.imgs?.[0] ?? ""}
               categoryName={prod.category?.name ?? ""}
+              promotion={prod.promotion}
               stock={prod.stock}
-              description={prod.description}
             />
           ))}
         </div>
