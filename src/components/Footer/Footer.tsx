@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="gap-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mx-auto px-6 py-10 max-w-7xl md:text-left text-center">
         {/* Columna 1 */}
         <div className="flex items-start gap-4 md:col-span-1">
-          <Link href="/dashboard">
+          <Link href="/login">
             <Image
               src="/logopurma.png"
               alt="Purmamamarca Logo"
