@@ -24,11 +24,11 @@ export async function createProduct(
 export async function uploadProductImages(
   productId: string,
   files: File[]
-): Promise<string[]> {
+): Promise<IProduct> {
   const formData = new FormData();
   files.forEach((file) => formData.append("files", file));
 
-  const { data } = await api.post<{ urls: string[] }>(
+  const { data } = await api.post(
     `/files/uploadimages/${productId}`,
     formData,
     {
@@ -36,7 +36,7 @@ export async function uploadProductImages(
     }
   );
 
-  return data.urls;
+  return data;
 }
 
 // Eliminar producto
@@ -53,4 +53,9 @@ export async function updateProductAvailability(
     available,
   });
   return data;
+}
+
+export async function updateProduct(id:string,data:Partial<IProduct>){
+  const res = await api.put(`/products/${id}`,data)
+  return res.data
 }
