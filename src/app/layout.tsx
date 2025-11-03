@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ABeeZee } from "next/font/google";
 import AntdProvider from "./antdProvider";
-import "./globals.css";
+import "./global.css";
 import ToastProvider from "@/components/Toast/ToastProvider";
 
 const abeezee = ABeeZee({

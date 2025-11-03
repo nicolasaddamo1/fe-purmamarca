@@ -105,7 +105,7 @@ const Page: React.FC = () => {
               key={prod.id}
               id={prod.id}
               available={prod.available}
-              onSale={prod.onSale} // 👈 Agregá esta línea
+              onSale={prod.onSale}
               priceOnSale={prod.priceOnSale}
               name={prod.name}
               price={prod.price}

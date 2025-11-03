@@ -26,7 +26,9 @@ const Category: React.FC<CategoryProps> = ({ id, name, imageUrl }) => {
           priority
         />
       </div>
-      <h5 className="w-24 font-medium text-sm text-center truncate">{name}</h5>
+      <span className="w-24 font-medium text-primary text-sm text-center truncate">
+        {name}
+      </span>
     </Link>
   );
 };

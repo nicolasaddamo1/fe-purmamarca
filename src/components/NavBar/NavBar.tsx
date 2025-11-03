@@ -1,3 +1,4 @@
+// components/NavBar/NavBar.tsx
 "use client";
 
 import Link from "next/link";
@@ -5,28 +6,34 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaSearchSolid } from "react-icons/lia";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import SidebarExample from "../cart/sideVar";
 import CategorySidevar from "../categorySideVar/CategorySidevar";
+import { useStore, useHasHydrated, useAuthActions } from "@/store/useStore";
+import { toast } from "react-toastify";
+import AdminDropdown from "@/components/admin/AdminDropdown"; // Importamos el componente modularizado
 
 const SEARCH_DEBOUNCE_MS = 250;
 
 const NavBar: React.FC = () => {
+  const router = useRouter();
   const pathname = usePathname() ?? "/";
+  const { isAuthenticated, admin } = useStore();
+  const hasHydrated = useHasHydrated();
+  const { handleLogoutAndClearStorage } = useAuthActions();
+
   const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const debounceRef = useRef<number | null>(null);
 
-  // Emit search event for pages/components
   const emitSearch = (q: string) => {
     const payload = { query: q, pathname };
     window.dispatchEvent(new CustomEvent("nav:search", { detail: payload }));
   };
 
-  // Debounce search input
   useEffect(() => {
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(
@@ -38,7 +45,6 @@ const NavBar: React.FC = () => {
     };
   }, [query, pathname]);
 
-  // Close search on outside click
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -49,17 +55,21 @@ const NavBar: React.FC = () => {
     return () => document.removeEventListener("pointerdown", onClick);
   }, []);
 
-  // Close search on route change
   useEffect(() => {
     setShowSearch(false);
     setQuery("");
     emitSearch("");
   }, [pathname]);
 
+  const handleLogout = () => {
+    handleLogoutAndClearStorage();
+    router.push("/");
+    toast.info("Sesión cerrada correctamente.");
+  };
+
   return (
     <header className="top-0 left-0 z-[999] fixed bg-primary md:bg-primary/20 backdrop-blur-md w-full">
       <nav className="flex justify-center md:justify-between items-center mx-auto px-4 md:px-10 max-w-7xl h-[80px]">
-        {/* Left: MobileMenu + Logo */}
         <div className="flex items-center gap-4">
           <MobileMenu />
 
@@ -83,12 +93,10 @@ const NavBar: React.FC = () => {
           </Link>
         </div>
 
-        {/* Right: everything else aligned to right */}
         <div
           ref={containerRef}
           className="flex items-center gap-6 ml-auto font-medium text-white/90 text-sm"
         >
-          {/* Search icon + expanding input (solo visible en "/" y md+) */}
           {pathname === "/" && (
             <div className="hidden relative md:flex items-center">
               <button
@@ -121,12 +129,10 @@ const NavBar: React.FC = () => {
             </div>
           )}
 
-          {/* Category sidebar (hidden en móvil) */}
           <div className="hidden md:flex">
             <CategorySidevar />
           </div>
 
-          {/* Links: hidden on mobile, visible md+ */}
           <div className="hidden md:flex items-center gap-6">
             <Link href="/" className="group relative">
               <span className="text-white/90 hover:text-primary transition-colors">
@@ -143,7 +149,18 @@ const NavBar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Cart / Sidebar */}
+          {hasHydrated && isAuthenticated() && admin ? (
+            <div className="group hidden relative md:flex">
+              <AdminDropdown
+                onLogout={handleLogout}
+                userName={admin?.name || "Admin"}
+              />
+              <span className="-bottom-1 left-0 absolute bg-primary w-0 group-hover:w-full h-[2px] transition-all duration-300" />
+            </div>
+          ) : (
+            <div className="hidden md:block w-6 h-6" />
+          )}
+
           <SidebarExample />
         </div>
       </nav>

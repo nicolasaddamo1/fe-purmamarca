@@ -22,6 +22,13 @@ export default function SidebarAdm({ open }: Props) {
 
   if (sidebarView === "newProduct") return <SidebarNewProduct />;
 
+  const handleNewProductClick = () => {
+    // 1. Activa la vista del formulario de producto en el sidebar (reemplaza la navegación)
+    setSidebarView("newProduct");
+    // 2. Redirige a /dashboard, donde se mostrará el ProductPreviewCard en el contenido principal.
+    router.push("/dashboard");
+  };
+
   return (
     <aside
       className={`bg-chocolate/10 border-r border-chocolate/30 transition-all duration-300 ${
@@ -29,9 +36,9 @@ export default function SidebarAdm({ open }: Props) {
       } h-screen overflow-hidden`}
     >
       <div className="flex flex-col gap-4 p-4 py-10">
-        {/* Botón para crear producto */}
+        {/* Botón para crear producto (Ahora redirige a /dashboard) */}
         <button
-          onClick={() => setSidebarView("newProduct")}
+          onClick={handleNewProductClick}
           className="flex items-center gap-2 bg-chocolate/90 hover:bg-chocolate/80 px-3 py-2 rounded-md text-white transition cursor-pointer"
         >
           <HiPlus className="w-5 h-5" /> {open && "Nuevo producto"}
