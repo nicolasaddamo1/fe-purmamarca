@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-app border-secondary border-t text-maroon">
-      <div className="gap-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mx-auto px-6 py-10 max-w-7xl md:text-left text-center">
+      <div className="gap-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mx-auto px-6 py-10 max-w-7xl md:text-left text-center">
         {/* Columna 1 */}
         <div className="flex items-start gap-4 md:col-span-1">
           <Link href="/login">
@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
 
         {/* Columna 4 */}
-        <div className="self-center md:text-left text-center">
+        <div className="flex-row self-center md:text-left text-center">
           <h2 className="font-semibold text-secondary text-lg">Llegamos a</h2>
           <ul className="space-y-1 mt-2">
             <li className="text-maroon">TODO</li>
