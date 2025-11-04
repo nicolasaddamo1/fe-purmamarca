@@ -27,11 +27,8 @@ const PromoCarousel: React.FC = () => {
         if (promotions.length >= 1) {
             setLoaded(true)
         }
-    }, [])
+    }, [promotions])
     //TODO HANDLE REDIRECT IF POSSIBLE create new page called promotion/[id] y get categories from there
-    // function handleRedirect(prom: IPromotion) {
-    //     if (prom.category_ids) { }
-    // }
     if (!loaded) {
         return (
             <div className="flex justify-around items-center w-full h-[250px]">

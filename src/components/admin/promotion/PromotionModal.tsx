@@ -5,6 +5,8 @@ import { Modal, Button, Spin, Select, DatePicker, Input } from "antd";
 import { useDropzone } from "react-dropzone";
 import { FiCamera } from "react-icons/fi";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone"
 import { useCategoryStore } from "@/store/categoryStore";
 import { IPromotion } from "@/interfaces/promotionsInterface";
 
@@ -23,6 +25,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
   loading = false,
   promotionToEdit = null,
 }) => {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  dayjs.tz.setDefault("America/Argentina/Buenos_Aires");
   const { categories } = useCategoryStore();
 
   const [name, setName] = useState(promotionToEdit?.name || "");
@@ -85,7 +90,6 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
 
   const handleSubmit = async () => {
     if (!name.trim() || !startDate || !expirationDate) return;
-
     const formData = new FormData();
     formData.append("name", name.trim());
     formData.append("start_date", startDate);
@@ -158,6 +162,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
           <DatePicker
             placeholder="Fecha de inicio"
             className="w-full"
+
             value={startDate ? dayjs(startDate) : null}
             onChange={(d) => setStartDate(d ? d.toISOString() : "")}
           />
