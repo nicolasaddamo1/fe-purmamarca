@@ -9,10 +9,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import SidebarExample from "../cart/sideVar";
-import CategorySidevar from "../categorySideVar/CategorySidevar";
+import CategorySidevar from "@/components/categorySideVar/CategorySidevar";
 import { useStore, useHasHydrated, useAuthActions } from "@/store/useStore";
 import { toast } from "react-toastify";
-import AdminDropdown from "@/components/admin/AdminDropdown"; // Importamos el componente modularizado
+import AdminDropdown from "@/components/admin/AdminDropdown";
+import { useCartStore } from "@/store/cartStore";
 
 const SEARCH_DEBOUNCE_MS = 250;
 
@@ -28,6 +29,8 @@ const NavBar: React.FC = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const debounceRef = useRef<number | null>(null);
+
+  const totalItems = useCartStore((state) => state.prods.length);
 
   const emitSearch = (q: string) => {
     const payload = { query: q, pathname };
@@ -161,7 +164,12 @@ const NavBar: React.FC = () => {
             <div className="hidden md:block w-6 h-6" />
           )}
 
-          <SidebarExample />
+          <div className="relative">
+            <SidebarExample />
+            {totalItems > 0 && (
+              <span className="block top-0.5 -right-0.5 absolute bg-red-600 rounded-full w-2 h-2 -translate-y-1/2 translate-x-1/2 transform" />
+            )}
+          </div>
         </div>
       </nav>
     </header>

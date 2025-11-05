@@ -2,7 +2,6 @@ import { IPromotion, IPromotionDTO } from "@/interfaces/promotionsInterface";
 import api from "./axiosInstance";
 import { toast } from "react-toastify";
 
-// ✅ Obtener todas las promociones
 export async function getAllPromotions(): Promise<IPromotion[]> {
   try {
     const { data } = await api.get("/promotions");
@@ -13,7 +12,6 @@ export async function getAllPromotions(): Promise<IPromotion[]> {
   }
 }
 
-// ✅ Obtener una promoción por ID
 export async function getPromotionById(id: string): Promise<IPromotion> {
   try {
     const { data } = await api.get(`/promotions/${id}`);
@@ -28,13 +26,16 @@ export async function createPromotion(formData: FormData): Promise<IPromotion> {
   try {
     const payload: IPromotionDTO = {
       name: formData.get("name") as string,
-       image_url: formData.get("image_url") as string,
+      image_url: formData.get("image_url") as string,
       start_date: formData.get("start_date") as string,
       expiration_date: formData.get("expiration_date") as string,
       promo_percentage: formData.get("promo_percentage")
         ? Number(formData.get("promo_percentage"))
         : undefined,
-      category_ids: formData.getAll("category_ids") ? formData.getAll("category_ids"):undefined,
+      category_ids:
+        formData.getAll("category_ids").length > 0
+          ? (formData.getAll("category_ids") as string[])
+          : undefined,
     };
 
     const { data } = await api.post("/promotions", payload);
@@ -81,9 +82,8 @@ export async function patchPromotion(
           (payload as any)[key] = Number(value);
         } else if (key === "category_ids") {
           (payload as any)[key] = formData.getAll("category_ids");
-        }
-        else if (key === "file") {
-          continue
+        } else if (key === "file") {
+          continue;
         } else {
           (payload as any)[key] = value;
         }
@@ -108,14 +108,13 @@ export async function deletePromotion(id: string) {
   }
 }
 
-
 export async function uploadPromotionImage(file: File): Promise<string> {
   try {
     const formData = new FormData();
     formData.append("files", file);
 
     const { data } = await api.post<{ urls: string[] }>(
-      `/files/upload-images-no-id/temp`, 
+      `/files/upload-images-no-id/temp`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -128,4 +127,3 @@ export async function uploadPromotionImage(file: File): Promise<string> {
     throw error;
   }
 }
-

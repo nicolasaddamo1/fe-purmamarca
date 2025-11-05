@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, Tooltip, Modal } from "antd";
+
+import { Card, Tooltip, Modal, App } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -25,10 +26,21 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { name, imgs, price, stock, size, description, onSale, priceOnSale, promotion } =
-    product;
+  const {
+    name,
+    imgs,
+    price,
+    stock,
+    size,
+
+    onSale,
+    priceOnSale,
+    promotion,
+  } = product;
   const { toggleAvailability } = useProductStore();
   const [isAvailable, setIsAvailable] = useState(product.available);
+
+  const { modal } = App.useApp();
 
   const imageSrc =
     imgs && imgs.length > 0 && imgs[0].startsWith("http")
@@ -36,7 +48,7 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
       : "/placeholder.png";
 
   const handleDelete = () => {
-    Modal.confirm({
+    modal.confirm({
       title: "Borrar producto",
       icon: <ExclamationCircleOutlined />,
       content: `¿Seguro querés borrar ${name}?`,
@@ -77,12 +89,13 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
   return (
     <Card
       hoverable
-      className={`shadow-md hover:shadow-lg rounded-2xl transition-all relative ${!isProductActive ? "opacity-60" : ""
-        }`}
+      className={`shadow-md hover:shadow-lg rounded-2xl transition-all relative ${
+        !isProductActive ? "opacity-60" : ""
+      }`}
       actions={[
         <Tooltip title="Editar" key="edit">
           <EditOutlined
-            onClick={() => onEdit?.(product,)}
+            onClick={() => onEdit?.(product)}
             className="text-blue-500 hover:text-blue-600"
           />
         </Tooltip>,
@@ -113,17 +126,18 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
       ]}
     >
       <div className="relative -mx-6 -mt-6 mb-6 overflow-hidden">
-        {(onSale) ? (
+        {onSale ? (
           <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
             🔥 OFERTA
-          </div>)
-          :
-          (isAvailable && promotion?.name) &&
-          (
+          </div>
+        ) : (
+          isAvailable &&
+          promotion?.name && (
             <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
               🔥 OFERTA {promotion.name.toUpperCase()}
             </div>
-          )}
+          )
+        )}
         <img
           alt={name}
           src={imageSrc}
@@ -158,7 +172,6 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
               )}
             </p>
             {size && <p>Tamaño: {size}</p>}
-            {description && <p>{description}</p>}
           </>
         }
       />

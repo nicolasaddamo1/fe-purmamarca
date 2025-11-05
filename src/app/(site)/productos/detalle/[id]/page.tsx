@@ -1,33 +1,36 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+
+import { InputNumber } from "antd";
 import { getProductById } from "@/app/axios/ProductosApi";
 import { IProduct } from "@/interfaces/productInterface";
 import { useCartStore } from "@/store/cartStore";
-import { InputNumber, InputNumberProps, message, Skeleton } from "antd";
-import React, { useEffect, useState } from "react";
+import ProductPageSkeleton from "@/components/ProductosView/Skeleton/ProductPageSkeleton";
+
+import { toast } from "react-toastify";
+import ProductColorTag from "@/components/UI/ProductColorTag";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-function Page({ params }: Props) {
+export default function Page({ params }: Props) {
   const { id } = React.use(params);
-
   const [data, setData] = useState<IProduct | undefined>(undefined);
   const [value, setValue] = useState(1);
   const [imageRender, setImageRender] = useState<string>("");
 
   const { addProd } = useCartStore();
-  const [messageApi, contextHolder] = message.useMessage();
 
-  const fallbackImages = [
+  const FALLBACK_IMAGES = [
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzW2tT1esdRNYRXDqodxYxHAbrwvs0QQ6A9w&s",
     "https://d22fxaf9t8d39k.cloudfront.net/6e8610fe739ecb81cfebe1429b43c28c1aabd7f820ab56b492650234d0fbfb35231113.jpg",
     "https://acdn-us.mitiendanube.com/stores/004/878/822/products/20250602_150158-53520ee9096366a9c417488927602382-480-0.webp",
   ];
 
-  const success = () => {
-    messageApi.open({ type: "success", content: "Agregado al Carrito!" });
+  const showSuccessToast = () => {
+    toast.success("Producto agregado al carrito!");
   };
 
   useEffect(() => {
@@ -37,144 +40,168 @@ function Page({ params }: Props) {
       try {
         const res = await getProductById(id);
         setData(res);
-        setImageRender(res.imgs?.[0] ?? fallbackImages[0]);
-      } catch (error) {
-        console.error("Error al cargar producto:", error);
+        const images = res.imgs?.length ? res.imgs : FALLBACK_IMAGES;
+        setImageRender(images[0]);
+      } catch {
+        toast.error("Hubo un error al cargar el producto.");
       }
     }
 
     load();
   }, [id]);
 
-  const onChange: InputNumberProps["onChange"] = (val) => setValue(Number(val));
+  const handleQtyChange = (val: number | null) => {
+    setValue(val && val > 0 ? val : 1);
+  };
 
-  function handleClick() {
+  const handleAddToCart = () => {
     if (!data) return;
     addProd({ ...data, stock_order: value });
-    success();
-  }
+    showSuccessToast();
+  };
 
-  if (!data) {
-    return (
-      <section className="flex flex-row justify-center items-center gap-10 px-10 py-36 w-full">
-        <div className="flex gap-6 w-full">
-          <Skeleton.Node active style={{ width: 450, height: 450 }} />
-          <div className="flex flex-col gap-4 w-[60%]">
-            <Skeleton.Input active size="large" style={{ width: 200 }} />
-            <Skeleton paragraph={{ rows: 4 }} active />
-            <Skeleton.Button active size="large" shape="round" />
-            <Skeleton paragraph={{ rows: 6 }} active />
-          </div>
-        </div>
-      </section>
-    );
-  }
+  if (!data) return <ProductPageSkeleton />;
+
+  const productImages = data.imgs?.length ? data.imgs : FALLBACK_IMAGES;
 
   return (
-    <section className="flex md:flex-row flex-col justify-center items-center gap-10 md:px-10 py-2 md:py-36">
-      {contextHolder}
-      <div className="flex md:flex-row flex-col p-4 md:p-0 w-full">
-        <div className="flex flex-row md:flex-col gap-2 p-2 md:w-24 max-h-[40rem] overflow-x-scroll md:overflow-x-hidden md:overflow-y-scroll no-scrollbar">
-          {(data.imgs?.length ? data.imgs : fallbackImages).map((img, i) => (
-            <div
-              key={i}
-              onClick={() => setImageRender(img)}
-              className={`flex items-center rounded-sm outline-2 hover:outline-chocolate md:min-h-20 md:max-h-20 min-h-16 min-w-20 overflow-hidden duration-200 ${
-                img === imageRender
-                  ? "opacity-100 outline-chocolate"
-                  : "opacity-60 outline-transparent"
-              }`}
-            >
-              <img className="m-auto w-20 h-16" alt={data.name} src={img} />
-            </div>
-          ))}
+    <section className="mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 max-w-7xl">
+      <div className="gap-10 md:gap-16 grid grid-cols-1 md:grid-cols-2">
+        {/* Columna Izquierda - Imágenes */}
+        <div className="flex md:flex-row flex-col-reverse gap-4">
+          {/* Thumbnails */}
+          <div className="flex flex-row md:flex-col gap-3 md:gap-4 md:w-24 md:max-h-[600px] overflow-x-auto md:overflow-y-auto no-scrollbar shrink-0">
+            {productImages.map((img, i) => (
+              <div
+                key={i}
+                onClick={() => setImageRender(img)}
+                className={`cursor-pointer rounded-md aspect-square w-16 h-16 md:w-24 md:h-24 overflow-hidden shrink-0 transition-all duration-200 ring-offset-2 ${
+                  img === imageRender
+                    ? "ring-2 ring-primary scale-[1.02]"
+                    : "opacity-70 hover:opacity-100 hover:scale-[1.03]"
+                }`}
+              >
+                <img
+                  className="w-full h-full object-cover"
+                  alt={`Thumbnail ${i + 1} de ${data.name}`}
+                  src={img}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Imagen Principal */}
+          <div className="group relative flex-1">
+            <img
+              className="shadow-md rounded-lg w-full h-auto object-cover aspect-[1/1] group-hover:scale-[1.01] transition-transform duration-300"
+              alt={data.name}
+              src={imageRender}
+            />
+          </div>
         </div>
 
-        <img
-          className="m-auto md:h-[40rem]"
-          height={450}
-          width={550}
-          alt={data.name}
-          src={imageRender}
-        />
-      </div>
-
-      <div className="flex flex-col gap-2 px-2 md:px-0 md:w-[60%]">
-        <header className="font-bold text-subtitle text-4xl">
-          <h4>{data.name}</h4>
-        </header>
-
-        <section className="flex flex-col gap-4">
-          <h6 className="font-semibold text-2xl">
-            ${" "}
-            {data.priceOnSale ? (
-              <>
-                <span className="px-1 text-3xl">
-                  {Number(data.priceOnSale).toLocaleString()}
+        {/*  Columna Derecha - Información */}
+        <div className="md:top-28 md:sticky flex flex-col space-y-8">
+          {/* Título y Precio */}
+          <header className="space-y-3">
+            <h1 className="font-bold text-primary text-3xl md:text-4xl leading-tight">
+              {data.name}
+            </h1>
+            <h6 className="font-semibold text-neutral-900 text-2xl md:text-3xl">
+              {data.priceOnSale ? (
+                <>
+                  <span className="px-1 text-chocolate">
+                    ${Number(data.priceOnSale).toLocaleString("es-AR")}
+                  </span>
+                  <del className="px-2 text-neutral-500 text-lg">
+                    ${Number(data.price).toLocaleString("es-AR")}
+                  </del>
+                </>
+              ) : (
+                <span className="px-1">
+                  ${Number(data.price).toLocaleString("es-AR")}
                 </span>
-                <del className="px-2 text-gray-500 text-sm">
-                  {Number(data.price).toLocaleString()}
-                </del>
-              </>
-            ) : (
-              <span className="px-1 text-3xl">
-                {Number(data.price).toLocaleString()}
-              </span>
-            )}
-          </h6>
+              )}
+            </h6>
+          </header>
 
-          <div className="flex flex-col items-left gap-2">
-            <div className="flex gap-2 font-semibold">
-              Cantidad:
+          {/* Cantidad + Botón */}
+          <div className="flex flex-col space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="font-medium text-neutral-800">Cantidad:</span>
               <InputNumber
                 controls={false}
                 value={value}
                 min={1}
-                onChange={onChange}
+                onChange={handleQtyChange}
                 disabled={!data.available}
+                className="w-20"
               />
             </div>
+
             {!data.available && (
               <span className="font-medium text-red-600">
                 Producto no disponible
               </span>
             )}
+
+            <button
+              onClick={handleAddToCart}
+              className="bg-primary hover:bg-primary/90 disabled:bg-gray-400 shadow-sm hover:shadow-md px-6 py-3 rounded-md w-full font-semibold text-white text-base transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
+              disabled={!data.available}
+            >
+              Añadir al carrito
+            </button>
           </div>
 
-          <button
-            onClick={handleClick}
-            className="bg-subtitle hover:bg-chocolate disabled:bg-gray-400 px-4 py-1 rounded-md w-full font-semibold text-white text-lg duration-200 disabled:cursor-not-allowed"
-            disabled={!data.available}
-          >
-            Añadir al carrito
-          </button>
-        </section>
+          {/* Descripción */}
+          {data.description && (
+            <div className="space-y-2">
+              <h6 className="font-semibold text-primary text-lg md:text-xl">
+                Descripción:
+              </h6>
+              <p className="text-neutral-600 text-base leading-relaxed">
+                {data.description}
+              </p>
+            </div>
+          )}
 
-        <section className="flex flex-col gap-2">
-          <h6 className="font-semibold text-subtitle text-lg md:text-2xl">
-            Descripción:
-          </h6>
-          <p className="text-sm">{data.description}</p>
+          {/* Características */}
+          {(data.size || data.color || data.category?.name) && (
+            <div className="space-y-4">
+              <h6 className="font-semibold text-primary text-lg md:text-xl">
+                Características:
+              </h6>
 
-          <h6 className="font-semibold text-subtitle text-lg md:text-2xl">
-            Características:
-          </h6>
-          <ul className="flex flex-col gap-2 text-sm md:text-base">
-            {data.size && (
-              <li>
-                <span className="font-semibold">Tamaño:</span> {data.size}
-              </li>
-            )}
-            {data.color && (
-              <li>
-                <span className="font-semibold">Color:</span> {data.color}
-              </li>
-            )}
-          </ul>
-        </section>
+              <div className="flex flex-wrap gap-3">
+                {data.size && (
+                  <div className="bg-white shadow-sm px-4 py-2 rounded-md">
+                    <span className="font-semibold text-neutral-800 text-sm">
+                      Tamaño:
+                    </span>{" "}
+                    <span className="text-neutral-600 text-sm">
+                      {data.size}
+                    </span>
+                  </div>
+                )}
+
+                {data.color && <ProductColorTag color={data.color} />}
+
+                {data.category?.name && (
+                  <div className="bg-white shadow-sm px-4 py-2 rounded-md">
+                    <span className="font-semibold text-neutral-800 text-sm">
+                      Categoría:
+                    </span>{" "}
+                    <span className="text-neutral-600 text-sm">
+                      {data.category.name}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
 }
-
-export default Page;
