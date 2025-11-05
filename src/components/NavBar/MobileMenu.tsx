@@ -8,15 +8,17 @@ import CategorySidevar from "../categorySideVar/CategorySidevar";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+
   const path = usePathname();
-  const defineHeight = path.includes("productos") ? -50 : -95;
+
+  const initialY = -20;
+  const finalY = 0;
 
   return (
-    <div className="md:hidden relative">
-      {/* Botón hamburguesa */}
+    <div className="md:hidden z-50 relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="z-50 relative flex flex-col justify-center items-center w-8 h-8"
+        className="relative flex flex-col justify-center items-center w-8 h-8"
       >
         <motion.span
           animate={isOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
@@ -38,16 +40,22 @@ const MobileMenu = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: defineHeight, x: -60 }}
-            animate={{ opacity: 1, y: defineHeight, x: -25 }}
-            exit={{ opacity: 0, x: -60 }}
+            initial={{ opacity: 0, y: initialY, x: 0 }}
+            animate={{ opacity: 1, y: finalY, x: 0 }}
+            exit={{ opacity: 0, y: initialY, x: 0 }}
             transition={{ duration: 0.3 }}
-            className={`${
-              path.includes("/aboutUs") ? "top-[9.3rem]" : "top-[9.3rem]"
-            } absolute flex flex-col justify-start items-start space-y-4 bg-primary shadow-md p-16 rounded-br-[9rem] w-max h-max text-white text-lg`}
+            className={`
+              absolute top-full -left-6 mt-2 
+              flex flex-col justify-start items-start space-y-4 
+              bg-primary shadow-lg  rounded-br-full
+              px-18 py-18
+              w-max h-max text-white text-lg z-40 
+            `}
           >
             {/* Categorías */}
-            <CategorySidevar />
+            <div className="right-6 relative">
+              <CategorySidevar />
+            </div>
 
             {/* Links */}
             <Link
@@ -55,7 +63,7 @@ const MobileMenu = () => {
               onClick={() => setIsOpen(false)}
               className="group relative"
             >
-              <span className="text-white/90 hover:text-gray-400 transition-colors">
+              <span className="right-6 relative text-white/90 hover:text-gray-400 transition-colors">
                 PRODUCTOS
               </span>
             </Link>
@@ -65,8 +73,8 @@ const MobileMenu = () => {
               onClick={() => setIsOpen(false)}
               className="group relative"
             >
-              <span className="text-white/90 hover:text-gray-400 transition-colors">
-                SOBRE NOSOTROS
+              <span className="right-6 relative text-white/90 hover:text-gray-400 transition-colors">
+                NOSOTROS
               </span>
             </Link>
           </motion.div>
