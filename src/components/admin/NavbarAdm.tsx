@@ -24,11 +24,10 @@ export default function NavbarAdm({ sidebarOpen, setSidebarOpen }: Props) {
             priority
           />
           <div>
-            <Link
-              href="/"
-              className="right-5 relative font-semibold text-chocolate text-xl"
-            >
-              Purmamarca
+            <Link href="/">
+              <span className="right-5 relative font-semibold text-chocolate text-xl">
+                Purmamarca
+              </span>
             </Link>
             <h2 className="-top-1 relative font-medium text-primary text-sm">
               Holística & Decoración

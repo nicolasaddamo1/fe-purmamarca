@@ -1,12 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+
+import { Button, App } from "antd";
 import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 
 import { useProductStore } from "@/store/productsStore";
-import { getAllPromotions, createPromotion, patchPromotion, uploadPromotionImage, deletePromotion } from "@/app/axios/PromotionsApi";
+import {
+  getAllPromotions,
+  createPromotion,
+  patchPromotion,
+  uploadPromotionImage,
+  deletePromotion,
+} from "@/app/axios/PromotionsApi";
 import { IPromotion } from "@/interfaces/promotionsInterface";
 import PromotionModal from "@/components/admin/promotion/PromotionModal";
 import { CardPromotion } from "@/components/admin/promotion/CardPromotion";
@@ -15,7 +22,11 @@ function PromoPage() {
   const { promotions, setPromotions } = useProductStore();
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [promotionToEdit, setPromotionToEdit] = useState<IPromotion | null>(null);
+  const [promotionToEdit, setPromotionToEdit] = useState<IPromotion | null>(
+    null
+  );
+
+  const { modal } = App.useApp();
 
   useEffect(() => {
     async function fetchPromotions() {
@@ -35,15 +46,12 @@ function PromoPage() {
       const file = formData.get("file") as File | null;
       let imageUrl = "";
 
-      // 1️⃣ Subir imagen si existe
       if (file) {
         imageUrl = await uploadPromotionImage(file);
       }
 
-      // 2️⃣ Preparar payload con image_url ya listo
       if (imageUrl) formData.append("image_url", imageUrl);
 
-      // 3️⃣ Crear o editar promoción
       let updatedPromotions: IPromotion[] = [];
       let savedPromotion: IPromotion;
 
@@ -70,7 +78,7 @@ function PromoPage() {
   };
 
   const handleDelete = async (promotion: IPromotion) => {
-    Modal.confirm({
+    modal.confirm({
       title: "Borrar promoción",
       icon: <ExclamationCircleOutlined />,
       content: `¿Seguro querés borrar "${promotion.name}"?`,

@@ -42,16 +42,19 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) return;
-    const newFiles = [...files, ...acceptedFiles];
-    setFiles(newFiles);
-    const newPreviews = [
-      ...previews,
-      ...acceptedFiles.map((file) => URL.createObjectURL(file)),
-    ];
-    setPreviews(newPreviews);
-  }, [files, previews]);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length === 0) return;
+      const newFiles = [...files, ...acceptedFiles];
+      setFiles(newFiles);
+      const newPreviews = [
+        ...previews,
+        ...acceptedFiles.map((file) => URL.createObjectURL(file)),
+      ];
+      setPreviews(newPreviews);
+    },
+    [files, previews]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -62,9 +65,13 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
   const handleRemoveImage = (index: number) => {
     const removedImg = previews[index];
     if (removedImg.startsWith("http")) {
-      setExistingImgs((prev) => prev.filter((_, i) => previews.indexOf(prev[i]) !== index));
+      setExistingImgs((prev) =>
+        prev.filter((_, i) => previews.indexOf(prev[i]) !== index)
+      );
     } else {
-      setFiles((prev) => prev.filter((_, i) => i !== index - existingImgs.length));
+      setFiles((prev) =>
+        prev.filter((_, i) => i !== index - existingImgs.length)
+      );
     }
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
@@ -117,11 +124,10 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
       open={open}
       onCancel={onClose}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
       title="Editar producto"
     >
       <div className="flex flex-col gap-4">
-
         {/* 🖼️ ZONA DE SUBIDA DE IMÁGENES */}
         {previews.length > 0 && (
           <div className="flex flex-row gap-2 p-2 max-h-[40rem] overflow-x-scroll md:overflow-x-hidden md:overflow-y-scroll no-scrollbar">
