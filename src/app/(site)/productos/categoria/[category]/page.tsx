@@ -13,9 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "next/navigation";
 
 const Page: React.FC = () => {
-  const { category } = useParams(); // ✅ uso correcto en client
-  const catId = category ?? "todos"; // fallback a todos
-
+  const { category } = useParams();
+  const catId = category ?? "todos";
   const { categories, setCategories } = useCategoryStore();
   const { products, setProducts } = useProductStore();
   const [data, setData] = useState<IProduct[]>([]);
@@ -44,7 +43,6 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     if (!products?.length) return;
-
     if (catId === "todos") setData(products);
     else setData(products.filter((p) => p.categoryId === catId));
   }, [catId, products]);
@@ -116,6 +114,7 @@ const Page: React.FC = () => {
                     categoryName={prod.category?.name ?? ""}
                     stock={prod.stock}
                     description={prod.description}
+                    promotion={prod.promotion ?? null}
                   />
                 </motion.div>
               ))}
