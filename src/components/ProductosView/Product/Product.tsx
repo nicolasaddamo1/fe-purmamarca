@@ -37,7 +37,7 @@ const Product: React.FC<ProductProps> = ({
     const now = new Date();
     const start = new Date(promotion.start_date);
     const end = new Date(promotion.expiration_date);
-    // inclusión de límites: activa si ahora está entre start y end (ambos inclusive)
+    // activa si está entre start y end (inclusive)
     return now >= start && now <= end && promotion.promo_percentage > 0;
   }, [promotion]);
 
@@ -45,11 +45,9 @@ const Product: React.FC<ProductProps> = ({
     if (!isPromotionActive || !promotion) return null;
     const pct = Number(promotion.promo_percentage ?? 0);
     const discounted = price * (1 - pct / 100);
-    // redondeo a 2 decimales para evitar floats raros
     return Math.round(discounted * 100) / 100;
   }, [isPromotionActive, promotion, price]);
 
-  // decide qué precio mostrar (promo activa > priceOnSale > price)
   const displayPrice = discountedPrice ?? priceOnSale ?? price;
 
   return (
@@ -87,22 +85,30 @@ const Product: React.FC<ProductProps> = ({
         </Link>
 
         <div
-          className={`text-3xl md:text-2xl font-semibold ${
+          className={`text-3xl md:text-2xl font-semibold flex items-center gap-2 ${
             isAvailable ? "text-primary" : "text-gray-800"
           }`}
         >
           {discountedPrice != null ? (
-            <div className="flex items-center gap-2">
-              <span>
-                $
-                {discountedPrice.toLocaleString(undefined, {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 2,
-                })}
-              </span>
-              <del className="text-gray-500 md:text-xs text-lg">
-                ${price.toLocaleString()}
-              </del>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span>
+                  $
+                  {discountedPrice.toLocaleString(undefined, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+                <del className="text-gray-500 md:text-xs text-lg">
+                  ${price.toLocaleString()}
+                </del>
+                {/* Porcentaje */}
+                {promotion?.promo_percentage && (
+                  <span className="font-bold text-red-600 text-sm">
+                    -{promotion.promo_percentage}%
+                  </span>
+                )}
+              </div>
             </div>
           ) : priceOnSale != null ? (
             <div className="flex items-center gap-2">

@@ -111,7 +111,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
       open={open}
       onCancel={onClose}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
       title={promotionToEdit ? "Editar promoción" : "Crear promoción"}
       className="rounded-xl"
     >

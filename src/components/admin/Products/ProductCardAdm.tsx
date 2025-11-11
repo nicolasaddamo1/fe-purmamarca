@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-
-import { Card, Tooltip, Modal, App } from "antd";
+import { Card, Tooltip, App } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -26,27 +25,33 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const {
-    name,
-    imgs,
-    price,
-    stock,
-    size,
+  const { name, imgs, price, stock, size, onSale, priceOnSale, promotion } =
+    product;
 
-    onSale,
-    priceOnSale,
-    promotion,
-  } = product;
   const { toggleAvailability } = useProductStore();
   const [isAvailable, setIsAvailable] = useState(product.available);
 
   const { modal } = App.useApp();
 
+  // ✅ Imagen
   const imageSrc =
     imgs && imgs.length > 0 && imgs[0].startsWith("http")
       ? imgs[0]
       : "/placeholder.png";
 
+  // ✅ Verificar si la promoción está activa
+  const isPromoActive =
+    promotion &&
+    new Date(promotion.start_date) <= new Date() &&
+    new Date(promotion.expiration_date) >= new Date();
+
+  // ✅ Calcular precio con descuento
+  const promoDiscount =
+    isPromoActive && promotion?.promo_percentage
+      ? price - (price * promotion.promo_percentage) / 100
+      : null;
+
+  // ✅ Eliminar producto
   const handleDelete = () => {
     modal.confirm({
       title: "Borrar producto",
@@ -66,13 +71,13 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
     });
   };
 
+  // ✅ Cambiar disponibilidad
   const handleToggleAvailable = async () => {
     try {
       const updatedAvailable = !isAvailable;
       setIsAvailable(updatedAvailable);
 
       await updateProduct(product.id, { available: !product.available });
-
       toggleAvailability(product.id, updatedAvailable);
 
       toast.success(
@@ -126,18 +131,16 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
       ]}
     >
       <div className="relative -mx-6 -mt-6 mb-6 overflow-hidden">
-        {onSale ? (
+        {isPromoActive && promotion?.name ? (
+          <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
+            🔥 OFERTA {promotion.name.toUpperCase()}
+          </div>
+        ) : onSale ? (
           <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
             🔥 OFERTA
           </div>
-        ) : (
-          isAvailable &&
-          promotion?.name && (
-            <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
-              🔥 OFERTA {promotion.name.toUpperCase()}
-            </div>
-          )
-        )}
+        ) : null}
+
         <img
           alt={name}
           src={imageSrc}
@@ -150,17 +153,37 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
         description={
           <>
             <div className="flex items-center gap-2 mb-2">
-              {onSale && priceOnSale ? (
+              {isPromoActive && promotion?.promo_percentage ? (
                 <>
-                  <p className="text-gray-500 text-sm line-through">${price}</p>
+                  <p className="text-gray-500 text-sm line-through">
+                    ${Number(price).toLocaleString()}
+                  </p>
                   <p className="font-bold text-red-600 text-lg">
-                    ${priceOnSale}
+                    $
+                    {promoDiscount?.toLocaleString(undefined, {
+                      minimumFractionDigits: 0,
+                    })}{" "}
+                    <span className="text-gray-500 text-xs">
+                      (-{promotion.promo_percentage}%)
+                    </span>
+                  </p>
+                </>
+              ) : onSale && priceOnSale ? (
+                <>
+                  <p className="text-gray-500 text-sm line-through">
+                    ${Number(price).toLocaleString()}
+                  </p>
+                  <p className="font-bold text-red-600 text-lg">
+                    ${Number(priceOnSale).toLocaleString()}
                   </p>
                 </>
               ) : (
-                <p className="font-bold text-green-700 text-lg">${price}</p>
+                <p className="font-bold text-green-700 text-lg">
+                  ${Number(price).toLocaleString()}
+                </p>
               )}
             </div>
+
             <p>
               Stock:{" "}
               {isProductActive ? (
@@ -171,6 +194,7 @@ const ProductCardAdm: React.FC<ProductCardAdmProps> = ({
                 </span>
               )}
             </p>
+
             {size && <p>Tamaño: {size}</p>}
           </>
         }
