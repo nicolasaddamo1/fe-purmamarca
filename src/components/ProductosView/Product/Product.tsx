@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
+import type { IPromotion } from "@/interfaces/promotionsInterface";
 
 interface ProductProps {
   id: string;
@@ -11,14 +12,10 @@ interface ProductProps {
   onSale?: boolean;
   available?: boolean;
   imageUrl: string;
-  categoryName: string
-  promotion: {
-    name: string,
-    promo_percentage: number | null,
-    start_date: Date,
-    expiration_date: Date
-  } | null
+  categoryName: string;
+  promotion: IPromotion | null;
   stock?: number | string;
+  description?: string;
 }
 
 const Product: React.FC<ProductProps> = ({
@@ -35,30 +32,44 @@ const Product: React.FC<ProductProps> = ({
 }) => {
   const isAvailable = Boolean(available);
 
+  const isPromotionActive = React.useMemo(() => {
+    if (!promotion || promotion.promo_percentage == null) return false;
+    const now = new Date();
+    const start = new Date(promotion.start_date);
+    const end = new Date(promotion.expiration_date);
+    // activa si está entre start y end (inclusive)
+    return now >= start && now <= end && promotion.promo_percentage > 0;
+  }, [promotion]);
+
+  const discountedPrice = React.useMemo<number | null>(() => {
+    if (!isPromotionActive || !promotion) return null;
+    const pct = Number(promotion.promo_percentage ?? 0);
+    const discounted = price * (1 - pct / 100);
+    return Math.round(discounted * 100) / 100;
+  }, [isPromotionActive, promotion, price]);
+
+  const displayPrice = discountedPrice ?? priceOnSale ?? price;
+
   return (
     <div
       className={`group flex flex-col justify-between rounded-lg outline-1 w-64 md:w-56 h-auto m-auto hover:shadow-2xl duration-200
-        ${isAvailable
-          ? "outline-[#76644c67] hover:outline-[#76644c]"
-          : "outline-neutral-400 hover:outline-neutral-700"
+        ${
+          isAvailable
+            ? "outline-[#76644c67] hover:outline-[#76644c]"
+            : "outline-neutral-400 hover:outline-neutral-700"
         }
         ${!isAvailable ? "opacity-60" : ""} bg-white`}
     >
       <div
-        className={`${isAvailable ? "bg-[#dbc7ab]" : "bg-gray-200"
-          } w-full relative`}
+        className={`${
+          isAvailable ? "bg-[#dbc7ab]" : "bg-gray-200"
+        } w-full relative`}
       >
-        {(onSale && isAvailable) ? (
+        {isAvailable && (onSale || isPromotionActive) && (
           <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
-            🔥 OFERTA
-          </div>)
-          :
-          (isAvailable && promotion?.name) &&
-          (
-            <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
-              🔥 OFERTA {promotion.name.toUpperCase()}
-            </div>
-          )}
+            🔥 OFERTA {promotion?.name?.toUpperCase() ?? ""}
+          </div>
+        )}
 
         <img
           className="rounded-t-lg w-full h-48 object-cover"
@@ -74,14 +85,36 @@ const Product: React.FC<ProductProps> = ({
         </Link>
 
         <div
-          className={`text-3xl md:text-2xl font-semibold ${isAvailable ? "text-primary" : "text-gray-800"
-            }`}
+          className={`text-3xl md:text-2xl font-semibold flex items-center gap-2 ${
+            isAvailable ? "text-primary" : "text-gray-800"
+          }`}
         >
-          {priceOnSale ? (
-            <div className="flex items-center gap-1">
+          {discountedPrice != null ? (
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span>
+                  $
+                  {discountedPrice.toLocaleString(undefined, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+                <del className="text-gray-500 md:text-xs text-lg">
+                  ${price.toLocaleString()}
+                </del>
+                {/* Porcentaje */}
+                {promotion?.promo_percentage && (
+                  <span className="font-bold text-red-600 text-sm">
+                    -{promotion.promo_percentage}%
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : priceOnSale != null ? (
+            <div className="flex items-center gap-2">
               <span>${Number(priceOnSale).toLocaleString()}</span>
               <del className="text-gray-500 md:text-xs text-lg">
-                ${Number(price).toLocaleString()}
+                ${price.toLocaleString()}
               </del>
             </div>
           ) : (

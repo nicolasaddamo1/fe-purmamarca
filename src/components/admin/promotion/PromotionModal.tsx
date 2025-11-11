@@ -6,7 +6,7 @@ import { useDropzone } from "react-dropzone";
 import { FiCamera } from "react-icons/fi";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone"
+import timezone from "dayjs/plugin/timezone";
 import { useCategoryStore } from "@/store/categoryStore";
 import { IPromotion } from "@/interfaces/promotionsInterface";
 
@@ -94,7 +94,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
     formData.append("name", name.trim());
     formData.append("start_date", startDate);
     formData.append("expiration_date", expirationDate);
-    if (promoPercentage) formData.append("promo_percentage", promoPercentage);
+    if (promoPercentage)
+      formData.append("promo_percentage", String(promoPercentage));
+
     if (selectedCategories.length)
       selectedCategories.forEach((id) => {
         formData.append("category_ids", id);
@@ -109,7 +111,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
       open={open}
       onCancel={onClose}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
       title={promotionToEdit ? "Editar promoción" : "Crear promoción"}
       className="rounded-xl"
     >
@@ -162,7 +164,6 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
           <DatePicker
             placeholder="Fecha de inicio"
             className="w-full"
-
             value={startDate ? dayjs(startDate) : null}
             onChange={(d) => setStartDate(d ? d.toISOString() : "")}
           />

@@ -1,6 +1,5 @@
 import { create } from "zustand";
-
-import { persist } from "zustand/middleware";
+import { persist, PersistStorage } from "zustand/middleware";
 
 interface Admin {
   name: string;
@@ -58,10 +57,11 @@ export const useHasHydrated = () => {
 export const useAuthActions = () => {
   const logout = useStore((state) => state.logout);
 
-  const handleLogoutAndClearStorage = () => {
+  const handleLogoutAndClearStorage = async () => {
     logout();
-
-    (useStore.persist as any).clearStorage();
+    const storage = (useStore.persist?.getOptions().storage ??
+      localStorage) as PersistStorage<StoreState>;
+    await storage.removeItem("admin-store");
   };
 
   return { handleLogoutAndClearStorage };

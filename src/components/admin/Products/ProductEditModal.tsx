@@ -8,6 +8,7 @@ import { useProductStore } from "@/store/productsStore";
 import { updateProduct, uploadProductImages } from "@/app/axios/ProductosApi";
 import TextArea from "antd/es/input/TextArea";
 import { useCategoryStore } from "@/store/categoryStore";
+import { toast } from "react-toastify";
 
 interface ProductEditModalProps {
   open: boolean;
@@ -75,6 +76,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
     }
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
+
   const cleanProductPayload = (data: IProduct) => ({
     name: data.name,
     description: data.description,
@@ -108,12 +110,11 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
       const cleanId = formData.id?.replace(/[{}]/g, "");
       await updateProduct(cleanId, payload);
 
-      message.success("Producto actualizado correctamente");
+      toast.success("Producto actualizado correctamente");
       updateProductInStore({ ...formData, imgs: finalImgs });
       onClose();
     } catch (error) {
-      console.error(error);
-      message.error("Error al actualizar el producto");
+      toast.error("Error al actualizar el producto");
     } finally {
       setLoading(false);
     }
@@ -129,100 +130,132 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
     >
       <div className="flex flex-col gap-4">
         {/* 🖼️ ZONA DE SUBIDA DE IMÁGENES */}
-        {previews.length > 0 && (
-          <div className="flex flex-row gap-2 p-2 max-h-[40rem] overflow-x-scroll md:overflow-x-hidden md:overflow-y-scroll no-scrollbar">
-            {previews.map((img, i) => (
-              <div
-                key={i}
-                className="group relative flex justify-center items-center rounded-sm overflow-hidden"
-              >
-                <img
-                  src={img}
-                  alt={`Imagen ${i + 1}`}
-                  className="m-auto rounded-sm w-20 h-16 object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemoveImage(i);
-                  }}
-                  className="top-0 right-0 absolute bg-black/50 opacity-0 group-hover:opacity-100 p-1 rounded-full text-white transition"
-                >
-                  <FiX size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-        <div
-          {...getRootProps()}
-          className="relative flex flex-col justify-center items-center p-6 border-2 border-primary/70 hover:border-chocolate border-dashed rounded-lg h-60 transition cursor-pointer"
-        >
-          <input {...getInputProps()} />
-          <FiCamera className="mb-2 text-primary text-4xl" />
-          <p className="text-primary/70 hover:text-chocolate/70 text-sm text-center">
-            Arrastrá o seleccioná imágenes (podés subir varias)
+        <div>
+          <p className="mb-1 font-semibold text-primary text-sm">
+            Imágenes del producto
           </p>
+
+          {/* Dropzone principal */}
+          <div
+            {...getRootProps()}
+            className="relative flex justify-center items-center bg-gray-50 border-2 border-primary/70 hover:border-chocolate border-dashed rounded-xl h-52 overflow-hidden transition cursor-pointer"
+          >
+            <input {...getInputProps()} />
+            {previews.length > 0 ? (
+              <img
+                src={previews[0]}
+                alt="Imagen principal"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="flex flex-col items-center text-primary/70">
+                <FiCamera className="mb-2 text-3xl" />
+                <p className="text-sm text-center">
+                  Arrastrá o seleccioná imágenes (podés subir varias)
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Miniaturas */}
+          {previews.length > 1 && (
+            <div className="flex flex-wrap gap-3 mt-3">
+              {previews.slice(1).map((img, i) => (
+                <div
+                  key={i}
+                  className="group relative shadow-sm rounded-lg w-20 h-20 overflow-hidden"
+                >
+                  <img
+                    src={img}
+                    alt={`Imagen ${i + 2}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveImage(i + 1);
+                    }}
+                    className="top-1 right-1 absolute bg-black/50 opacity-0 group-hover:opacity-100 px-1 rounded-full text-white text-xs transition"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        <Input
-          type="text"
-          placeholder="Nombre"
-          className="p-3 border rounded-lg focus:ring-2 focus:ring-chocolate w-full"
-          value={formData.name}
-          onChange={(e) => setField("name", e.target.value)}
-        />
-        <Input
-          type="number"
-          placeholder="Precio"
-          className="p-3 border rounded-lg focus:ring-2 focus:ring-chocolate w-full"
-          value={formData.price}
-          onChange={(e) => setField("price", Number(e.target.value))}
-        />
-        <Input
-          type="number"
-          placeholder="Stock"
-          className="p-3 border rounded-lg focus:ring-2 focus:ring-chocolate w-full"
-          value={formData.stock}
-          onChange={(e) => setField("stock", Number(e.target.value))}
-        />
+        {/* 🏷️ CAMPOS DE TEXTO */}
+        <div>
+          <p className="mb-1 font-semibold text-primary text-sm">Nombre</p>
+          <Input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setField("name", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <p className="mb-1 font-semibold text-primary text-sm">Precio</p>
+          <Input
+            type="number"
+            value={formData.price}
+            onChange={(e) => setField("price", Number(e.target.value))}
+          />
+        </div>
+
+        <div>
+          <p className="mb-1 font-semibold text-primary text-sm">Stock</p>
+          <Input
+            type="number"
+            value={formData.stock}
+            onChange={(e) => setField("stock", Number(e.target.value))}
+          />
+        </div>
 
         <Flex gap={20}>
-          <Input
-            type="text"
-            placeholder="Tamaño"
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-chocolate w-full"
-            value={formData.size}
-            onChange={(e) => setField("size", e.target.value)}
-          />
-          <Input
-            type="text"
-            placeholder="Color"
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-chocolate w-full"
-            value={formData.color}
-            onChange={(e) => setField("color", e.target.value)}
-          />
+          <div className="w-full">
+            <p className="mb-1 font-semibold text-primary text-sm">Tamaño</p>
+            <Input
+              type="text"
+              value={formData.size}
+              onChange={(e) => setField("size", e.target.value)}
+            />
+          </div>
+
+          <div className="w-full">
+            <p className="mb-1 font-semibold text-primary text-sm">Color</p>
+            <Input
+              type="text"
+              value={formData.color}
+              onChange={(e) => setField("color", e.target.value)}
+            />
+          </div>
         </Flex>
 
-        <TextArea
-          placeholder="Descripción"
-          className="p-3 border rounded-lg focus:ring-2 focus:ring-chocolate w-full resize-none"
-          value={formData.description}
-          onChange={(e) => setField("description", e.target.value)}
-          rows={3}
-        />
+        <div>
+          <p className="mb-1 font-semibold text-primary text-sm">Descripción</p>
+          <TextArea
+            value={formData.description}
+            onChange={(e) => setField("description", e.target.value)}
+            rows={3}
+          />
+        </div>
 
-        <Select
-          placeholder="Selecciona categoría"
-          value={selectedCategories}
-          onChange={setSelectedCategories}
-          options={categories.map((cat) => ({
-            label: cat.name,
-            value: cat.id,
-          }))}
-          className="w-full"
-        />
+        <div>
+          <p className="mb-1 font-semibold text-primary text-sm">Categoría</p>
+          <Select
+            placeholder="Selecciona categoría"
+            value={selectedCategories}
+            onChange={setSelectedCategories}
+            options={categories.map((cat) => ({
+              label: cat.name,
+              value: cat.id,
+            }))}
+            className="w-full"
+          />
+        </div>
 
         <Flex align="center" gap={10}>
           <span>¿En oferta?</span>
@@ -234,13 +267,16 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
         </Flex>
 
         {formData.onSale && (
-          <Input
-            type="number"
-            placeholder="Precio en oferta"
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-chocolate w-full"
-            value={formData.priceOnSale}
-            onChange={(e) => setField("priceOnSale", Number(e.target.value))}
-          />
+          <div>
+            <p className="mb-1 font-semibold text-primary text-sm">
+              Precio en oferta
+            </p>
+            <Input
+              type="number"
+              value={formData.priceOnSale}
+              onChange={(e) => setField("priceOnSale", Number(e.target.value))}
+            />
+          </div>
         )}
 
         <Flex align="center" gap={10}>
@@ -252,7 +288,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
           />
         </Flex>
 
-        <div className="flex justify-center gap-6 mt-2">
+        <div className="flex justify-center gap-6 mt-4">
           <Button onClick={onClose} disabled={loading}>
             Cancelar
           </Button>

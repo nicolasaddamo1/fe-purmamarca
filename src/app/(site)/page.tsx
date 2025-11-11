@@ -11,6 +11,7 @@ import { useCategoryStore } from "@/store/categoryStore";
 import { getAllCategories } from "@/app/axios/categoriasApi";
 import { getAllProducts } from "@/app/axios/ProductosApi";
 import { getAllPromotions } from "../axios/PromotionsApi";
+import { IPromotion } from "@/interfaces/promotionsInterface";
 
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
@@ -111,7 +112,7 @@ const Page: React.FC = () => {
               price={prod.price}
               imageUrl={prod.imgs?.[0] ?? ""}
               categoryName={prod.category?.name ?? ""}
-              promotion={prod.promotion}
+              promotion={prod.promotion as unknown as IPromotion | null}
               stock={prod.stock}
             />
           ))}
