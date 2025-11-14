@@ -11,6 +11,8 @@ import { getAllCategories } from "@/app/axios/categoriasApi";
 import { getAllProducts } from "@/app/axios/ProductosApi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "next/navigation";
+import { IPromotion } from "@/interfaces/promotionsInterface";
+import CategoryCarousel from "@/components/CategoryCarousel/CategoryCarousel";
 
 const Page: React.FC = () => {
   const { category } = useParams();
@@ -58,17 +60,7 @@ const Page: React.FC = () => {
           name="Ve Otras"
           highlight="Categorías"
         />
-        <div className="flex flex-row justify-left items-center gap-4 p-4 w-full max-w-[1200px] overflow-x-scroll no-scrollbar">
-          <Category id="todos" name="Todos" imageUrl="/logopurma.png" />
-          {categories?.map((cat) => (
-            <Category
-              key={cat.id}
-              id={cat.id}
-              name={cat.name}
-              imageUrl={cat.categoryImage ?? ""}
-            />
-          ))}
-        </div>
+        <CategoryCarousel categories={categories} />
       </section>
 
       <HeadSection
@@ -114,7 +106,7 @@ const Page: React.FC = () => {
                     categoryName={prod.category?.name ?? ""}
                     stock={prod.stock}
                     description={prod.description}
-                    promotion={prod.promotion ?? null}
+                    promotion={prod.promotion as unknown as IPromotion | null}
                   />
                 </motion.div>
               ))}

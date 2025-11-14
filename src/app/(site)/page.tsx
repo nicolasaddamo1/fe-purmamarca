@@ -12,6 +12,7 @@ import { getAllCategories } from "@/app/axios/categoriasApi";
 import { getAllProducts } from "@/app/axios/ProductosApi";
 import { getAllPromotions } from "../axios/PromotionsApi";
 import { IPromotion } from "@/interfaces/promotionsInterface";
+import { toast } from "react-toastify";
 
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
@@ -36,6 +37,7 @@ const Page: React.FC = () => {
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);
+        toast.error("Error al obtener datos");
       }
     };
 
