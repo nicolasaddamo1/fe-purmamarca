@@ -121,13 +121,6 @@ const Product: React.FC<ProductProps> = ({
             <p>${Number(price).toLocaleString()}</p>
           )}
         </div>
-
-        {/* Stock */}
-        <p className={`${isAvailable ? "text-primary" : "text-red-600"}`}>
-          {isAvailable
-            ? `Stock: ${stock ?? "No especificado"}`
-            : "Stock: Agotado"}
-        </p>
       </div>
 
       {/* Botón Ver Más */}
