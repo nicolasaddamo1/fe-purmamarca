@@ -12,6 +12,7 @@ interface ProductStore {
   clearPromotions: () => void;
   toggleAvailability: (id: string, available: boolean) => void;
   updateProductInStore: (updated: IProduct) => void;
+  refreshStore: (newProducts: IProduct[], newPromotions: IPromotion[]) => void;
 }
 
 export const useProductStore = create<ProductStore>()(
@@ -35,6 +36,8 @@ export const useProductStore = create<ProductStore>()(
             String(p.id) === String(updated.id) ? updated : p
           ),
         })),
+      refreshStore: (newProducts, newPromotions) =>
+        set({ products: newProducts, promotions: newPromotions }),
     }),
     {
       name: "products-storage",

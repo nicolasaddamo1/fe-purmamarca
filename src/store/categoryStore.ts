@@ -9,6 +9,7 @@ interface CategoryStore {
   updateCategoryInStore: (category: ICategory) => void;
   removeCategory: (id: string) => void;
   clearCategories: () => void;
+  refreshStore: (newCategories: ICategory[]) => void;
 }
 
 export const useCategoryStore = create<CategoryStore>()(
@@ -29,6 +30,7 @@ export const useCategoryStore = create<CategoryStore>()(
           categories: state.categories.filter((c) => c.id !== id),
         })),
       clearCategories: () => set({ categories: [] }),
+      refreshStore: (newCategories) => set({ categories: newCategories }),
     }),
     {
       name: "categories-storage",
