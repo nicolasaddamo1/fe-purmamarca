@@ -92,21 +92,25 @@ const Page: React.FC = () => {
           highlight="mejor precio"
         />
         <div className="gap-6 grid grid-cols-1 md:grid-cols-5 md:p-4 w-full">
-          {displayProducts.map((prod) => (
-            <Product
-              key={prod.id}
-              id={prod.id}
-              available={prod.available}
-              onSale={prod.onSale}
-              priceOnSale={prod.priceOnSale}
-              name={prod.name}
-              price={prod.price}
-              imageUrl={prod.imgs?.[0] ?? ""}
-              categoryName={prod.category?.name ?? ""}
-              promotion={prod.promotion as unknown as IPromotion | null}
-              stock={prod.stock}
-            />
-          ))}
+          {displayProducts.map((prod) => {
+            // console.log("🟡 PROMO DEL PRODUCTO:", prod.name, prod.promotion);
+
+            return (
+              <Product
+                key={prod.id}
+                id={prod.id}
+                available={prod.available}
+                onSale={prod.onSale}
+                priceOnSale={prod.priceOnSale}
+                name={prod.name}
+                price={prod.price}
+                imageUrl={prod.imgs?.[0] ?? ""}
+                categoryName={prod.category?.name ?? ""}
+                promotion={prod.promotion}
+                stock={prod.stock}
+              />
+            );
+          })}
         </div>
       </section>
     </div>
