@@ -9,6 +9,7 @@ import Image from "next/image";
 import { FaRegTrashAlt } from "react-icons/fa";
 import PedidoFormModal from "../modal/FormInfo";
 import Link from "next/link";
+import { IoClose } from "react-icons/io5";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,69 +28,123 @@ export default function Sidebar() {
     <AnimatePresence>
       {isOpen && (
         <div className="z-[999] fixed inset-0">
-          {/* Overlay */}
+          {/* Overlay Oscuro */}
           <motion.div
-            className="absolute inset-0 bg-black/20"
+            className="absolute inset-0 bg-black/40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Sidebar */}
+          {/* Sidebar Principal */}
           <motion.aside
-            className="top-0 right-0 z-50 fixed flex flex-col bg-background shadow-xl w-[80%] md:w-80 h-full"
+            className="top-0 right-0 fixed flex flex-col bg-white shadow-2xl w-[80%] max-w-xs h-full"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.3 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <header className="flex justify-between items-center p-4 border-b">
-              <h2 className="font-semibold text-chocolate text-xl tracking-wide">
-                Carrito
+            {/* Encabezado Fijo y Estético */}
+            <header className="top-0 sticky flex justify-between items-center bg-primary/70 shadow-sm p-4 border-gray-100 border-b">
+              <h2 className="flex items-center gap-2 font-extrabold text-white text-xl tracking-wide">
+                <CgShoppingCart className="w-6 h-6" />
               </h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-gray-600 hover:text-black"
+                className="hover:bg-white/20 p-1 rounded-full text-white/90 transition-colors"
+                aria-label="Cerrar carrito de compras"
               >
-                ✕
+                <IoClose className="w-6 h-6" />
               </button>
             </header>
 
-            <div className="flex flex-col flex-1 md:p-4 overflow-y-auto">
+            {/* Contenido del Carrito (Scrollable) */}
+            <div className="flex flex-col flex-grow p-3 w-full overflow-y-auto">
               {prods.length >= 1 ? (
-                prods.map((prod, i) => (
-                  <Link
-                    href={`/productos/detalle/${prod.id}`}
-                    key={i}
-                    className="flex flex-row items-center gap-2 hover:bg-white/40 p-2 duration-200 cursor-default"
-                  >
-                    <Image
-                      height={80}
-                      width={80}
-                      className="w-14 md:w-20 h-14 md:h-20"
-                      alt={prod.name}
-                      src={prod.imgs[0]}
-                    />
-                    <section className="w-full">
-                      <h6 className="font-medium text-subtitle">{prod.name}</h6>
-                      <p>
-                        Cant: <span>{prod.stock_order}</span>
-                      </p>
-                    </section>
-                    <FaRegTrashAlt
-                      onClick={() => deleteProd(prod)}
-                      className="self-start size-10 md:size-7 text-red-500 hover:text-red-700 duration-200"
-                      size={20}
-                    />
-                  </Link>
-                ))
+                prods.map((prod, i) => {
+                  const unitPrice =
+                    prod.onSale && prod.priceOnSale && prod.priceOnSale > 0
+                      ? prod.priceOnSale
+                      : prod.price;
+
+                  const finalPrice = unitPrice * prod.stock_order;
+
+                  const isOnSale =
+                    prod.onSale && prod.priceOnSale && prod.priceOnSale > 0;
+
+                  return (
+                    <div
+                      key={i}
+                      className="flex flex-row items-center gap-3 hover:bg-primary/5 p-2 rounded-lg transition-colors duration-200"
+                    >
+                      {/* Contenedor del Link para la imagen y texto */}
+                      <Link
+                        href={`/productos/detalle/${prod.id}`}
+                        onClick={() => setIsOpen(false)}
+                        className="flex flex-grow items-center gap-3"
+                      >
+                        <Image
+                          height={80}
+                          width={80}
+                          className="flex-shrink-0 border border-gray-200 rounded-md w-16 h-16 object-cover"
+                          alt={prod.name}
+                          src={prod.imgs[0]}
+                        />
+                        <section className="w-full">
+                          <h6 className="font-semibold text-primary/90 text-sm">
+                            {prod.name}
+                          </h6>
+                          <p className="mt-1 text-gray-600 text-xs">
+                            Cant:{" "}
+                            <span className="font-bold">
+                              {prod.stock_order}
+                            </span>
+                          </p>
+
+                          {/* Muestra el precio con la lógica de oferta */}
+                          <div className="flex items-center gap-2 mt-1">
+                            {isOnSale && (
+                              <span className="font-medium text-gray-500 text-xs line-through">
+                                ${(prod.price * prod.stock_order).toFixed(2)}
+                              </span>
+                            )}
+                            <p
+                              className={`font-bold text-sm ${
+                                isOnSale ? "text-red-600" : "text-chocolate"
+                              }`}
+                            >
+                              ${finalPrice.toFixed(2)}
+                            </p>
+                          </div>
+                        </section>
+                      </Link>
+
+                      {/* Botón de Eliminar */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteProd(prod);
+                        }}
+                        className="flex-shrink-0 hover:bg-red-100 p-2 rounded-full text-red-500 hover:text-red-700 transition-colors"
+                        aria-label={`Eliminar ${prod.name} del carrito`}
+                      >
+                        <FaRegTrashAlt size={16} />
+                      </button>
+                    </div>
+                  );
+                })
               ) : (
-                <p className="text-gray-500">Tu carrito está vacío.</p>
+                <div className="flex justify-center items-center p-4 h-full">
+                  <p className="font-medium text-gray-500 text-center">
+                    Tu carrito está vacío. ¡Añade algunos productos!
+                  </p>
+                </div>
               )}
             </div>
 
-            <footer className="p-4 border-t">
+            {/* Footer Fijo con Botón de Pedido */}
+            <footer className="bottom-0 sticky bg-white shadow-lg p-4 border-gray-200 border-t">
               <PedidoFormModal />
             </footer>
           </motion.aside>
@@ -102,9 +157,9 @@ export default function Sidebar() {
     <>
       <div
         onClick={() => setIsOpen(true)}
-        className="text-white/70 hover:text-primary duration-300 cursor-pointer"
+        className="group relative flex items-center gap-2 hover:bg-primary/20 p-2 rounded-lg font-bold text-white/90 hover:text-white tracking-wider transition-colors duration-300 cursor-pointer"
       >
-        <CgShoppingCart size={20} />
+        <CgShoppingCart className="w-5 h-5" />
       </div>
 
       {mounted && createPortal(sidebarContent, document.body)}

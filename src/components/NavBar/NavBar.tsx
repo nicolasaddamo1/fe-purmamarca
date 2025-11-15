@@ -9,11 +9,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import SidebarExample from "../cart/sideVar";
-import CategorySidevar from "@/components/categorySideVar/CategorySidevar";
+
 import { useStore, useHasHydrated, useAuthActions } from "@/store/useStore";
 import { toast } from "react-toastify";
 import AdminDropdown from "@/components/admin/AdminDropdown";
 import { useCartStore } from "@/store/cartStore";
+import CategorySidebar from "../categorySidebar/CategorySidebar";
 
 const SEARCH_DEBOUNCE_MS = 250;
 
@@ -133,7 +134,7 @@ const NavBar: React.FC = () => {
           )}
 
           <div className="hidden md:flex">
-            <CategorySidevar />
+            <CategorySidebar />
           </div>
 
           <div className="hidden md:flex items-center gap-6">
@@ -167,7 +168,7 @@ const NavBar: React.FC = () => {
           <div className="relative">
             <SidebarExample />
             {totalItems > 0 && (
-              <span className="block top-0.5 -right-0.5 absolute bg-red-600 rounded-full w-2 h-2 -translate-y-1/2 translate-x-1/2 transform" />
+              <span className="block top-2.5 right-2 absolute bg-red-500 rounded-full w-2 h-2 -translate-y-1/2 translate-x-1/2 transform" />
             )}
           </div>
         </div>
