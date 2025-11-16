@@ -74,7 +74,7 @@ const Page: React.FC = () => {
 
       <section className="flex flex-col gap-6 md:px-4 py-10">
         {/* Sidebar de categorías */}
-        <div className="hidden md:block">
+        <div className="">
           <HeadSection
             verMas={false}
             link="/home"

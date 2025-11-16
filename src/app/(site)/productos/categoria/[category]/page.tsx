@@ -13,6 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "next/navigation";
 import { IPromotion } from "@/interfaces/promotionsInterface";
 import CategoryCarousel from "@/components/CategoryCarousel/CategoryCarousel";
+import Link from "next/link";
+import { HiArrowLeft } from "react-icons/hi2";
 
 const Page: React.FC = () => {
   const { category } = useParams();
@@ -63,12 +65,22 @@ const Page: React.FC = () => {
         <CategoryCarousel categories={categories} />
       </section>
 
-      <HeadSection
-        verMas={false}
-        link="/home"
-        name="Nuestros mejores productos en"
-        highlight={catData?.name ?? "Todos"}
-      />
+      <div className="relative">
+        <HeadSection
+          verMas={false}
+          link="/home"
+          name="Nuestros mejores productos en"
+          highlight={catData?.name ?? "Todos"}
+        />
+
+        <Link
+          href="/"
+          className="md:hidden flex items-center gap-1 -mt-2 mb-4 pl-6 font-medium text-primary hover:text-primary/80 text-lg transition-colors"
+        >
+          <HiArrowLeft size={18} className="text-primary" />
+          <span className="text-primary">Volver</span>
+        </Link>
+      </div>
 
       <div className="gap-6 grid grid-cols-1 md:grid-cols-5 p-2 md:p-4 w-full min-h-[400px]">
         <AnimatePresence mode="wait">

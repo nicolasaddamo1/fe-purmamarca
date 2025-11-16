@@ -14,8 +14,8 @@ function HeadSection({
   verMas: boolean;
 }) {
   return (
-    <div className="flex md:flex-row flex-col justify-between items-end p-2 md:px-10">
-      <h4 className="-left-8 relative flex md:flex-row flex-col items-center md:items-start gap-2 font-semibold text-chocolate text-xl md:text-2xl md:text-left text-center tracking-wide">
+    <div className="flex md:flex-row flex-col justify-between items-center md:items-end p-2 md:px-10">
+      <h4 className="relative flex md:flex-row flex-col items-center gap-2 font-semibold text-chocolate text-xl md:text-2xl md:text-left text-center tracking-wide">
         {name}
         <span className="font-medium text-primary/80 md:text-2xl text-3xl">
           {highlight ? highlight : null}
