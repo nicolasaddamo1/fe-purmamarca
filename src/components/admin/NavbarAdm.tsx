@@ -3,14 +3,41 @@ import Image from "next/image";
 import { useState } from "react";
 import DropdownUser from "./DropdownUser";
 import { HiMenu } from "react-icons/hi";
+import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Input } from "antd";
 
 interface Props {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
 }
 
-export default function NavbarAdm({ sidebarOpen, setSidebarOpen }: Props) {
+export default function NavbarAdm({
+  sidebarOpen,
+  setSidebarOpen,
+}: Props): React.ReactElement {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentSearch: string = searchParams.get("search") || "";
+  const [searchTerm, setSearchTerm] = useState<string>(currentSearch);
+
+  const handleSearchChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const value: string = event.target.value;
+    setSearchTerm(value);
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (value.trim()) {
+      params.set("search", value.trim());
+    } else {
+      params.delete("search");
+    }
+
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+
   return (
     <nav className="flex justify-between items-center bg-chocolate/10 shadow-md px-6 py-4 w-full h-[70px]">
       <div className="flex items-center gap-4">
@@ -41,6 +68,18 @@ export default function NavbarAdm({ sidebarOpen, setSidebarOpen }: Props) {
           <HiMenu className="w-6 h-6 text-white" />
         </button>
       </div>
+
+      <div className="hidden sm:block flex-1 mx-8 max-w-lg">
+        <Input
+          placeholder="Buscar productos por nombre o descripción..."
+          prefix={<SearchOutlined />}
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="focus:shadow-primary/50 border-2 border-primary/50 rounded-xl transition duration-150"
+          style={{ height: "40px" }}
+        />
+      </div>
+
       <DropdownUser />
     </nav>
   );

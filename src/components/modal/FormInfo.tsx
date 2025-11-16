@@ -7,79 +7,105 @@ import { FaWhatsapp } from "react-icons/fa";
 
 const { Text } = Typography;
 
+/* -------------------------------------------
+   MISMA LÓGICA QUE EL SIDEBAR (PROMO + ONSALE)
+---------------------------------------------- */
+function getFinalUnitPrice(prod: any) {
+  const now = new Date();
+
+  const hasPromo =
+    prod.promotion &&
+    prod.promotion.promo_percentage &&
+    prod.promotion.promo_percentage > 0 &&
+    new Date(prod.promotion.start_date) <= now &&
+    new Date(prod.promotion.expiration_date) >= now;
+
+  if (hasPromo) {
+    const discount = prod.price * (prod.promotion.promo_percentage / 100);
+    return prod.price - discount;
+  }
+
+  if (prod.onSale && prod.priceOnSale && prod.priceOnSale > 0) {
+    return prod.priceOnSale;
+  }
+
+  return prod.price;
+}
+
 export default function PedidoFormModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const { prods, clearCart } = useCartStore();
 
+  /* --- TOTAL DE ITEMS Y TOTAL DE PRECIO --- */
   const { totalAmount, totalItems } = useMemo(() => {
     let totalAmount = 0;
     let totalItems = 0;
 
     prods.forEach((prod) => {
-      const unitPrice =
-        prod.onSale && prod.priceOnSale && prod.priceOnSale > 0
-          ? prod.priceOnSale
-          : prod.price;
+      const unitPrice = getFinalUnitPrice(prod);
       totalAmount += unitPrice * prod.stock_order;
       totalItems += prod.stock_order;
     });
 
-    return { totalAmount: totalAmount, totalItems: totalItems };
+    return { totalAmount, totalItems };
   }, [prods]);
 
   const handleFinish = (values: any) => {
     const { nombre, direccion, localidad, codigoPostal, telefono, correo } =
       values;
 
-    // --- 1. ENCABEZADO Y DATOS DEL CLIENTE ---
+    // --- ENCABEZADO NUEVO ---
     let mensaje = `
-*--- PEDIDO DE PRODUCTOS ---*
+Hola! Estoy interesado en comprar estos productos 
 
-*Cliente:* ${nombre}
+*--- DATOS DEL CLIENTE ---*
+*Nombre:* ${nombre}
 *Teléfono:* ${telefono}
 *Correo:* ${correo}
-*Dirección de Envío:*
+
+*Dirección:*
 - ${direccion}
 - ${localidad} (CP: ${codigoPostal})
 
-*---  DETALLE DE LA ORDEN (${totalItems} artículos) ---*
+*--- DETALLE DEL CARRITO (${totalItems} artículos) ---*
 `;
-    // --- 2. LISTA DE PRODUCTOS (incluyendo URL de la imagen) ---
+
+    // --- PRODUCTOS ---
     prods.forEach((prod, index) => {
-      const unitPrice =
-        prod.onSale && prod.priceOnSale && prod.priceOnSale > 0
-          ? prod.priceOnSale
-          : prod.price;
+      const unitPrice = getFinalUnitPrice(prod);
       const totalProducto = unitPrice * prod.stock_order;
 
-      const imageUrl = prod.imgs?.[0] || "No disponible";
+      const isPromo =
+        prod.promotion &&
+        prod.promotion.promo_percentage &&
+        prod.promotion.promo_percentage > 0;
 
       mensaje += `
 *${index + 1}. ${prod.name}*
    - Cantidad: ${prod.stock_order}
    - Precio Unitario: $${unitPrice.toFixed(2)} ${
-        prod.onSale ? "(*Oferta*)" : ""
+        isPromo ? "(*Promo*)" : prod.onSale ? "(*Oferta*)" : ""
       }
    - Total Producto: $${totalProducto.toFixed(2)}
-   - Imagen: ${imageUrl} 
+   
 `;
     });
 
-    // --- 3. RESUMEN FINAL ---
+    // --- RESUMEN ---
     mensaje += `
-*---  RESUMEN DE COBRO ---*
-*Total a Pagar:* $${totalAmount.toFixed(2)}
+*--- TOTAL FINAL ---*
+$${totalAmount.toFixed(2)}
 
-¡Gracias por su pedido!`;
+Me gustaria saber  los medios de pago y cómo seguimos?
+`;
 
-    // Envío a WhatsApp
-    const url = `https://wa.me/542615515398?text=${encodeURIComponent(
+    // WhatsApp
+    const url = `https://wa.me/5491133324141?text=${encodeURIComponent(
       mensaje
     )}`;
     window.open(url, "_blank");
 
-    // Limpieza
     setIsModalOpen(false);
     form.resetFields();
     clearCart();
@@ -113,15 +139,19 @@ export default function PedidoFormModal() {
           <h3 className="mb-2 font-semibold text-primary/80">
             Resumen de la Orden
           </h3>
+
           <List
             size="small"
             dataSource={prods}
             renderItem={(prod) => {
-              const unitPrice =
-                prod.onSale && prod.priceOnSale && prod.priceOnSale > 0
-                  ? prod.priceOnSale
-                  : prod.price;
+              const unitPrice = getFinalUnitPrice(prod);
               const totalProducto = unitPrice * prod.stock_order;
+
+              const isPromo =
+                prod.promotion &&
+                prod.promotion.promo_percentage &&
+                prod.promotion.promo_percentage > 0;
+
               return (
                 <List.Item>
                   <List.Item.Meta
@@ -131,15 +161,21 @@ export default function PedidoFormModal() {
                       </Text>
                     }
                     description={
-                      prod.onSale ? (
-                        <Text type="danger" className="text-xs">
-                          OFERTA: ${unitPrice.toFixed(2)} c/u
-                        </Text>
-                      ) : (
-                        <Text className="text-xs">
-                          ${unitPrice.toFixed(2)} c/u
-                        </Text>
-                      )
+                      <Text
+                        className={`text-xs ${
+                          isPromo
+                            ? "text-green-700"
+                            : prod.onSale
+                            ? "text-red-600"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        {isPromo
+                          ? `PROMO: $${unitPrice.toFixed(2)} c/u`
+                          : prod.onSale
+                          ? `OFERTA: $${unitPrice.toFixed(2)} c/u`
+                          : `$${unitPrice.toFixed(2)} c/u`}
+                      </Text>
                     }
                   />
                   <div>
@@ -151,6 +187,7 @@ export default function PedidoFormModal() {
               );
             }}
           />
+
           <div className="flex justify-between mt-3 pt-2 border-gray-200 border-t">
             <Text strong className="text-md">
               Total Final ({totalItems} items)
@@ -165,12 +202,7 @@ export default function PedidoFormModal() {
           <Form.Item
             name="nombre"
             label="Nombre completo"
-            rules={[
-              {
-                required: true,
-                message: "Por favor ingrese su nombre completo",
-              },
-            ]}
+            rules={[{ required: true, message: "Ingrese su nombre completo" }]}
           >
             <Input />
           </Form.Item>
@@ -178,9 +210,7 @@ export default function PedidoFormModal() {
           <Form.Item
             name="direccion"
             label="Dirección"
-            rules={[
-              { required: true, message: "Por favor ingrese su dirección" },
-            ]}
+            rules={[{ required: true, message: "Ingrese su dirección" }]}
           >
             <Input />
           </Form.Item>
@@ -188,9 +218,7 @@ export default function PedidoFormModal() {
           <Form.Item
             name="localidad"
             label="Localidad"
-            rules={[
-              { required: true, message: "Por favor ingrese su localidad" },
-            ]}
+            rules={[{ required: true, message: "Ingrese su localidad" }]}
           >
             <Input />
           </Form.Item>
@@ -198,9 +226,7 @@ export default function PedidoFormModal() {
           <Form.Item
             name="codigoPostal"
             label="Código Postal"
-            rules={[
-              { required: true, message: "Por favor ingrese su código postal" },
-            ]}
+            rules={[{ required: true, message: "Ingrese su código postal" }]}
           >
             <Input />
           </Form.Item>
@@ -208,9 +234,7 @@ export default function PedidoFormModal() {
           <Form.Item
             name="telefono"
             label="Teléfono"
-            rules={[
-              { required: true, message: "Por favor ingrese su teléfono" },
-            ]}
+            rules={[{ required: true, message: "Ingrese su teléfono" }]}
           >
             <Input />
           </Form.Item>
@@ -219,8 +243,8 @@ export default function PedidoFormModal() {
             name="correo"
             label="Correo"
             rules={[
-              { required: true, message: "Por favor ingrese su correo" },
-              { type: "email", message: "Ingrese un correo válido" },
+              { required: true, message: "Ingrese su correo" },
+              { type: "email", message: "Correo inválido" },
             ]}
           >
             <Input />
