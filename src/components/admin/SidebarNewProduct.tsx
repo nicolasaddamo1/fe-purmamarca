@@ -64,7 +64,7 @@ const SidebarNewProduct: React.FC = () => {
         available: boolean;
       } = {
         name: product.name,
-        description: product.description,
+        description: product.description || "Sin descripción",
         color: product.color,
         categoryId: product.categoryId,
         price: product.price,

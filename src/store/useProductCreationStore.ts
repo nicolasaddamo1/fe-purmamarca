@@ -2,6 +2,7 @@
 import { create } from "zustand";
 
 interface ProductCreationStore {
+  categoryName: string;
   name: string;
   description: string;
   color: string;
@@ -22,6 +23,7 @@ interface ProductCreationStore {
 }
 
 export const useProductCreationStore = create<ProductCreationStore>((set) => ({
+  categoryName: "",
   name: "",
   description: "",
   color: "",
@@ -37,6 +39,7 @@ export const useProductCreationStore = create<ProductCreationStore>((set) => ({
   setField: (key, value) => set((state) => ({ ...state, [key]: value })),
   resetForm: () =>
     set({
+      categoryName: "",
       name: "",
       description: "",
       color: "",

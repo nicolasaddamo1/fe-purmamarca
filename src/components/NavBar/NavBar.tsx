@@ -1,4 +1,3 @@
-// components/NavBar/NavBar.tsx
 "use client";
 
 import Link from "next/link";
@@ -9,11 +8,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import SidebarExample from "../cart/sideVar";
-import CategorySidevar from "@/components/categorySideVar/CategorySidevar";
+
 import { useStore, useHasHydrated, useAuthActions } from "@/store/useStore";
 import { toast } from "react-toastify";
 import AdminDropdown from "@/components/admin/AdminDropdown";
 import { useCartStore } from "@/store/cartStore";
+import CategorySidebar from "../categorySidebar/CategorySidebar";
 
 const SEARCH_DEBOUNCE_MS = 250;
 
@@ -101,31 +101,33 @@ const NavBar: React.FC = () => {
           className="flex items-center gap-6 ml-auto font-medium text-white/90 text-sm"
         >
           {pathname === "/" && (
-            <div className="hidden relative md:flex items-center">
+            <div className="relative flex items-center">
               <button
                 aria-label="Buscar"
                 onClick={() => {
                   setShowSearch((s) => !s);
                   setTimeout(() => inputRef.current?.focus(), 120);
                 }}
-                className="p-1 rounded hover:text-primary transition-colors"
+                className="p-1 rounded text-white md:text-chocolate hover:text-primary transition-colors"
               >
                 <LiaSearchSolid size={22} />
               </button>
-
               <AnimatePresence>
                 {showSearch && (
                   <motion.input
                     key="nav-search-input"
                     ref={inputRef}
                     initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 220, opacity: 1 }}
+                    animate={{
+                      width: showSearch ? "180px" : 0,
+                      opacity: 1,
+                    }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.22 }}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Buscar..."
-                    className="right-6 absolute bg-white px-3 py-1 border border-gray-300 rounded-md outline-none text-black text-sm -translate-x-2"
+                    className="right-full md:right-6 z-50 absolute bg-white px-3 py-1 border border-gray-300 rounded-md outline-none text-black text-sm -translate-x-3 md:translate-x-0"
                   />
                 )}
               </AnimatePresence>
@@ -133,7 +135,7 @@ const NavBar: React.FC = () => {
           )}
 
           <div className="hidden md:flex">
-            <CategorySidevar />
+            <CategorySidebar />
           </div>
 
           <div className="hidden md:flex items-center gap-6">
@@ -167,7 +169,7 @@ const NavBar: React.FC = () => {
           <div className="relative">
             <SidebarExample />
             {totalItems > 0 && (
-              <span className="block top-0.5 -right-0.5 absolute bg-red-600 rounded-full w-2 h-2 -translate-y-1/2 translate-x-1/2 transform" />
+              <span className="block top-2.5 right-2 absolute bg-red-500 rounded-full w-2 h-2 -translate-y-1/2 translate-x-1/2 transform" />
             )}
           </div>
         </div>
