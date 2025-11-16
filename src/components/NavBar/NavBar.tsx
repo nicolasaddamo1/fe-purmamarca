@@ -1,4 +1,3 @@
-// components/NavBar/NavBar.tsx
 "use client";
 
 import Link from "next/link";
@@ -102,31 +101,33 @@ const NavBar: React.FC = () => {
           className="flex items-center gap-6 ml-auto font-medium text-white/90 text-sm"
         >
           {pathname === "/" && (
-            <div className="hidden relative md:flex items-center">
+            <div className="relative flex items-center">
               <button
                 aria-label="Buscar"
                 onClick={() => {
                   setShowSearch((s) => !s);
                   setTimeout(() => inputRef.current?.focus(), 120);
                 }}
-                className="p-1 rounded hover:text-primary transition-colors"
+                className="p-1 rounded text-white md:text-chocolate hover:text-primary transition-colors"
               >
                 <LiaSearchSolid size={22} />
               </button>
-
               <AnimatePresence>
                 {showSearch && (
                   <motion.input
                     key="nav-search-input"
                     ref={inputRef}
                     initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 220, opacity: 1 }}
+                    animate={{
+                      width: showSearch ? "180px" : 0,
+                      opacity: 1,
+                    }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.22 }}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Buscar..."
-                    className="right-6 absolute bg-white px-3 py-1 border border-gray-300 rounded-md outline-none text-black text-sm -translate-x-2"
+                    className="right-full md:right-6 z-50 absolute bg-white px-3 py-1 border border-gray-300 rounded-md outline-none text-black text-sm -translate-x-3 md:translate-x-0"
                   />
                 )}
               </AnimatePresence>
