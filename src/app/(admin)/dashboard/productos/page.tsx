@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useProductStore } from "@/store/productsStore";
 import { getAllProducts, deleteProduct } from "@/app/axios/ProductosApi";
 import ProductList from "@/components/admin/Products/ProductList";
@@ -8,8 +8,20 @@ import { toast } from "react-toastify";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
 import ProductEditModal from "@/components/admin/Products/ProductEditModal";
+import { useSearchParams } from "next/navigation";
+
+const cleanString = (str: string): string => {
+  if (!str) return "";
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+};
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const currentSearch = searchParams.get("search") || "";
+
   const { products, setProducts } = useProductStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<IProduct | null>(null);
@@ -17,6 +29,23 @@ export default function ProductsPage() {
   useEffect(() => {
     getAllProducts().then(setProducts);
   }, [setProducts]);
+
+  const filteredProducts = useMemo(() => {
+    if (!currentSearch) {
+      return products;
+    }
+
+    const cleanedSearch = cleanString(currentSearch);
+
+    return products.filter((product) => {
+      const nameMatch = cleanString(product.name).includes(cleanedSearch);
+      const descriptionMatch = cleanString(product.description || "").includes(
+        cleanedSearch
+      );
+
+      return nameMatch || descriptionMatch;
+    });
+  }, [products, currentSearch]);
 
   const handleDelete = (product: IProduct) => {
     Modal.confirm({
@@ -50,7 +79,7 @@ export default function ProductsPage() {
       </h1>
 
       <ProductList
-        products={products}
+        products={filteredProducts}
         onDelete={handleDelete}
         onEdit={handleEdit}
       />

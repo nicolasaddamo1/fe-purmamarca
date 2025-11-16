@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Modal, Button } from "antd";
@@ -19,7 +20,18 @@ import { toast } from "react-toastify";
 
 import { useCategoryStore } from "@/store/categoryStore";
 
+const cleanString = (str: string): string => {
+  if (!str) return "";
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+};
+
 const CategoryPage: React.FC = () => {
+  const searchParams = useSearchParams();
+  const currentSearch = searchParams.get("search") || "";
+
   const {
     categories,
     setCategories,
@@ -44,6 +56,18 @@ const CategoryPage: React.FC = () => {
     fetchCategories();
   }, [setCategories]);
 
+  const filteredCategories = useMemo(() => {
+    if (!currentSearch) {
+      return categories;
+    }
+
+    const cleanedSearch = cleanString(currentSearch);
+
+    return categories.filter((category) => {
+      return cleanString(category.name).includes(cleanedSearch);
+    });
+  }, [categories, currentSearch]);
+
   const handleCreateOrEditCategory = async (
     name: string,
     file: File | null
@@ -52,9 +76,7 @@ const CategoryPage: React.FC = () => {
     try {
       let finalCategory: ICategory;
       if (categoryToEdit) {
-        // PATCH solo nombre
         finalCategory = await updateCategory(categoryToEdit.id, { name });
-        // Subir imagen si hay
         if (file) {
           const imageUrl = await uploadCategoryImage(categoryToEdit.id, file);
           finalCategory = { ...finalCategory, categoryImage: imageUrl };
@@ -62,7 +84,6 @@ const CategoryPage: React.FC = () => {
         updateCategoryInStore(finalCategory);
         toast.success("Categoría actualizada 😎");
       } else {
-        // Crear nueva categoría
         finalCategory = await createCategory(name);
         if (file) {
           const imageUrl = await uploadCategoryImage(finalCategory.id, file);
@@ -121,7 +142,7 @@ const CategoryPage: React.FC = () => {
       </Button>
 
       <CategoryList
-        categories={categories}
+        categories={filteredCategories}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

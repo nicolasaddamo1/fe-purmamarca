@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import CategorySidevar from "../categorySideVar/CategorySidevar";
+import CategorySidevar from "../categorySidebar/CategorySidebar";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);

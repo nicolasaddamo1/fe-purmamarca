@@ -32,9 +32,7 @@ const CategoryDropdown: React.FC = () => {
         onClick={() => setOpen(!open)}
         className="flex justify-between items-center bg-white shadow-sm p-2 border border-chocolate/20 rounded-md focus:outline-none focus:ring-1 focus:ring-chocolate/50 w-full"
       >
-        {product.categoryId
-          ? categories.find((c) => c.id === product.categoryId)?.name
-          : "Seleccionar categoría"}
+        {product.categoryName ? product.categoryName : "Seleccionar categoría"}
         <HiChevronDown className="w-5 h-5 text-chocolate/70" />
       </button>
 
@@ -45,6 +43,7 @@ const CategoryDropdown: React.FC = () => {
               key={c.id}
               onClick={() => {
                 setField("categoryId", c.id);
+                setField("categoryName", c.name);
                 setOpen(false);
               }}
               className="hover:bg-chocolate/10 px-3 py-2 cursor-pointer"

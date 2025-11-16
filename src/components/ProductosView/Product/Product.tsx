@@ -37,7 +37,7 @@ const Product: React.FC<ProductProps> = ({
     const now = new Date();
     const start = new Date(promotion.start_date);
     const end = new Date(promotion.expiration_date);
-    // activa si está entre start y end (inclusive)
+
     return now >= start && now <= end && promotion.promo_percentage > 0;
   }, [promotion]);
 
@@ -49,6 +49,17 @@ const Product: React.FC<ProductProps> = ({
   }, [isPromotionActive, promotion, price]);
 
   const displayPrice = discountedPrice ?? priceOnSale ?? price;
+
+  console.log("🔥 PROMO CHECK:", {
+    name,
+    now: new Date(),
+    start: promotion ? new Date(promotion.start_date) : null,
+    end: promotion ? new Date(promotion.expiration_date) : null,
+    pct: promotion?.promo_percentage,
+    isPromotionActive,
+    hasPromotion: !!promotion,
+    promotion,
+  });
 
   return (
     <div
@@ -102,7 +113,7 @@ const Product: React.FC<ProductProps> = ({
                 <del className="text-gray-500 md:text-xs text-lg">
                   ${price.toLocaleString()}
                 </del>
-                {/* Porcentaje */}
+
                 {promotion?.promo_percentage && (
                   <span className="font-bold text-red-600 text-sm">
                     -{promotion.promo_percentage}%
@@ -121,16 +132,8 @@ const Product: React.FC<ProductProps> = ({
             <p>${Number(price).toLocaleString()}</p>
           )}
         </div>
-
-        {/* Stock */}
-        <p className={`${isAvailable ? "text-primary" : "text-red-600"}`}>
-          {isAvailable
-            ? `Stock: ${stock ?? "No especificado"}`
-            : "Stock: Agotado"}
-        </p>
       </div>
 
-      {/* Botón Ver Más */}
       <Link
         href={`/productos/detalle/${id}`}
         className="self-center bg-gray-200/60 hover:bg-chocolate group-hover:bg-chocolate/80 m-2 px-4 py-1 rounded-sm text-gray-600 group-hover:text-white transition-all duration-200"

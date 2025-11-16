@@ -5,10 +5,10 @@ export interface IProduct {
   color?: string;
   categoryId: string;
   category: {
-            id: string,
-            name: string,
-            categoryImage: null
-        },
+    id: string;
+    name: string;
+    categoryImage: null;
+  };
   price: number;
   stock: number;
   size?: string;
@@ -17,11 +17,11 @@ export interface IProduct {
   imgs?: string[];
   priceOnSale?: number;
   promotion: {
-    name: string,
-    promo_percentage: number | null,
-    start_date: Date,
-    expiration_date: Date
-  } | null
+    name: string;
+    promo_percentage: number | null;
+    start_date: Date;
+    expiration_date: Date;
+  } | null;
 }
 
 export type TCategory = {
