@@ -50,6 +50,8 @@ const Product: React.FC<ProductProps> = ({
 
   const displayPrice = discountedPrice ?? priceOnSale ?? price;
 
+  console.log("PRODUCT:", name, promotion);
+
   return (
     <div
       className={`group flex flex-col justify-between rounded-lg outline-1 w-64 md:w-56 h-auto m-auto hover:shadow-2xl duration-200

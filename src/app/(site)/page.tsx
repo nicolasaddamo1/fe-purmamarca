@@ -9,11 +9,10 @@ import { useCategoryStore } from "@/store/categoryStore";
 import { getAllCategories } from "@/app/axios/categoriasApi";
 import { getAllProducts } from "@/app/axios/ProductosApi";
 import { getAllPromotions } from "../axios/PromotionsApi";
-import { IPromotion } from "@/interfaces/promotionsInterface";
+
 import { toast } from "react-toastify";
 import CategoryCarousel from "@/components/CategoryCarousel/CategoryCarousel";
 import QualitiesSection from "@/components/landing/Features/FeaturesSection";
-import { AxiosError } from "axios";
 
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
@@ -24,38 +23,23 @@ const Page: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!categories.length) {
-          const fetchedCategories = await getAllCategories();
-          setCategories(fetchedCategories);
-        }
+        const fetchedCategories = await getAllCategories();
+        setCategories(fetchedCategories);
 
-        if (!products.length) {
-          const fetchedProducts = await getAllProducts();
-          setProducts(fetchedProducts);
-        }
+        const fetchedProducts = await getAllProducts();
+        setProducts(fetchedProducts);
 
-        if (!promotions.length) {
-          const fetchedPromotions = await getAllPromotions();
-          setPromotions(fetchedPromotions);
-        }
+        const fetchedPromotions = await getAllPromotions();
+        setPromotions(fetchedPromotions);
       } catch (error) {
-        console.error("Error al obtener datos:", error);
-        // no repitamos toast si viene del getAllPromotions
-        if (!(error instanceof AxiosError)) {
+        {
           toast.error("Error al obtener datos");
         }
       }
     };
 
     fetchData();
-  }, [
-    categories.length,
-    products.length,
-    promotions.length,
-    setCategories,
-    setProducts,
-    setPromotions,
-  ]);
+  }, []);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -87,7 +71,6 @@ const Page: React.FC = () => {
       <PromoCarousel />
 
       <section className="flex flex-col gap-6 md:px-4 py-10">
-        {/* Sidebar de categorías */}
         <div className="">
           <HeadSection
             verMas={false}
@@ -98,7 +81,6 @@ const Page: React.FC = () => {
           <CategoryCarousel categories={categories} />
         </div>
 
-        {/* Productos */}
         <HeadSection
           verMas={false}
           link="/productos/categoria/any"
