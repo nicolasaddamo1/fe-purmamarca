@@ -3,6 +3,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useProductStore } from "@/store/productsStore";
 import { useMemo } from "react";
+import Link from "next/link";
+import { FaInstagram, FaFacebook, FaTiktok, FaWhatsapp } from "react-icons/fa";
 
 const Hero: React.FC = () => {
   const products = useProductStore((s) => s.products);
@@ -21,7 +23,43 @@ const Hero: React.FC = () => {
 
   return (
     <section className="relative flex md:flex-row flex-col w-full h-screen overflow-hidden">
-      {/* Fade Lateral */}
+      <div className="top-1/2 left-2 md:left-6 z-40 absolute flex flex-col gap-4 bg-white/10 md:bg-primary/10 p-6 md:p-0 rounded-2xl -translate-y-1/2">
+        <Link
+          href="https://www.instagram.com/purmamarca_dustribuidora?igsh=dDR4Zjh0ZmllNXJi"
+          target="_blank"
+        >
+          <FaInstagram
+            className="text-[#E1306C] md:text-gray-400 hover:scale-110 transition-transform"
+            size={30}
+          />
+        </Link>
+
+        <Link href="https://www.facebook.com/share/1CApiSuDLx/" target="_blank">
+          <FaFacebook
+            className="text-[#1877F2] md:text-gray-400 hover:scale-110 transition-transform"
+            size={30}
+          />
+        </Link>
+
+        <Link
+          href="https://www.tiktok.com/@purmamarca_distri?_t=ZM-90ndM9THf9H&_r=1"
+          target="_blank"
+        >
+          <FaTiktok
+            className="text-black md:text-gray-400 hover:scale-110 transition-transform"
+            size={30}
+          />
+        </Link>
+
+        <Link href="https://wa.me/c/5491133324141" target="_blank">
+          <FaWhatsapp
+            className="text-[#25D366] md:text-gray-400 hover:scale-110 transition-transform"
+            size={30}
+          />
+        </Link>
+      </div>
+
+      {/* Fade lateral */}
       <div className="z-20 absolute inset-0 pointer-events-none">
         <div className="top-0 left-0 absolute bg-gradient-to-r from-black/40 to-transparent w-32 h-full" />
         <div className="top-0 right-0 absolute bg-gradient-to-l from-black/40 to-transparent w-32 h-full" />
@@ -42,7 +80,6 @@ const Hero: React.FC = () => {
 
       {/* Carrusel */}
       <div className="relative w-full md:w-1/2 h-full overflow-hidden">
-        {/* Oscurecido leve */}
         <div className="z-10 absolute inset-0 bg-black/20" />
 
         {images.length > 0 && (
@@ -50,7 +87,7 @@ const Hero: React.FC = () => {
             className="flex h-full"
             animate={{
               x: ["0%", `-${images.length * 100}%`],
-              scale: [1, 1.015, 1], // zoom leve PRO
+              scale: [1, 1.015, 1],
             }}
             transition={{
               repeat: Infinity,

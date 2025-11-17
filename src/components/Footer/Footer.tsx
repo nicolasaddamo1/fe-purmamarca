@@ -25,6 +25,7 @@ export default function FooterMinimal() {
         </div>
 
         <div>
+          {/* TODO : Agregar medios de envío  */}
           <h3 className="font-semibold text-primary text-xl">Envíos por</h3>
           <ul className="space-y-2 mt-3 text-maroon text-sm">
             <li className="hover:text-primary transition cursor-pointer">
