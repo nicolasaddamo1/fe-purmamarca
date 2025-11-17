@@ -12,6 +12,7 @@ import { getAllPromotions } from "../axios/PromotionsApi";
 import { IPromotion } from "@/interfaces/promotionsInterface";
 import { toast } from "react-toastify";
 import CategoryCarousel from "@/components/CategoryCarousel/CategoryCarousel";
+import QualitiesSection from "@/components/landing/Features/FeaturesSection";
 
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
@@ -113,6 +114,7 @@ const Page: React.FC = () => {
           })}
         </div>
       </section>
+      <QualitiesSection />
     </div>
   );
 };

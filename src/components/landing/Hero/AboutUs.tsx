@@ -6,31 +6,32 @@ const AboutUs = () => {
       <section className="relative md:px-30 py-20">
         <div className="flex md:flex-row flex-col items-start gap-10 md:gap-50 mx-auto px-4 container">
           <div className="text-left">
-            <h4 className="mb-2 text-secondary text-2xl">Sobre nosotros</h4>
-            <h1 className="font-bold text-maroon text-3xl md:text-5xl leading-tight">
+            <h4 className="mb-2 text-chocolate/90 text-2xl">Sobre nosotros</h4>
+            <h1 className="font-bold text-primary/90 text-3xl md:text-5xl leading-tight">
               Distribuidora
             </h1>
-            <h1 className="font-bold text-maroon text-4xl md:text-5xl leading-tight">
+            <h1 className="font-bold text-primary/90 text-4xl md:text-5xl leading-tight">
               Purmamarca
             </h1>
           </div>
 
           <div className="space-y-4 text-gray-700 md:text-sm text-lg text-left leading-relaxed">
             <p>
-              Distribuidora Purmamarca es una empresa comprometida con llevar a
-              cada hogar productos naturales de alta calidad, inspirados en la
-              riqueza cultural y la biodiversidad de nuestra tierra. Trabajamos
-              de la mano con productores locales y comunidades originarias para
-              ofrecer alimentos, infusiones y productos de cuidado personal
-              elaborados de forma responsable y sostenible.
+              Purmamarca Holística & Decoración es tu distribuidora mayorista de
+              confianza para negocios. Ofrecemos una amplia gama de velas,
+              budas, sahumerios, esencias y accesorios decorativos con precios
+              especiales por volumen y stock constante.
             </p>
-
             <p className="hidden md:inline">
-              Creemos en el poder de lo natural para mejorar la vida de las
-              personas, por eso seleccionamos cuidadosamente cada ingrediente y
-              fomentamos prácticas que respeten el medio ambiente. Nuestro
-              objetivo es compartir, dentro y fuera de nuestra región, el valor
-              de lo auténtico, lo saludable y lo hecho con dedicación.
+              Trabajamos directamente con fabricantes locales y talleres
+              artesanales para asegurar calidad, continuidad en el suministro y
+              precios competitivos que te permitan ampliar tu oferta y maximizar
+              tus márgenes.
+            </p>
+            <p className="hidden md:inline">
+              Nuestro compromiso es ser un proveedor estable y confiable:
+              reposiciones ágiles, líneas exclusivas para distribuidores y
+              flexibilidad para que tu negocio crezca junto con nosotros.
             </p>
           </div>
         </div>
