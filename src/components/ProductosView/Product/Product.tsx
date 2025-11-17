@@ -50,16 +50,7 @@ const Product: React.FC<ProductProps> = ({
 
   const displayPrice = discountedPrice ?? priceOnSale ?? price;
 
-  console.log("🔥 PROMO CHECK:", {
-    name,
-    now: new Date(),
-    start: promotion ? new Date(promotion.start_date) : null,
-    end: promotion ? new Date(promotion.expiration_date) : null,
-    pct: promotion?.promo_percentage,
-    isPromotionActive,
-    hasPromotion: !!promotion,
-    promotion,
-  });
+  console.log("PRODUCT:", name, promotion);
 
   return (
     <div

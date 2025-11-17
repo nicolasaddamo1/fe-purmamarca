@@ -139,34 +139,29 @@ const PromoCarousel: React.FC = () => {
                 title={promo.name}
               />
 
-              <div
-                className="absolute inset-0 flex flex-col justify-center items-center opacity-0 hover:opacity-100 p-4 text-white transition-opacity duration-300 cursor-pointer"
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
-              >
-                <h2 className="drop-shadow-md font-extrabold text-amber-300 text-3xl md:text-4xl uppercase tracking-wide">
+              <div className="bottom-4 left-4 absolute flex flex-col gap-1 bg-black/40 shadow-lg backdrop-blur-md px-4 py-3 border border-white/20 rounded-lg max-w-[85%] md:max-w-xs text-white animate-[fadeIn_0.6s_ease-in-out]">
+                <p className="font-semibold text-base md:text-lg leading-tight">
                   {promo.name}
-                </h2>
-
-                {promo.promo_percentage && (
-                  <h3 className="mt-1 font-bold text-white text-2xl md:text-3xl">
-                    {promo.promo_percentage}% OFF
-                  </h3>
-                )}
-
-                <p className="mt-3 font-semibold text-gray-200 text-lg text-center">
-                  Aplica a:{" "}
-                  <span className="text-amber-300">{categoryNames}</span>
                 </p>
 
-                <div className="mt-2 text-gray-300 text-sm text-center">
-                  <p>
-                    Desde: {new Date(promo.start_date).toLocaleDateString()}
+                {promo.promo_percentage && (
+                  <p className="font-bold text-amber-300 text-sm md:text-base">
+                    {promo.promo_percentage}% OFF
                   </p>
-                  <p>
-                    Hasta:{" "}
+                )}
+
+                {promo.category_ids && promo.category_ids.length > 0 && (
+                  <p className="opacity-90 text-xs md:text-sm">
+                    · {categoryNames}
+                  </p>
+                )}
+
+                {promo.start_date && promo.expiration_date && (
+                  <p className="opacity-80 text-[10px] md:text-xs">
+                    {new Date(promo.start_date).toLocaleDateString()} →{" "}
                     {new Date(promo.expiration_date).toLocaleDateString()}
                   </p>
-                </div>
+                )}
               </div>
             </div>
           </section>
