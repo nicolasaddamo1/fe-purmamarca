@@ -6,24 +6,24 @@ import { GiMeditation } from "react-icons/gi";
 export default function QualitiesSection() {
   const qualities = [
     {
-      icon: <FaHome className="text-[#4A3F2C] text-4xl" />,
+      icon: <FaHome className="text-primary text-4xl" />,
       subtitle: "En tu espacio favorito...",
       title: "Armoniza tu hogar",
     },
     {
-      icon: <FaSun className="text-[#4A3F2C] text-4xl" />,
+      icon: <FaSun className="text-primary text-4xl" />,
       subtitle: "Eleva tu vibración, encuentra tu fuerza...",
       title: "Energía para tu día a día",
     },
     {
-      icon: <GiMeditation className="text-[#4A3F2C] text-4xl" />,
+      icon: <GiMeditation className="text-primary text-4xl" />,
       subtitle: "Un camino de iluminación y poder...",
       title: "Conexión espiritual",
     },
   ];
 
   return (
-    <section className="bg-[#f6e4d4] pb-16">
+    <section className="pb-16">
       <div className="items-start gap-12 md:gap-0 grid grid-cols-1 md:grid-cols-3 mx-auto px-6 max-w-6xl">
         {qualities.map((q, i) => (
           <div

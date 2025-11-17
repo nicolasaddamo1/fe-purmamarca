@@ -280,7 +280,7 @@ const Page: React.FC<Props> = ({ params }) => {
     : null;
 
   const badgeTextPromo = isPromotionActive
-    ? `PROMO: ${data.promotion?.name ?? ""}`
+    ? `🔥 PROMO: ${data.promotion?.name ?? ""}`
     : null;
 
   const badgeTextOnSale = !isPromotionActive && data.onSale ? "OFERTA" : null;

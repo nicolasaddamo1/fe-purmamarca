@@ -84,44 +84,60 @@ const Page: React.FC = () => {
 
       <div className="gap-6 grid grid-cols-1 md:grid-cols-5 p-2 md:p-4 w-full min-h-[400px]">
         <AnimatePresence mode="wait">
-          {loading
-            ? Array(5)
-                .fill(0)
-                .map((_, i) => (
-                  <motion.div
-                    key={i}
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="bg-gray-200 m-auto rounded-lg w-full h-60 animate-pulse"
-                  />
-                ))
-            : data.map((prod) => (
+          {loading ? (
+            Array(5)
+              .fill(0)
+              .map((_, i) => (
                 <motion.div
-                  key={prod.id}
+                  key={i}
                   layout
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
-                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                  className="m-auto"
-                >
-                  <Product
-                    key={prod.id}
-                    id={prod.id}
-                    available={prod.available}
-                    priceOnSale={prod.priceOnSale}
-                    name={prod.name}
-                    price={prod.price}
-                    imageUrl={prod.imgs?.[0] ?? ""}
-                    categoryName={prod.category?.name ?? ""}
-                    stock={prod.stock}
-                    description={prod.description}
-                    promotion={prod.promotion as unknown as IPromotion | null}
-                  />
-                </motion.div>
-              ))}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="bg-gray-200 m-auto rounded-lg w-full h-60 animate-pulse"
+                />
+              ))
+          ) : data.length === 0 ? (
+            <motion.div
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col justify-center items-center col-span-full py-20 text-gray-600 text-center"
+            >
+              <p className="font-medium text-lg md:text-xl">
+                No encontramos productos en esta categoría.
+              </p>
+              <p className="mt-1 text-sm md:text-base">
+                Probá con otra categoría o volvé más tarde.
+              </p>
+            </motion.div>
+          ) : (
+            data.map((prod) => (
+              <motion.div
+                key={prod.id}
+                layout
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                className="m-auto"
+              >
+                <Product
+                  id={prod.id}
+                  available={prod.available}
+                  priceOnSale={prod.priceOnSale}
+                  name={prod.name}
+                  price={prod.price}
+                  imageUrl={prod.imgs?.[0] ?? ""}
+                  categoryName={prod.category?.name ?? ""}
+                  stock={prod.stock}
+                  description={prod.description}
+                  promotion={prod.promotion as IPromotion | null}
+                />
+              </motion.div>
+            ))
+          )}
         </AnimatePresence>
       </div>
     </div>
