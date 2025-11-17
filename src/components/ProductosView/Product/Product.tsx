@@ -50,17 +50,6 @@ const Product: React.FC<ProductProps> = ({
 
   const displayPrice = discountedPrice ?? priceOnSale ?? price;
 
-  console.log("🔥 PROMO CHECK:", {
-    name,
-    now: new Date(),
-    start: promotion ? new Date(promotion.start_date) : null,
-    end: promotion ? new Date(promotion.expiration_date) : null,
-    pct: promotion?.promo_percentage,
-    isPromotionActive,
-    hasPromotion: !!promotion,
-    promotion,
-  });
-
   return (
     <div
       className={`group flex flex-col justify-between rounded-lg outline-1 w-64 md:w-56 h-auto m-auto hover:shadow-2xl duration-200

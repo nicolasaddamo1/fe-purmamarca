@@ -13,6 +13,7 @@ import { IPromotion } from "@/interfaces/promotionsInterface";
 import { toast } from "react-toastify";
 import CategoryCarousel from "@/components/CategoryCarousel/CategoryCarousel";
 import QualitiesSection from "@/components/landing/Features/FeaturesSection";
+import { AxiosError } from "axios";
 
 const Page: React.FC = () => {
   const { categories, setCategories } = useCategoryStore();
@@ -27,22 +28,34 @@ const Page: React.FC = () => {
           const fetchedCategories = await getAllCategories();
           setCategories(fetchedCategories);
         }
+
         if (!products.length) {
           const fetchedProducts = await getAllProducts();
           setProducts(fetchedProducts);
         }
+
         if (!promotions.length) {
           const fetchedPromotions = await getAllPromotions();
           setPromotions(fetchedPromotions);
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);
-        toast.error("Error al obtener datos");
+        // no repitamos toast si viene del getAllPromotions
+        if (!(error instanceof AxiosError)) {
+          toast.error("Error al obtener datos");
+        }
       }
     };
 
     fetchData();
-  }, [categories.length, products.length, setCategories, setProducts]);
+  }, [
+    categories.length,
+    products.length,
+    promotions.length,
+    setCategories,
+    setProducts,
+    setPromotions,
+  ]);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -70,7 +83,7 @@ const Page: React.FC = () => {
   });
 
   return (
-    <div className="md:pt-20">
+    <div className="pt-10 md:pt-20">
       <PromoCarousel />
 
       <section className="flex flex-col gap-6 md:px-4 py-10">
