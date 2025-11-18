@@ -4,6 +4,7 @@ import { Carousel, Skeleton } from "antd";
 import Image from "next/image";
 import { useProductStore } from "@/store/productsStore";
 import { useCategoryStore } from "@/store/categoryStore";
+import dayjs from "dayjs";
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -173,8 +174,8 @@ const PromoCarousel: React.FC = () => {
 
                 {promo.start_date && promo.expiration_date && (
                   <p className="opacity-80 text-[10px] md:text-xs">
-                    {new Date(promo.start_date).toLocaleDateString()} →{" "}
-                    {new Date(promo.expiration_date).toLocaleDateString()}
+                    {dayjs(promo.start_date).format("DD/MM/YYYY")} →{" "}
+                    {dayjs(promo.expiration_date).format("DD/MM/YYYY")}
                   </p>
                 )}
               </div>
