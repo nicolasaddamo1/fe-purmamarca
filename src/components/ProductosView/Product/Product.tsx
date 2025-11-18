@@ -30,27 +30,33 @@ const Product: React.FC<ProductProps> = ({
   promotion,
   stock,
 }) => {
-  const isAvailable = Boolean(available);
+  const isAvailable: boolean = Boolean(available);
 
-  const isPromotionActive = React.useMemo(() => {
+  const isPromotionActive: boolean = React.useMemo(() => {
     if (!promotion || promotion.promo_percentage == null) return false;
     const now = new Date();
     const start = new Date(promotion.start_date);
     const end = new Date(promotion.expiration_date);
 
-    return now >= start && now <= end && promotion.promo_percentage > 0;
+    return now >= start && now <= end && Number(promotion.promo_percentage) > 0;
   }, [promotion]);
 
-  const discountedPrice = React.useMemo<number | null>(() => {
+  const isCategoryPromo: boolean = React.useMemo(() => {
+    // Comprueba si el nombre de la categoría (en minúsculas) es 'promo' o 'promos'
+    const validPromotions: Set<string> = new Set(["promo", "promos"]);
+    return validPromotions.has(categoryName.toLowerCase());
+  }, [categoryName]);
+
+  const discountedPrice: number | null = React.useMemo<number | null>(() => {
     if (!isPromotionActive || !promotion) return null;
-    const pct = Number(promotion.promo_percentage ?? 0);
-    const discounted = price * (1 - pct / 100);
+    const pct: number = Number(promotion.promo_percentage ?? 0);
+    const discounted: number = price * (1 - pct / 100);
+    // Redondear a 2 decimales
     return Math.round(discounted * 100) / 100;
   }, [isPromotionActive, promotion, price]);
 
-  const displayPrice = discountedPrice ?? priceOnSale ?? price;
-
-  console.log("PRODUCT:", name, promotion);
+  // displayPrice puede ser el precio con descuento, el precio de oferta manual, o el precio original
+  const displayPrice: number = discountedPrice ?? priceOnSale ?? price;
 
   return (
     <div
@@ -67,9 +73,18 @@ const Product: React.FC<ProductProps> = ({
           isAvailable ? "bg-[#dbc7ab]" : "bg-gray-200"
         } w-full relative`}
       >
-        {isAvailable && (onSale || isPromotionActive) && (
+        {/* Lógica del Badge: Ahora prioriza: 1. Promo Especial, 2. Promoción Global, 3. Oferta Manual */}
+        {isAvailable && (onSale || isPromotionActive || isCategoryPromo) && (
           <div className="top-2 left-2 z-10 absolute bg-red-600 shadow px-2 py-1 rounded-sm font-bold text-white text-xs">
-            🔥 OFERTA {promotion?.name?.toUpperCase() ?? ""}
+            {isCategoryPromo ? (
+              <span>🏷️ PROMO ESPECIAL</span>
+            ) : isPromotionActive ? (
+              // Prioridad 2: Promoción Global (activa por fechas)
+              <span>🔥 OFERTA {promotion?.name?.toUpperCase() ?? ""}</span>
+            ) : (
+              // Prioridad 3: Oferta Manual (solo si onSale es true)
+              <span>🔥 OFERTA</span>
+            )}
           </div>
         )}
 
@@ -91,6 +106,7 @@ const Product: React.FC<ProductProps> = ({
             isAvailable ? "text-primary" : "text-gray-800"
           }`}
         >
+          {/* PRIMER CASO: Descuento por promoción global (discountedPrice) */}
           {discountedPrice != null ? (
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
@@ -101,9 +117,13 @@ const Product: React.FC<ProductProps> = ({
                     maximumFractionDigits: 2,
                   })}
                 </span>
-                <del className="text-gray-500 md:text-xs text-lg">
-                  ${price.toLocaleString()}
-                </del>
+
+                {/* Condición de TACHADO: SOLO si el precio descontado es estrictamente menor al original */}
+                {discountedPrice < price && (
+                  <del className="text-gray-500 md:text-xs text-lg">
+                    ${price.toLocaleString()}
+                  </del>
+                )}
 
                 {promotion?.promo_percentage && (
                   <span className="font-bold text-red-600 text-sm">
@@ -113,13 +133,19 @@ const Product: React.FC<ProductProps> = ({
               </div>
             </div>
           ) : priceOnSale != null ? (
+            /* SEGUNDO CASO: Precio de oferta manual (priceOnSale) */
             <div className="flex items-center gap-2">
               <span>${Number(priceOnSale).toLocaleString()}</span>
-              <del className="text-gray-500 md:text-xs text-lg">
-                ${price.toLocaleString()}
-              </del>
+
+              {/* Condición de TACHADO: SOLO si el precio de oferta es estrictamente menor al original */}
+              {Number(priceOnSale) < price && (
+                <del className="text-gray-500 md:text-xs text-lg">
+                  ${price.toLocaleString()}
+                </del>
+              )}
             </div>
           ) : (
+            /* TERCER CASO: Precio normal */
             <p>${Number(price).toLocaleString()}</p>
           )}
         </div>

@@ -50,7 +50,6 @@ export default function Sidebar() {
     <AnimatePresence>
       {isOpen && (
         <div className="z-[999] fixed inset-0">
-          {/* Overlay */}
           <motion.div
             className="absolute inset-0 bg-black/40"
             initial={{ opacity: 0 }}
@@ -59,7 +58,6 @@ export default function Sidebar() {
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Sidebar */}
           <motion.aside
             className="top-0 right-0 fixed flex flex-col bg-white shadow-2xl w-[80%] max-w-xs h-full"
             initial={{ x: "100%" }}
@@ -67,7 +65,6 @@ export default function Sidebar() {
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            {/* Header */}
             <header className="top-0 sticky flex justify-between items-center bg-primary/70 shadow-sm p-4 border-gray-100 border-b">
               <h2 className="flex items-center gap-2 font-extrabold text-white text-xl tracking-wide">
                 <CgShoppingCart className="w-6 h-6" />
@@ -80,12 +77,12 @@ export default function Sidebar() {
               </button>
             </header>
 
-            {/* List */}
             <div className="flex flex-col flex-grow p-3 w-full overflow-y-auto">
               {prods.length >= 1 ? (
                 prods.map((prod, i) => {
                   const unitPrice = getFinalUnitPrice(prod);
                   const finalPrice = unitPrice * prod.stock_order;
+                  const originalPriceTotal = prod.price * prod.stock_order;
 
                   const hasPromo =
                     prod.promotion &&
@@ -128,11 +125,11 @@ export default function Sidebar() {
                             </span>
                           </p>
 
-                          {/* Precios */}
                           <div className="flex items-center gap-2 mt-1">
-                            {(hasPromo || isOnSale) && (
+                            {/* Tachar solo si el precio final es menor al precio original */}
+                            {finalPrice < originalPriceTotal && (
                               <span className="font-medium text-gray-500 text-xs line-through">
-                                ${(prod.price * prod.stock_order).toFixed(2)}
+                                ${originalPriceTotal.toFixed(2)}
                               </span>
                             )}
 
@@ -151,7 +148,6 @@ export default function Sidebar() {
                         </section>
                       </Link>
 
-                      {/* Delete */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -173,7 +169,6 @@ export default function Sidebar() {
               )}
             </div>
 
-            {/* Footer */}
             <footer className="bottom-0 sticky bg-white shadow-lg p-4 border-gray-200 border-t">
               <PedidoFormModal />
             </footer>
