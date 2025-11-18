@@ -19,36 +19,51 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ categories }) => {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    const checkIsDesktop = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
-
+    const checkIsDesktop = () => setIsDesktop(window.innerWidth >= 768);
     checkIsDesktop();
     window.addEventListener("resize", checkIsDesktop);
     return () => window.removeEventListener("resize", checkIsDesktop);
   }, []);
 
+  const promoSet = new Set(["promo", "promos", "promoción", "promociones"]);
+
+  const normalized = categories.map((c) => ({
+    ...c,
+    normalized: c.name.toLowerCase().trim(),
+  }));
+
+  const promosFound = normalized.filter((c) => promoSet.has(c.normalized));
+
+  const uniquePromo =
+    promosFound.length > 0
+      ? {
+          id: promosFound[0].id,
+          name: "Promos",
+          categoryImage: promosFound[0].categoryImage ?? null,
+        }
+      : null;
+
+  const nonPromos = normalized.filter((c) => !promoSet.has(c.normalized));
+
   const allCategories = [
     { id: "todos", name: "Todos", categoryImage: "/logopurma.png" },
-    ...categories,
+    ...(uniquePromo ? [uniquePromo] : []),
+    ...nonPromos,
   ];
 
   const totalPages = Math.ceil(allCategories.length / itemsPerPage);
   const start = page * itemsPerPage;
   const visible = allCategories.slice(start, start + itemsPerPage);
 
-  const nextPage = () => {
-    if (page < totalPages - 1) setPage((prev) => prev + 1);
-  };
-  const prevPage = () => {
-    if (page > 0) setPage((prev) => prev - 1);
-  };
+  const nextPage = () => page < totalPages - 1 && setPage((p) => p + 1);
+  const prevPage = () => page > 0 && setPage((p) => p - 1);
 
-  const categoriesToRender = useMemo(() => {
-    return isDesktop ? visible : allCategories;
-  }, [isDesktop, visible, allCategories]);
+  const categoriesToRender = useMemo(
+    () => (isDesktop ? visible : allCategories),
+    [isDesktop, visible, allCategories]
+  );
 
-  const motionKey = isDesktop ? page : "mobile-grid";
+  const motionKey = isDesktop ? page : "grid";
 
   const motionProps = isDesktop
     ? {
