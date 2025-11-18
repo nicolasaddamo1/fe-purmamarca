@@ -1,29 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
 import { useCategoryStore } from "@/store/categoryStore";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { IoClose, IoMenu } from "react-icons/io5"; // Iconos para una UX más moderna
-import { BiCategory } from "react-icons/bi"; // Icono de Categorías
+import { IoClose, IoMenu } from "react-icons/io5";
+import { BiCategory } from "react-icons/bi";
 
 const CategorySidebar = () => {
   const { category } = useParams();
-  // Se asume que 'chocolate' y 'primary' son colores definidos en Tailwind
   const categoryId = Array.isArray(category) ? category[0] : category;
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { categories } = useCategoryStore();
-
   useEffect(() => setMounted(true), []);
+
+  const sortedCategories = useMemo(() => {
+    if (!categories || categories.length === 0) return [];
+    const promoIndex = categories.findIndex((c) => /promo/i.test(c.name));
+    if (promoIndex === -1) return categories;
+    const promoCat = categories[promoIndex];
+    const others = categories.filter((_, i) => i !== promoIndex);
+    return [promoCat, ...others];
+  }, [categories]);
 
   const sidebarContent = (
     <AnimatePresence>
       {isOpen && (
         <div className="z-[999] fixed inset-0">
-          {/* Overlay Oscuro */}
           <motion.div
             className="absolute inset-0 bg-black/40"
             initial={{ opacity: 0 }}
@@ -31,8 +37,6 @@ const CategorySidebar = () => {
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
           />
-
-          {/* Sidebar Principal */}
           <motion.aside
             className="top-0 left-0 fixed flex flex-col bg-white shadow-2xl w-[80%] max-w-xs h-full"
             initial={{ x: "-100%" }}
@@ -40,7 +44,6 @@ const CategorySidebar = () => {
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            {/* Encabezado Fijo y Estético */}
             <header className="top-0 sticky flex justify-between items-center bg-primary/70 shadow-sm p-4 border-gray-100 border-b">
               <h2 className="flex items-center gap-2 font-extrabold text-white text-xl tracking-wide">
                 <BiCategory className="w-6 h-6" />
@@ -55,9 +58,7 @@ const CategorySidebar = () => {
               </button>
             </header>
 
-            {/* Lista de Categorías con Scroll Separado */}
             <ul className="flex flex-col flex-grow gap-1 p-3 w-full overflow-y-auto">
-              {/* Enlace: Todas las categorías */}
               <li
                 className={`rounded-lg transition-colors duration-200 ${
                   !categoryId || categoryId === "todos"
@@ -78,27 +79,41 @@ const CategorySidebar = () => {
                 </Link>
               </li>
 
-              {/* Mapeo de Categorías */}
-              {categories?.map((obj) => (
-                <li
-                  key={obj.id}
-                  className={`rounded-lg transition-colors duration-200 ${
-                    categoryId === obj.id
-                      ? "bg-primary shadow-md text-white font-bold"
-                      : "text-primary hover:bg-primary/10 font-medium"
-                  }`}
-                >
-                  <Link
-                    href={`/productos/categoria/${obj.id}`}
-                    onClick={() => setIsOpen(false)}
-                    className={`block px-3 py-2 text-md decoration-0 ${
-                      categoryId === obj.id ? "text-white" : "text-primary"
-                    }`}
+              {sortedCategories.map((obj) => {
+                const isPromo = /promo/i.test(obj.name);
+                const isActive = categoryId === obj.id;
+
+                return (
+                  <li
+                    key={obj.id}
+                    className={`rounded-lg transition-colors duration-200 border
+        ${
+          isActive
+            ? "bg-primary shadow-md text-white font-bold border-primary"
+            : isPromo
+            ? "bg-orange-100 text-orange-700 hover:bg-orange-200 font-semibold border-orange-300"
+            : "text-primary hover:bg-primary/10 font-medium border-transparent"
+        }
+      `}
                   >
-                    {obj.name}
-                  </Link>
-                </li>
-              ))}
+                    <Link
+                      href={`/productos/categoria/${obj.id}`}
+                      onClick={() => setIsOpen(false)}
+                      className={`block px-3 py-2 text-md decoration-0
+          ${
+            isActive
+              ? "text-white"
+              : isPromo
+              ? "text-orange-700"
+              : "text-primary"
+          }
+        `}
+                    >
+                      {obj.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </motion.aside>
         </div>

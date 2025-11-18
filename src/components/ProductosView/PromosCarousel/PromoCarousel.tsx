@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Carousel, Skeleton } from "antd";
 import Image from "next/image";
 import { useProductStore } from "@/store/productsStore";
 import { useCategoryStore } from "@/store/categoryStore";
+import dayjs from "dayjs";
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -19,6 +20,7 @@ const imageStyle: React.CSSProperties = {
   borderRadius: "6px",
 };
 
+// ====================== Background Circles ======================
 const BackgroundCircles: React.FC = () => {
   const circles = [
     {
@@ -68,6 +70,7 @@ const BackgroundCircles: React.FC = () => {
   );
 };
 
+// ========================= Placeholder Banner =========================
 const PromoPlaceholderBanner: React.FC = () => {
   return (
     <div className="relative flex justify-center items-center bg-[#fff6ee] shadow-inner mt-10 md:mt-0 rounded-md w-full h-[250px] overflow-hidden">
@@ -87,6 +90,7 @@ const PromoPlaceholderBanner: React.FC = () => {
   );
 };
 
+// ======================== Promo Carousel =============================
 const PromoCarousel: React.FC = () => {
   const [loaded, setLoaded] = useState(false);
   const { promotions } = useProductStore();
@@ -96,6 +100,17 @@ const PromoCarousel: React.FC = () => {
     if (promotions.length >= 0) {
       setLoaded(true);
     }
+  }, [promotions]);
+
+  // ⚡ FILTRAR PROMOS VENCIDAS
+  const validPromotions = useMemo(() => {
+    const now = new Date();
+
+    return promotions.filter((promo) => {
+      if (!promo.expiration_date) return true; // si no tiene fecha, se considera válida
+      const exp = new Date(promo.expiration_date);
+      return exp >= now; // solo incluir si NO está vencida
+    });
   }, [promotions]);
 
   const getCategoryNames = (ids?: string[]): string => {
@@ -117,13 +132,14 @@ const PromoCarousel: React.FC = () => {
     );
   }
 
-  if (promotions.length === 0) {
+  // ⚡ SI NO QUEDAN PROMOS ACTIVAS → BANNER POR DEFECTO
+  if (validPromotions.length === 0) {
     return <PromoPlaceholderBanner />;
   }
 
   return (
     <Carousel autoplay autoplaySpeed={2500} dots={false}>
-      {promotions.map((promo) => {
+      {validPromotions.map((promo) => {
         const categoryNames = getCategoryNames(promo.category_ids);
 
         return (
@@ -158,8 +174,8 @@ const PromoCarousel: React.FC = () => {
 
                 {promo.start_date && promo.expiration_date && (
                   <p className="opacity-80 text-[10px] md:text-xs">
-                    {new Date(promo.start_date).toLocaleDateString()} →{" "}
-                    {new Date(promo.expiration_date).toLocaleDateString()}
+                    {dayjs(promo.start_date).format("DD/MM/YYYY")} →{" "}
+                    {dayjs(promo.expiration_date).format("DD/MM/YYYY")}
                   </p>
                 )}
               </div>

@@ -165,13 +165,13 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
             placeholder="Fecha de inicio"
             className="w-full"
             value={startDate ? dayjs(startDate) : null}
-            onChange={(d) => setStartDate(d ? d.toISOString() : "")}
+            onChange={(d) => setStartDate(d ? d.format("YYYY-MM-DD") : "")}
           />
           <DatePicker
             placeholder="Fecha de expiración"
             className="w-full"
             value={expirationDate ? dayjs(expirationDate) : null}
-            onChange={(d) => setExpirationDate(d ? d.toISOString() : "")}
+            onChange={(d) => setExpirationDate(d ? d.format("YYYY-MM-DD") : "")}
           />
         </div>
 
