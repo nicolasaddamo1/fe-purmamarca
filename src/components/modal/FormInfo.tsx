@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Modal, Form, Input, Button, List, Typography } from "antd";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore, IProdCart } from "@/store/cartStore";
 import { FaWhatsapp } from "react-icons/fa";
 
 const { Text } = Typography;
@@ -10,7 +10,7 @@ const { Text } = Typography;
 /* -------------------------------------------
    MISMA LÓGICA QUE EL SIDEBAR (PROMO + ONSALE)
 ---------------------------------------------- */
-function getFinalUnitPrice(prod: any) {
+function getFinalUnitPrice(prod: IProdCart) {
   const now = new Date();
 
   const hasPromo =
@@ -20,8 +20,8 @@ function getFinalUnitPrice(prod: any) {
     new Date(prod.promotion.start_date) <= now &&
     new Date(prod.promotion.expiration_date) >= now;
 
-  if (hasPromo) {
-    const discount = prod.price * (prod.promotion.promo_percentage / 100);
+  if (hasPromo && prod.promotion) {
+    const discount = prod.price * (prod.promotion.promo_percentage! / 100);
     return prod.price - discount;
   }
 
@@ -51,7 +51,16 @@ export default function PedidoFormModal() {
     return { totalAmount, totalItems };
   }, [prods]);
 
-  const handleFinish = (values: any) => {
+  interface FormValues {
+    nombre: string;
+    direccion: string;
+    localidad: string;
+    codigoPostal: string;
+    telefono: string;
+    correo: string;
+  }
+
+  const handleFinish = (values: FormValues) => {
     const { nombre, direccion, localidad, codigoPostal, telefono, correo } =
       values;
 

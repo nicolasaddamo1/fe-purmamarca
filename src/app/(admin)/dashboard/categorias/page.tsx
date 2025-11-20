@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
@@ -28,7 +28,7 @@ const cleanString = (str: string): string => {
     .replace(/[\u0300-\u036f]/g, "");
 };
 
-const CategoryPage: React.FC = () => {
+const CategoryPageContent: React.FC = () => {
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get("search") || "";
 
@@ -160,5 +160,15 @@ const CategoryPage: React.FC = () => {
     </div>
   );
 };
+
+const CategoryPage: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <CategoryPageContent />
+    </Suspense>
+  );
+};
+
+export const dynamic = 'force-dynamic';
 
 export default CategoryPage;

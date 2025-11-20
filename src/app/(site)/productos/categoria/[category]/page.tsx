@@ -55,7 +55,8 @@ const Page: React.FC = () => {
 
   return (
     <div className="py-10 md:pt-36">
-      <section className="hidden md:inline">
+      {/* Categorías - Visible en mobile y desktop */}
+      <section className="mb-6 md:mb-0">
         <HeadSection
           verMas={false}
           link="/home"

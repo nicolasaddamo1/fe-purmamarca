@@ -14,7 +14,7 @@ export async function getProductById(id: string | number) {
 
 // Crear producto
 export async function createProduct(
-  productData: Omit<IProduct, "id" | "imgs">
+  productData: Omit<IProduct, "id" | "imgs" | "category" | "promotion">
 ): Promise<IProduct> {
   const { data } = await api.post<IProduct>("/products", productData);
   return data;

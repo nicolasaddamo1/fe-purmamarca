@@ -31,7 +31,7 @@ const GalleryProducts: React.FC = () => {
 
     const spans = ["row-span-1", "row-span-2"];
 
-    let items = base.map((src) => ({
+    const items = base.map((src) => ({
       src,
       span: spans[Math.floor(Math.random() * spans.length)],
     }));

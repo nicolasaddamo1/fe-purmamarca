@@ -2,7 +2,9 @@
 
 import NavbarAdm from "@/components/admin/NavbarAdm";
 import SidebarAdm from "@/components/admin/SidebarAdm";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+
+export const dynamic = 'force-dynamic';
 
 export default function AdminLayout({
   children,
@@ -13,7 +15,9 @@ export default function AdminLayout({
 
   return (
     <div className="flex flex-col bg-gray-50 h-screen">
-      <NavbarAdm sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Suspense fallback={<div className="h-[70px] bg-chocolate/10" />}>
+        <NavbarAdm sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      </Suspense>
 
       <div className="flex flex-1 overflow-hidden">
         <SidebarAdm open={sidebarOpen} />

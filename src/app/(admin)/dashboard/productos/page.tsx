@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useProductStore } from "@/store/productsStore";
 import { getAllProducts, deleteProduct } from "@/app/axios/ProductosApi";
 import ProductList from "@/components/admin/Products/ProductList";
@@ -18,7 +18,7 @@ const cleanString = (str: string): string => {
     .replace(/[\u0300-\u036f]/g, "");
 };
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get("search") || "";
 
@@ -95,5 +95,15 @@ export default function ProductsPage() {
         />
       )}
     </div>
+  );
+}
+
+export const dynamic = 'force-dynamic';
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <ProductsPageContent />
+    </Suspense>
   );
 }

@@ -110,7 +110,7 @@ export default function Sidebar() {
                           width={80}
                           className="flex-shrink-0 border border-gray-200 rounded-md w-16 h-16 object-cover"
                           alt={prod.name}
-                          src={prod.imgs[0]}
+                          src={prod.imgs?.[0] ?? ""}
                         />
 
                         <section className="w-full">

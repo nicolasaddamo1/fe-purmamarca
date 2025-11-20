@@ -1,3 +1,5 @@
+import { IPromotion } from "./promotionsInterface";
+
 export interface IProduct {
   id: string;
   name: string;
@@ -16,12 +18,7 @@ export interface IProduct {
   available?: boolean;
   imgs?: string[];
   priceOnSale?: number;
-  promotion: {
-    name: string;
-    promo_percentage: number | null;
-    start_date: Date;
-    expiration_date: Date;
-  } | null;
+  promotion: IPromotion | null;
 }
 
 export type TCategory = {

@@ -29,13 +29,13 @@ export default function FooterMinimal() {
           <h3 className="font-semibold text-primary text-xl">Envíos por</h3>
           <ul className="space-y-2 mt-3 text-maroon text-sm">
             <li className="hover:text-primary transition cursor-pointer">
-              Traansporte
+              Via Cargo
             </li>
             <li className="hover:text-primary transition cursor-pointer">
-              Traansporte
+              Correo Argentino
             </li>
             <li className="hover:text-primary transition cursor-pointer">
-              Traansporte
+              BusPack 
             </li>
             <li>…</li>
           </ul>

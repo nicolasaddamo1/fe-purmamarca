@@ -79,13 +79,13 @@ export async function patchPromotion(
     for (const [key, value] of formData.entries()) {
       if (value) {
         if (key === "promo_percentage") {
-          (payload as any)[key] = Number(value);
+          (payload as Record<string, unknown>)[key] = Number(value);
         } else if (key === "category_ids") {
-          (payload as any)[key] = formData.getAll("category_ids");
+          (payload as Record<string, unknown>)[key] = formData.getAll("category_ids");
         } else if (key === "file") {
           continue;
         } else {
-          (payload as any)[key] = value;
+          (payload as Record<string, unknown>)[key] = value;
         }
       }
     }
