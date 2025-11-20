@@ -11,7 +11,7 @@ interface ProductProps {
   priceOnSale?: number;
   onSale?: boolean;
   available?: boolean;
-  imageUrl: string;
+  imageUrl: string | null;
   categoryName: string;
   promotion: IPromotion | null;
   stock?: number | string;
@@ -88,12 +88,18 @@ const Product: React.FC<ProductProps> = ({
           </div>
         )}
 
-        <img
-          className="rounded-t-lg w-full h-48 object-cover"
-          src={imageUrl}
-          alt={name}
-          title={name}
-        />
+        {imageUrl ? (
+          <img
+            className="rounded-t-lg w-full h-48 object-cover"
+            src={imageUrl}
+            alt={name}
+            title={name}
+          />
+        ) : (
+          <div className="flex items-center justify-center rounded-t-lg w-full h-48 bg-gray-200">
+            <span className="text-gray-400 text-sm">Sin imagen</span>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col items-start gap-1 px-3 py-2 w-full font-medium">

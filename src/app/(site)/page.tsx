@@ -19,6 +19,7 @@ const Page: React.FC = () => {
   const { products, setProducts, promotions, setPromotions } =
     useProductStore();
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [displayedCount, setDisplayedCount] = useState(20);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +67,18 @@ const Page: React.FC = () => {
     );
   });
 
+  // Resetear contador cuando cambia la búsqueda
+  useEffect(() => {
+    setDisplayedCount(20);
+  }, [searchQuery]);
+
+  const handleLoadMore = () => {
+    setDisplayedCount((prev) => prev + 20);
+  };
+
+  const displayedProducts = displayProducts.slice(0, displayedCount);
+  const hasMoreProducts = displayedCount < displayProducts.length;
+
   return (
     <div className="pt-10 md:pt-20">
       <PromoCarousel />
@@ -88,7 +101,7 @@ const Page: React.FC = () => {
           highlight="mejor precio"
         />
         <div className="gap-6 grid grid-cols-1 md:grid-cols-5 md:p-4 w-full">
-          {displayProducts.map((prod) => {
+          {displayedProducts.map((prod) => {
             // console.log("🟡 PROMO DEL PRODUCTO:", prod.name, prod.promotion);
 
             return (
@@ -100,7 +113,7 @@ const Page: React.FC = () => {
                 priceOnSale={prod.priceOnSale}
                 name={prod.name}
                 price={prod.price}
-                imageUrl={prod.imgs?.[0] ?? ""}
+                imageUrl={prod.imgs?.[0] || null}
                 categoryName={prod.category?.name ?? ""}
                 promotion={prod.promotion}
                 stock={prod.stock}
@@ -108,6 +121,18 @@ const Page: React.FC = () => {
             );
           })}
         </div>
+
+        {/* Botón Ver Más */}
+        {hasMoreProducts && (
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={handleLoadMore}
+              className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+            >
+              Ver más
+            </button>
+          </div>
+        )}
       </section>
       <QualitiesSection />
     </div>

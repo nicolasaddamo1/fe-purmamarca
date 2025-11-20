@@ -25,10 +25,16 @@ function ProductsPageContent() {
   const { products, setProducts } = useProductStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<IProduct | null>(null);
+  const [displayedCount, setDisplayedCount] = useState(20);
 
   useEffect(() => {
     getAllProducts().then(setProducts);
   }, [setProducts]);
+
+  // Resetear contador cuando cambia la búsqueda
+  useEffect(() => {
+    setDisplayedCount(20);
+  }, [currentSearch]);
 
   const filteredProducts = useMemo(() => {
     if (!currentSearch) {
@@ -72,6 +78,13 @@ function ProductsPageContent() {
     setModalOpen(true);
   };
 
+  const handleLoadMore = () => {
+    setDisplayedCount((prev) => prev + 20);
+  };
+
+  const displayedProducts = filteredProducts.slice(0, displayedCount);
+  const hasMoreProducts = displayedCount < filteredProducts.length;
+
   return (
     <div>
       <h1 className="mb-6 font-semibold text-primary text-4xl text-center">
@@ -79,10 +92,22 @@ function ProductsPageContent() {
       </h1>
 
       <ProductList
-        products={filteredProducts}
+        products={displayedProducts}
         onDelete={handleDelete}
         onEdit={handleEdit}
       />
+
+      {/* Botón Ver Más */}
+      {hasMoreProducts && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={handleLoadMore}
+            className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+          >
+            Ver más
+          </button>
+        </div>
+      )}
 
       {productToEdit && (
         <ProductEditModal

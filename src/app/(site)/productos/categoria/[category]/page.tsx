@@ -140,7 +140,7 @@ const Page: React.FC = () => {
                   priceOnSale={prod.priceOnSale}
                   name={prod.name}
                   price={prod.price}
-                  imageUrl={prod.imgs?.[0] ?? ""}
+                  imageUrl={prod.imgs?.[0] || null}
                   categoryName={prod.category?.name ?? ""}
                   stock={prod.stock}
                   description={prod.description}
