@@ -23,6 +23,7 @@ const Page: React.FC = () => {
   const { products, setProducts } = useProductStore();
   const [data, setData] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [displayedCount, setDisplayedCount] = useState(20);
 
   useEffect(() => {
     const loadData = async () => {
@@ -49,7 +50,16 @@ const Page: React.FC = () => {
     if (!products?.length) return;
     if (catId === "todos") setData(products);
     else setData(products.filter((p) => p.categoryId === catId));
+    // Resetear el contador cuando cambia la categoría
+    setDisplayedCount(20);
   }, [catId, products]);
+
+  const handleLoadMore = () => {
+    setDisplayedCount((prev) => prev + 20);
+  };
+
+  const displayedProducts = data.slice(0, displayedCount);
+  const hasMoreProducts = displayedCount < data.length;
 
   const catData = categories.find((cat) => cat.id === catId);
 
@@ -114,7 +124,7 @@ const Page: React.FC = () => {
               </p>
             </motion.div>
           ) : (
-            data.map((prod) => (
+            displayedProducts.map((prod) => (
               <motion.div
                 key={prod.id}
                 layout
@@ -141,6 +151,18 @@ const Page: React.FC = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Botón Ver Más */}
+      {!loading && hasMoreProducts && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={handleLoadMore}
+            className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+          >
+            Ver más
+          </button>
+        </div>
+      )}
     </div>
   );
 };
