@@ -54,6 +54,24 @@ const Page: React.FC = () => {
     setDisplayedCount(20);
   }, [catId, products]);
 
+  // Autoscroll en mobile cuando cambia la categoría
+  useEffect(() => {
+    // Solo hacer scroll en mobile (ancho menor a 768px)
+    const isMobile = window.innerWidth < 768;
+    if (isMobile && !loading) {
+      // Pequeño delay para asegurar que el DOM se haya actualizado
+      setTimeout(() => {
+        const productosSection = document.getElementById("productos-section");
+        if (productosSection) {
+          productosSection.scrollIntoView({ 
+            behavior: "smooth", 
+            block: "start" 
+          });
+        }
+      }, 300);
+    }
+  }, [catId, loading]);
+
   const handleLoadMore = () => {
     setDisplayedCount((prev) => prev + 20);
   };
@@ -93,7 +111,7 @@ const Page: React.FC = () => {
         </Link>
       </div>
 
-      <div className="gap-6 grid grid-cols-1 md:grid-cols-5 p-2 md:p-4 w-full min-h-[400px]">
+      <div id="productos-section" className="gap-6 grid grid-cols-1 md:grid-cols-5 p-2 md:p-4 w-full min-h-[400px]">
         <AnimatePresence mode="wait">
           {loading ? (
             Array(5)

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Modal, Form, Input, Button, List, Typography } from "antd";
+import { Modal, Form, Input, Button, List, Typography, Alert } from "antd";
 import { useCartStore, IProdCart } from "@/store/cartStore";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -144,6 +144,12 @@ Me gustaria saber  los medios de pago y cómo seguimos?
         footer={null}
         style={{ zIndex: 999999 }}
       >
+        <Alert
+          message="Productos sujetos a stock. Los precios de los productos son en efectivo."
+          type="info"
+          showIcon
+          className="mb-4 text-center"
+        />
         <div className="bg-gray-50 my-4 p-4 border border-gray-200 rounded-lg">
           <h3 className="mb-2 font-semibold text-primary/80">
             Resumen de la Orden

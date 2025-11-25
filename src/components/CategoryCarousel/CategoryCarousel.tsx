@@ -4,6 +4,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Category from "@/components/ProductosView/Category/Category";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { LiaSearchSolid } from "react-icons/lia";
+import { useRouter, usePathname } from "next/navigation";
 
 interface CategoryCarouselProps {
   categories: {
@@ -14,9 +16,14 @@ interface CategoryCarouselProps {
 }
 
 const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ categories }) => {
+  const router = useRouter();
+  const pathname = usePathname() ?? "/";
   const [page, setPage] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [showAllMobile, setShowAllMobile] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 10;
+  const maxMobileCategories = 6;
 
   useEffect(() => {
     const checkIsDesktop = () => setIsDesktop(window.innerWidth >= 768);
@@ -24,6 +31,13 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ categories }) => {
     window.addEventListener("resize", checkIsDesktop);
     return () => window.removeEventListener("resize", checkIsDesktop);
   }, []);
+
+  // Resetear el estado de expansión cuando cambia a desktop
+  useEffect(() => {
+    if (isDesktop) {
+      setShowAllMobile(false);
+    }
+  }, [isDesktop]);
 
   const promoSet = new Set(["promo", "promos", "promoción", "promociones"]);
 
@@ -58,10 +72,33 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ categories }) => {
   const nextPage = () => page < totalPages - 1 && setPage((p) => p + 1);
   const prevPage = () => page > 0 && setPage((p) => p - 1);
 
-  const categoriesToRender = useMemo(
-    () => (isDesktop ? visible : allCategories),
-    [isDesktop, visible, allCategories]
-  );
+  // Filtrar categorías por búsqueda
+  const filteredCategories = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return allCategories;
+    }
+    const query = searchQuery.trim().toLowerCase();
+    return allCategories.filter((cat) =>
+      cat.name.toLowerCase().includes(query)
+    );
+  }, [allCategories, searchQuery]);
+
+  const categoriesToRender = useMemo(() => {
+    if (isDesktop) {
+      return visible;
+    }
+    
+    // Si hay búsqueda activa, mostrar todas las categorías filtradas
+    if (searchQuery.trim()) {
+      return filteredCategories;
+    }
+    
+    // En mobile: mostrar solo 6 si no se ha expandido, o todas si se expandió
+    if (showAllMobile || allCategories.length <= maxMobileCategories) {
+      return allCategories;
+    }
+    return allCategories.slice(0, maxMobileCategories);
+  }, [isDesktop, visible, allCategories, showAllMobile, filteredCategories, searchQuery]);
 
   const motionKey = isDesktop ? page : "grid";
 
@@ -128,6 +165,43 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ categories }) => {
               }`}
             />
           ))}
+        </div>
+      )}
+
+      {/* Botón "Ver más" solo en mobile cuando hay más de 6 categorías */}
+      {!isDesktop && allCategories.length > maxMobileCategories && !showAllMobile && !searchQuery.trim() && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => setShowAllMobile(true)}
+            className="px-6 py-2 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+          >
+            Ver más
+          </button>
+        </div>
+      )}
+
+      {/* Campo de búsqueda solo en mobile */}
+      {!isDesktop && (
+        <div className="flex justify-center mt-4 w-full px-4">
+          <div className="relative flex items-center w-full max-w-sm">
+            <LiaSearchSolid className="left-3 absolute text-gray-400 text-xl" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar una categoría"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-gray-700 placeholder-gray-400"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="right-3 absolute text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Limpiar búsqueda"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
