@@ -7,18 +7,18 @@ export default function QualitiesSection() {
   const qualities = [
     {
       icon: <FaHome className="text-primary text-4xl" />,
-      subtitle: "En tu espacio favorito...",
-      title: "Armoniza tu hogar",
+      subtitle: "Vende lo que todos",
+      title: "Quieren comprar",
     },
     {
       icon: <FaSun className="text-primary text-4xl" />,
-      subtitle: "Eleva tu vibración, encuentra tu fuerza...",
-      title: "Energía para tu día a día",
+      subtitle: "Deco para todos",
+      title: "Los espacios",
     },
     {
       icon: <GiMeditation className="text-primary text-4xl" />,
-      subtitle: "Un camino de iluminación y poder...",
-      title: "Conexión espiritual",
+      subtitle: "Holística, protección",
+      title: "Calma y bienestar",
     },
   ];
 

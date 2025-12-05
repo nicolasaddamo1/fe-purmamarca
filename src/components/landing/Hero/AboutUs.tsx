@@ -17,21 +17,19 @@ const AboutUs = () => {
 
           <div className="space-y-4 text-gray-700 md:text-sm text-lg text-left leading-relaxed">
             <p>
-              Purmamarca Holística & Decoración es tu distribuidora mayorista de
-              confianza para negocios. Ofrecemos una amplia gama de velas,
-              budas, sahumerios, esencias y accesorios decorativos con precios
-              especiales por volumen y stock constante.
+              Nosotros somos una empresa familiar dedicada a la fabricación y
+              distribución de artículos de decoración holística y bienestar.
+              Nuestra empresa comenzó en el año 2020 y desde entonces crecemos
+              todo el tiempo junto a nuestros clientes.
             </p>
             <p className="hidden md:inline">
-              Trabajamos directamente con fabricantes locales y talleres
-              artesanales para asegurar calidad, continuidad en el suministro y
-              precios competitivos que te permitan ampliar tu oferta y maximizar
-              tus márgenes.
+              Tenemos los mejores precios que te van a permitir ganar como
+              mínimo el doble de lo invertido.
             </p>
             <p className="hidden md:inline">
-              Nuestro compromiso es ser un proveedor estable y confiable:
-              reposiciones ágiles, líneas exclusivas para distribuidores y
-              flexibilidad para que tu negocio crezca junto con nosotros.
+              El secreto de nuestro negocio es la dedicación y la pasión que le
+              ponemos todos los días. Sean bienvenidos a nuestra familia de
+              clientes.
             </p>
           </div>
         </div>

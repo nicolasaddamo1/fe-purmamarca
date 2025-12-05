@@ -26,18 +26,15 @@ export default function FooterMinimal() {
 
         <div>
           {/* TODO : Agregar medios de envío  */}
-          <h3 className="font-semibold text-primary text-xl">Envíos por</h3>
+          <h3 className="font-semibold text-primary text-xl">Envíos a todas las provincias</h3>
           <ul className="space-y-2 mt-3 text-maroon text-sm">
             <li className="hover:text-primary transition cursor-pointer">
-              Via Cargo
+              <p className="break-words leading-relaxed">
+                Vía cargo, andreani, correo argentino, buspack y cualquier
+                logística que tenga sucursal en el partido de Gral San Martín
+                en Buenos Aires. También recibimos comisionistas.
+              </p>
             </li>
-            <li className="hover:text-primary transition cursor-pointer">
-              Correo Argentino
-            </li>
-            <li className="hover:text-primary transition cursor-pointer">
-              BusPack 
-            </li>
-            <li>…</li>
           </ul>
         </div>
 

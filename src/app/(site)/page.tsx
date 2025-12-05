@@ -97,8 +97,8 @@ const Page: React.FC = () => {
         <HeadSection
           verMas={false}
           link="/productos/categoria/any"
-          name="Obten los mejores productos al"
-          highlight="mejor precio"
+          name="Tenemos la mejor relación"
+          highlight="precio calidad"
         />
         <div className="gap-6 grid grid-cols-1 md:grid-cols-5 md:p-4 w-full">
           {displayedProducts.map((prod) => {
